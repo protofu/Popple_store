@@ -29,7 +29,10 @@ replay_pid*
 
 ### Redis ###
 # Ignore redis binary dump (dump.rdb) files
-
 *.rdb
+
+### Application Configuration ###
+# Ignore application.yml files
+application.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/java,redis
