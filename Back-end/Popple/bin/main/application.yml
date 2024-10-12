@@ -25,7 +25,6 @@ spring:
     user:
       name: popple
       password: 960512
-
 # jwt 토큰 발행 기초 설정
 jwt:
     issuer: team-popple
@@ -46,10 +45,8 @@ oauth2:
       redirect-uri: http://localhost:5173/oauth/kakao
       token-uri: https://kauth.kakao.com/oauth/token
       user-info-request-uri: https://kapi.kakao.com/v2/user/me
-
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-
