@@ -35,4 +35,7 @@ replay_pid*
 # Ignore application.yml files
 application.yml
 
+### Ignore bin directory ###
+bin/
+
 # End of https://www.toptal.com/developers/gitignore/api/java,redis
