@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.popple.auth.repository.UserRespository;
+import com.popple.auth.repository.UserRepository;
 import com.popple.common.jwt.JwtAuthenticationFilter;
 import com.popple.common.jwt.JwtAuthenticationService;
 import com.popple.common.jwt.JwtProperties;
@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 	private final UserDetailsService userDetailsService;
-	private final UserRespository userRespository;
+	private final UserRepository userRespository;
 	private final JwtProperties jwtProperties;
 	
 	// JWT Provider 생성자 호출
