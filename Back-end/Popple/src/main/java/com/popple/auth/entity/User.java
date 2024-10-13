@@ -46,6 +46,9 @@ public class User implements UserDetails {
 	@Column(nullable=true)
 	private Long compId;
 	
+	@Column(nullable=false)
+	private String name;
+	
 	@Column(nullable=false, unique=true)
 	private String nickname;
 	

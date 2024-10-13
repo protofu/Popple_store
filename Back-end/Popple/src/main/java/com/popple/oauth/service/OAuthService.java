@@ -1,10 +1,24 @@
 package com.popple.oauth.service;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;
 import com.popple.common.utils.OAuth2Properties;
@@ -28,7 +42,7 @@ public class OAuthService {
 		// 사용자 정보를 조회하고
 		// 기존에 있는 사용자라면 (oauth 인증 여부에 따라 oauth = true로 변경)
 		// 기존에 없는 사용자라면 (새로 가입 _ DB 추가)
-		user = userRepository.findByEmailAndDeletedAtIsNull(user.getEmail());
+		user = userRepository.findByEmailAndDeletedAtIsNull(user.getEmail()).orElse(user);
 		// 임시
 		
 		if (!user.isOAuth()) {
@@ -45,13 +59,76 @@ public class OAuthService {
 		return tokenMap.get("accessToken");
 	}
 
-	private User generateOAuthUser(String providedAccessToken, String provider) {
-		// TODO Auto-generated method stub
-		return null;
+	private String getAccessToken(String code, String provider) {
+		// 설정 가져오기
+		OAuth2Properties.Client client = oAuth2Properties.getClients().get(provider);
+		// code를 통해 google에서 제공하는 accessToken을 가져온다
+		String decodedCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.setBasicAuth(client.getClientId(), client.getClientSecret());
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("client_id", client.getClientId());
+		params.add("client_secret", client.getClientSecret());
+		params.add("code", decodedCode);
+		params.add("grant_type", "authorization_code");
+		params.add("redirect_uri", client.getRedirectUri());
+		
+		RestTemplate rt = new RestTemplate();
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+		ResponseEntity<Map> responseEntity = rt.postForEntity(client.getTokenUri(), requestEntity, Map.class);
+		
+		if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 정보를 가져올 수 없음");
+		}
+		
+		return (String) responseEntity.getBody().get("access_token");
+	}
+	
+	private User generateOAuthUser(String accessToken, String provider) {
+		// 설정 가져오기
+		OAuth2Properties.Client client = oAuth2Properties.getClients().get(provider);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer" + accessToken);
+		
+		RestTemplate rt = new RestTemplate();
+		ResponseEntity<JsonNode> responseEntity = rt.exchange(client.getUserInfoRequestUri(), HttpMethod.GET, new HttpEntity<>(headers), JsonNode.class);
+		
+		if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 정보를 가져올 수 없음");
+		}
+		
+		JsonNode jsonNode = responseEntity.getBody();
+		String email = null;
+		String name = null;
+		User user = null;
+		
+		try {
+			if (jsonNode.has("email") && jsonNode.has("name")) {
+				email = jsonNode.get("email").asText();
+				name = jsonNode.get("name").asText();
+				user = User.builder()
+					.email(email)
+					.name(name)
+					.oAuth(true)
+					.build();
+			} else if (jsonNode.has("id") && jsonNode.has("properties")) {
+				// 이부분이 카카오 이메일 받는 부분
+				email = jsonNode.get("id").asText() + "@kakao.com";
+				name = jsonNode.get("properties").get("nickname").asText();
+				user = User.builder()
+					.email(email)
+					.name(name)
+					.oAuth(true)
+					.build();
+			} else {
+				throw new RuntimeException("해당 사용자를 찾을 수 없습니다.");
+			}
+		} catch (RuntimeException e) {
+			throw new RuntimeException("해당 사용자를 찾을 수 없습니다.");
+		}
+		return user;
 	}
 
-	private String getAccessToken(String code, String provider) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
