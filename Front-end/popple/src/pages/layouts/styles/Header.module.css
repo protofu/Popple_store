@@ -1,0 +1,36 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.nav li {
+  margin-left: 1rem;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
