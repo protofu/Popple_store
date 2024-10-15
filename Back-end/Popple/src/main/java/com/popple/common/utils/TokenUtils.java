@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.popple.auth.domain.LoginResponse;
+import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.entity.User;
 import com.popple.common.jwt.JwtProvider;
 
