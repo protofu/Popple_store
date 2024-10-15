@@ -46,7 +46,7 @@ public class Exhibition {
 	
 	//전시명
 	@Column(nullable = false)
-	private String title;
+	private String exhibitionName;
 	
 	//부제
 	@Column(nullable = false)
