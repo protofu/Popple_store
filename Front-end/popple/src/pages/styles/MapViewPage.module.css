@@ -1,0 +1,16 @@
+.container {
+  border: 1px solid black;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.leftContainer {
+  flex: 2;
+  border: 1px solid red;
+}
+
+.rightContainer {
+  flex: 8;
+  border: 1px solid blueviolet;
+}
