@@ -4,7 +4,7 @@ export default function MapViewPage() {
   return (
     <div className={styles.container}>
       <div className={styles.leftContainer}>
-        대충 검색이 들어갈 자리
+        
       </div>
       <div className={styles.rightContainer}>
         <MapView />
