@@ -40,12 +40,12 @@ public class Visit {
 	
 	//전시 id
 	@JoinColumn(name = "exhibition_id", nullable = false)
-	@OneToOne
+	@ManyToOne
 	private Exhibition exhibition;
 	
 	//유저 id
 	@JoinColumn(name = "user_id", nullable = false)
-	@OneToMany
+	@ManyToOne
 	private User user;
 	
 	//기업 id

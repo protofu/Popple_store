@@ -70,7 +70,7 @@ public class AuthController {
 	//회원 정보 수정
 	//토큰 재발급
 	@Operation(summary = "토큰 재발급", description = "토큰을 재발급합니다.")
-	@PostMapping("")
+	@PostMapping("/refresh-token")
 	public ResponseEntity<LoginResponse> refreshToken(HttpServletRequest req, HttpServletResponse res){
 		Map<String, String> tokenMap = authService.refreshToken(req);
 		

@@ -29,7 +29,7 @@ public class JwtProvider {
 		log.info("[generateAccessToken] 액세스 토큰 생성");
 		Date now = new Date();
 		// 만료 시간 = 현재시각 + 설정한 유지 시간
-		Date expiredDate = new Date(now.getTime() + jwtProperties.getAcessDuration());
+		Date expiredDate = new Date(now.getTime() + jwtProperties.getAccessDuration());
 		// 생성
 		return makeToken(user, expiredDate);
 	}

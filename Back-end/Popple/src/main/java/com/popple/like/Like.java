@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Data
+@Table(name = "likes")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Like {
@@ -33,7 +35,7 @@ public class Like {
 	private User user;
 	
 	@JoinColumn(name = "exhibition_id", nullable = false)
-	@OneToOne
+	@ManyToOne
 	private Exhibition exhibition;
 		
 }
