@@ -1,0 +1,17 @@
+.outletContainer {
+  margin: 0 auto;
+  margin-top: 150px;
+  padding: 5px;
+  min-height: 100vh;
+  max-width: calc(100% - 530px);
+}
+
+/* 반응형 CSS 설정 */
+@media (max-width: 1455px) {
+  .outletContainer {
+    margin: 0 auto;
+    margin-top: 150px;
+    min-height: 100vh;
+    max-width: 100%;
+  }
+}
