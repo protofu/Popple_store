@@ -6,6 +6,7 @@ import styles from './Router.module.css';
 import MapViewPage from "../pages/MapViewPage";
 import SignUpPage from "../pages/SignUpPage";
 import AuthLayout from "../pages/layouts/AuthLayout";
+import OAuthLoginPage from "../pages/OAuthLoginPage";
 
 
 export default function Router() {
@@ -19,6 +20,7 @@ export default function Router() {
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
         <Route path="/map-view" element={<MapViewPage />} />
+        <Route path="/oauth/:provider" element={<OAuthLoginPage />} />
 
         {/* Auth 폼을 적용할 페이지들 */}
         <Route element={<AuthLayout />}>
