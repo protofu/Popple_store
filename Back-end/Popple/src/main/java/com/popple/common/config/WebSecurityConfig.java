@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.HttpBasicC
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -60,7 +59,7 @@ public class WebSecurityConfig {
 		// 사용자 정보를 사용자 이름(email)을 통해 불러오기
 		authProvider.setUserDetailsService(userDetailsService);
 		// BCrypt를 사용하여 비밀번호 검증
-		authProvider.setPasswordEncoder(BCryptPasswordEncoder());
+		authProvider.setPasswordEncoder(bCryptPasswordEncoder());
 		// 위 설정(authProvider)을 통해 사용자를 검증하고 성공시 Authentication 객체반환
 		// Authentication 예시 -> Principal, Credentials, Authorities(ROLE), Authenticated, Details
 		return new ProviderManager(authProvider);
@@ -68,7 +67,7 @@ public class WebSecurityConfig {
 	
 	// 암호화 빈 객체 생성 (스프링의 BCryptPasswordEncoder 암호화를 사용)
 	@Bean
-	private PasswordEncoder BCryptPasswordEncoder() {
+	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 

@@ -1,4 +1,4 @@
-package com.popple.auth.domain;
+package com.popple.auth.domain.response;
 
 import lombok.Builder;
 import lombok.Data;

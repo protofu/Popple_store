@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.popple.auth.domain.LoginResponse;
+import com.popple.auth.domain.response.LoginResponse;
 import com.popple.oauth.service.OAuthService;
 
 import jakarta.servlet.http.HttpServletResponse;
