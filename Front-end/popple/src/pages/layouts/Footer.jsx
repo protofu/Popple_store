@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/Footer.module.css";
 import Insta from "../../assets/Insta.png";
 import Github from "../../assets/Github.png";
 
@@ -15,57 +14,77 @@ export default function Footer() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.footerContainer}>
-        <div className={styles.footerInfo}>
+    <div className="w-full border-t border-gray-400">
+      <div 
+        style={{ maxWidth: "calc(100% - 530px)" }}
+        className="mx-auto pt-4 pb-5 flex justify-between items-center md:max-w-full xl:flex-row flex-col md:items-start"
+      >
+        <div className="text-gray-400 flex justify-between md:mb-0 mb-5">
           <div>
-            <p>Popeye</p>
-            <p>서울특별시 종로구 우정국로2길 21 대왕빌딩 7층</p>
-            <p>문의 : sungjae0512@gmail.com</p>
-            <p>고객센터 : 24H 상시 운영</p>
+            <p className="m-1 text-[13px]">Popeye</p>
+            <p className="m-1 text-[13px]">서울특별시 종로구 우정국로2길 21 대왕빌딩 7층</p>
+            <p className="m-1 text-[13px]">문의 : sungjae0512@gmail.com</p>
+            <p className="m-1 text-[13px]">고객센터 : 24H 상시 운영</p>
             <br />
-            <p>&copy;
-              <span className={styles.copyrights}>Popeye Corp.</span>
-              All rights reserved.
+            <p className="m-1 text-[13px]">&copy; 
+              <span className="underline">Popeye Corp.</span> All rights reserved.
             </p>
           </div>
-          <div className={styles.icons}>
-            <img src={Insta} alt="인스타 이미지" onClick={() => handleExternalNavigation("https://www.instagram.com")} />
-            <img src={Github} alt="깃허브 이미지" onClick={() => handleExternalNavigation("https://github.com/Popple-store/Popple")}/>
+          <div className="flex justify-center items-center ml-5 gap-2">
+            <img
+              src={Insta}
+              alt="인스타 이미지"
+              className="w-10 h-10 cursor-pointer"
+              onClick={() => handleExternalNavigation("https://www.instagram.com")}
+            />
+            <img
+              src={Github}
+              alt="깃허브 이미지"
+              className="w-10 h-10 cursor-pointer"
+              onClick={() => handleExternalNavigation("https://github.com/Popple-store/Popple")}
+            />
           </div>
         </div>
-        <div className={styles.footerNav}>
+        <div className="flex gap-7 text-lg">
           <ul>
-            <li className={styles.subNavTitle} onClick={() => handleNavigation("/login")}>팝업/전시회</li>
-            <ul className={styles.subMenu}>
-              <li>팝업</li>
-              <li>전시회</li>
-              <li>지도로 보기</li>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+              팝업/전시회
+            </li>
+            <ul className="pl-1">
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">팝업</li>
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">전시회</li>
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">지도로 보기</li>
             </ul>
           </ul>
           <ul>
-            <li className={styles.subNavTitle} onClick={() => handleNavigation("/login")}>마이페이지</li>
-            <ul className={styles.subMenu}>
-              <li>정보수정</li>
-              <li>나의리뷰</li>
-              <li>예약목록</li>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+              마이페이지
+            </li>
+            <ul className="pl-1">
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">정보수정</li>
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">나의리뷰</li>
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">예약목록</li>
             </ul>
           </ul>
           <ul>
-            <li className={styles.subNavTitle} onClick={() => handleNavigation("/login")}>이벤트</li>
-            <ul className={styles.subMenu}>
-              <li>이벤트</li>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+              이벤트
+            </li>
+            <ul className="pl-1">
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">이벤트</li>
             </ul>
           </ul>
           <ul>
-            <li className={styles.subNavTitle} onClick={() => handleNavigation("/login")}>고객센터</li>
-            <ul className={styles.subMenu}>
-              <li>FAQ</li>
-              <li>1:1 문의하기</li>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+              고객센터
+            </li>
+            <ul className="pl-1">
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">FAQ</li>
+              <li className="text-gray-400 text-sm mb-1 cursor-pointer">1:1 문의하기</li>
             </ul>
           </ul>
         </div>
       </div>
     </div>
   );
-};
+}

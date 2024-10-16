@@ -16,7 +16,7 @@ export default function Router() {
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
-        <Route path="/map-view" element={<MapViewPage />} /> {/* Corrected this line */}
+        <Route path="/map-view" element={<MapViewPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>

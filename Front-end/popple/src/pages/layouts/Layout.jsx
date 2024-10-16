@@ -1,20 +1,15 @@
 import { Outlet } from "react-router-dom";
-import styles from "./styles/Layout.module.css";
-import Header from "./header";
+import Header from "./Header";
 import Footer from "./Footer";
 
 export default function Layout() {
   return (
-    <div>
-      <div>
+    <div className="flex flex-col">
       <Header />
-      </div>
-      <main className={styles.outletContainer}>
+      <main className="lg:max-w-[calc(100%-530px)] w-screen mt-[150px] p-4 min-h-screen mx-auto">
         <Outlet />
       </main>
-      <div>
       <Footer />
-      </div>
     </div>
   );
 };
