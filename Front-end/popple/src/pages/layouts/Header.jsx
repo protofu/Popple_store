@@ -13,7 +13,7 @@ export default function Header() {
         <li onClick={() => handleNavigation("/login")} className="list-none cursor-pointer px-2">
           LOGIN
         </li>
-        <li className="list-none cursor-pointer px-2">JOIN US</li>
+        <li onClick={() => handleNavigation("/sign-up")} className="list-none cursor-pointer px-2">JOIN US</li>
         <li className="list-none cursor-pointer px-2">HELP</li>
       </div>
       <div className="flex justify-center py-2.5">
