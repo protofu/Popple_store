@@ -48,17 +48,24 @@ public class AuthController {
 	
 	//이메일 중복 확인
 	@Operation(summary = "이메일 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
-	@GetMapping("")
+	@GetMapping("/email")
 	public ResponseEntity<Boolean> emailCheck(String email){
 		boolean isNotDuplicate = authService.duplicateEmailCheck(email);
 		return ResponseEntity.ok(isNotDuplicate);
 		
 	}
 	
+	//닉네임 중복 확인
+	@Operation(summary = "닉네임 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
+	@GetMapping("/nickname")
+	public ResponseEntity<Boolean> nicknameCheck(String nickname){
+		boolean isNotDuplicate = authService.duplicateNicknameCheck(nickname);
+		return ResponseEntity.ok(isNotDuplicate);
+	}
 	
 	//회원 탈퇴
 	@Operation(summary = "회원탈퇴", description = "회원탈퇴를 진행합니다.")
-	@PatchMapping("")
+	@PatchMapping("/delete/{id}")
 	public ResponseEntity<?> deleteUser(UserDeleteRequest userDeleteRequest){
 		authService.deleteUser(userDeleteRequest);
 		if(!userDeleteRequest.getEmail().isEmpty()) {
@@ -67,7 +74,17 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없음");
 		}
 	}
+	
 	//회원 정보 수정
+	@Operation(summary = "회원수정", description = "회원수정을 진행합니다.")
+	@PatchMapping("/update/{id}")
+	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user, SignUpRequest signUpRequest){
+		SignUpResponse updateUser = authService.updateUser(user, signUpRequest);
+		return ResponseEntity.ok(updateUser);
+		
+	}
+	
+	
 	//토큰 재발급
 	@Operation(summary = "토큰 재발급", description = "토큰을 재발급합니다.")
 	@PostMapping("/refresh-token")

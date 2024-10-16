@@ -44,10 +44,23 @@ public class AuthService {
 		User savedUser = userRepository.save(user);
 		return SignUpResponse.toDTO(savedUser);
 	}
+	//회원 수정
+	public SignUpResponse updateUser(User user, SignUpRequest signUpRequest) {
+		User updateUser = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없음"));
+		if(user.getId() == updateUser.getId()) {
+			if(signUpRequest.getPassword() != null) updateUser.setPassword(signUpRequest.getPassword());
+			userRepository.save(updateUser);
+		}
+		return SignUpResponse.toDTO(updateUser);
+	}
 	
 	//이메일 중복 체크
 	public boolean duplicateEmailCheck(String email) {
 		return !userRepository.existsByEmailAndDeletedAtIsNull(email);
+	}
+
+	public boolean duplicateNicknameCheck(String nickname) {
+		return !userRepository.existsByNicknameAndDeletedAtIsNull(nickname);
 	}
 	
 	//회원탈퇴
@@ -114,6 +127,9 @@ public class AuthService {
 		userRepository.save(user);
 		return tokenMap;
 	}
+
+	
+
 
 
 
