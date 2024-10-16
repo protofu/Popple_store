@@ -68,6 +68,10 @@ public class Exhibition {
 	@Column(nullable = true)
 	private String notice;
 	
+	//이용조건
+	@Column(nullable = true)
+	private String terms;
+	
 	//관람등급
 	@Column(nullable = false)
 	private String grade;

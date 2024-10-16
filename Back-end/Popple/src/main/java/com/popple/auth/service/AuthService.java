@@ -40,7 +40,7 @@ public class AuthService {
 				.nickname(req.getNickname())
 				.password(encodedPassword)
 				.build();
-		
+		log.info("user : {}", user);
 		User savedUser = userRepository.save(user);
 		return SignUpResponse.toDTO(savedUser);
 	}

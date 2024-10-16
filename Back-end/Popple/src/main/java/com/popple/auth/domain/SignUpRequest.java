@@ -3,6 +3,8 @@ package com.popple.auth.domain;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.popple.auth.entity.User;
+import com.popple.company.entity.Company;
 
 import lombok.Data;
 import lombok.ToString;
@@ -17,6 +19,18 @@ public class SignUpRequest {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birth;
+	
+	public User toEntity() {
+		return User.builder()
+				.email(email)
+				.name(name)
+				.password(password)
+				.nickname(nickname)
+				.birth(birth)
+				.gender(false)
+				.role(RoleEnum.ROLE_USER)
+				.build();
+	}
 	
 
 }

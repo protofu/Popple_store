@@ -8,5 +8,4 @@ import lombok.ToString;
 public class UserDeleteRequest {
 	private String email;
 	private String password;
-	private String nickname;
 }

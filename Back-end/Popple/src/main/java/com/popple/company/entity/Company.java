@@ -2,6 +2,8 @@ package com.popple.company.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +56,7 @@ public class Company {
 	private LocalDateTime deletedAt;
 	
 	//둥록 시간
-	@Column(name = "created_at", nullable = true)
+	@CreatedDate
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 }

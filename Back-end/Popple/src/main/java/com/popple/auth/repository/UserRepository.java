@@ -14,5 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	
 	//이메일 중복 확인
 	boolean existsByEmailAndDeletedAtIsNull(String email);
+
+	Optional<User> findByCompId(Long id);
 	
 }
