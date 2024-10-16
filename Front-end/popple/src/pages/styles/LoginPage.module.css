@@ -5,8 +5,7 @@
   flex-direction: column;
   margin: 0 auto;
   padding: 40px;
-  border: 2px solid #8900E1;
-  max-width: calc(100% - 530px);
+  /* border: 2px solid #8900E1; */
   gap: 10px;
 }
 
