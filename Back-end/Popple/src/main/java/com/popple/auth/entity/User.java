@@ -69,7 +69,7 @@ public class User implements UserDetails {
 	@Builder.Default
 	private RoleEnum role = RoleEnum.ROLE_USER;		// 기본적으로 USER 부여
 	
-	@Column(name="refreshToken", nullable=true)
+	@Column(name="refreshToken", nullable=true, length=2000)
 	public String refreshToken;
 	
 	@Override

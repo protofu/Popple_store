@@ -3,15 +3,19 @@ import mainLogo from "../../assets/MainLogo.png";
 import { useLoginStore } from "../../stores/LoginState";
 import { useEffect } from "react";
 import { getCookie, removeCookie } from "../../utils/CookieUtils";
+import { useLoginUserStore } from "../../stores/LoginUserState";
+import { jwtDecode } from "jwt-decode";
 
 export default function Header() {
   const { isLoggedIn, setIsLoggedIn } = useLoginStore(state => state);
-
+  const { loginUserName, loginUserNickname, setLoginUser } = useLoginUserStore(state => state);
+  
   // 로그인 상태 관리 메서드
   const checkLoggedIn = () => {
     const token = getCookie("accessToken");
     if (token) {
       setIsLoggedIn(true);
+      setLoginUser(jwtDecode(token).name, jwtDecode(token).nickname);
     } else {
       setIsLoggedIn(false);
     }
@@ -40,7 +44,7 @@ export default function Header() {
       <div className="flex justify-end text-sm text-gray-600 p-1 pr-10 divide-x divide-gray-400">
         { isLoggedIn ? 
           <>
-            <li onClick={() => handleNavigation("/my-page")} className="list-none cursor-pointer px-2">이름 뜰 곳</li>
+            <li onClick={() => handleNavigation("/my-page")} className="list-none cursor-pointer px-2">{loginUserNickname} 님</li>
             <li onClick={() => handleLogout()} className="list-none cursor-pointer px-2">
               LOGOUT
             </li>
