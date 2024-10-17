@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
-import { setCookie } from "../utils/CookieUtils";
 import { useEffect, useState } from "react";
 import { oauthAPI } from "../api/services/OAuth";
-import { useForm } from "react-hook-form";
 import AuthLayout from "./layouts/AuthLayout";
+import SignUpPage from "./SignUpPage";
 
 
 export default function OAuthLoginPage() {
@@ -44,8 +43,6 @@ export default function OAuthLoginPage() {
     login();
   }, [code]);
 
-  const  { register, handleSubmit } = useForm();
-
   const onSubmit = async (data) => {
     try {
       const res = await oauthAPI.login({
@@ -65,41 +62,11 @@ export default function OAuthLoginPage() {
     }
   };
 
-  const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2"
-
   if (authData && !authData.ableToLogoin) {
     
     return (
       <AuthLayout>
-        <div className="flex justify-center items-center h-full">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
-            {/* 이메일 필드 */}
-            <div className="flex items-center gap-4">
-              <label htmlFor="email" className="w-24">이메일</label>
-              <input id="email" {...register("email")} defaultValue={authData.email} className={inputStyle}/>
-            </div>
-
-            {/* 닉네임 필드 */}
-            <div className="flex items-center gap-4">
-              <label htmlFor="nickname" className="w-24">닉네임</label>
-              <input id="nickname" {...register("nickname")} defaultValue={authData.nickname} className={inputStyle} />
-            </div>
-
-            {/* 이름 필드 */}
-            <div className="flex items-center gap-4">
-              <label htmlFor="name" className="w-24">이름</label>
-              <input id="name" {...register("name")} defaultValue={authData.name} className={inputStyle} />
-            </div>
-            {/* 생일 필드 */}
-            <div className="flex items-center gap-4">
-              <label htmlFor="birth" className="w-24">생년월일</label>
-              <input id="birth" {...register("birth")} defaultValue={authData.birth} className={inputStyle} />
-            </div>
-
-            {/* 확인 버튼 */}
-            <button>확인</button>
-          </form>
-        </div>
+        <SignUpPage oAuth={true} authData={authData} onOAuthSubmit={onSubmit}/>
       </AuthLayout>
     );
   }

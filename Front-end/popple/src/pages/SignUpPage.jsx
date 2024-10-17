@@ -1,18 +1,20 @@
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { register } from "swiper/element";
 
-export default function SignUpPage() {
+export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
+
+  const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
   
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
     watch,
   } = useForm();
   
-
-  const signUpField = [
+  const [signUpField, setSignUpField] = useState([
     {
       id: 1,
       name: "email",
@@ -84,17 +86,24 @@ export default function SignUpPage() {
       ],
       condition: { required: true, valueAsDate: true },
     },
-  ];
-
+  ]);
+  useEffect(() => {
+    if(oAuth) {
+      setValue("email", authData?.email)
+      setValue("name", authData?.name)
+      setValue("nickname", authData?.nickname)
+      setSignUpField(prev => prev.filter(field => field.type !== 'password'));
+    }  
+  }, []);
+  
   const onSubmit = (data) => console.log(data);
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="mt-[30px] text-center mb-10 text-xl">Email 회원가입</h1>
+    <form onSubmit={oAuth ? handleSubmit(onOAuthSubmit) : handleSubmit(onSubmit)}>
+      <h1 className="mt-[30px] text-center mb-10 text-xl">회원가입</h1>
       {signUpField.map((f) => {
         return (
-          <div className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-10">
+          <div key={f.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-10">
             <label
-              key={f.id}
               htmlFor={f.name}
               className="block text-sm font-medium text-gray-900 dark:text-white text-center"
             >
@@ -103,7 +112,7 @@ export default function SignUpPage() {
             {f.type === "radio" ? (
               <div key={f.id} className="flex w-1/2 ">
                 {f.array.map((g, index) => (
-                  <div>
+                  <div key={index}>
                     <input
                       type={f.type}
                       id={g.label}
@@ -123,7 +132,7 @@ export default function SignUpPage() {
                   type={f.type}
                   id={f.name}
                   {...register(f.name, f.condition)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-3 "
+                  className={inputStyle}
                   placeholder={f.placeholder}
                   required={f.type==="date" ? true : false}
                 />
