@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { oauthAPI } from "../api/services/OAuth";
 import AuthLayout from "./layouts/AuthLayout";
 import SignUpPage from "./SignUpPage";
+import { setCookie } from "../utils/CookieUtils";
 
 
 export default function OAuthLoginPage() {
@@ -21,6 +22,7 @@ export default function OAuthLoginPage() {
       const res = await oauthAPI.signUp(provider, code);
       console.log("res 데이터" + res.data);
       if (res.data.accessToken) {
+        setCookie("accessToken", res.data.accessToken, { path: "/"});
         console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
         window.location.href="/";
         return;

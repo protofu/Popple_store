@@ -1,21 +1,60 @@
 import { useNavigate } from "react-router-dom";
 import mainLogo from "../../assets/MainLogo.png";
+import { useLoginStore } from "../../stores/LoginState";
+import { useEffect } from "react";
+import { getCookie, removeCookie } from "../../utils/CookieUtils";
 
 export default function Header() {
-  const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useLoginStore(state => state);
 
+  // 로그인 상태 관리 메서드
+  const checkLoggedIn = () => {
+    const token = getCookie("accessToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    checkLoggedIn();
+  }, []);
+  
+  // 화면 이동 메서드
+  const navigate = useNavigate();
   const handleNavigation = (path) => {
     navigate(path);
   }
+
+  // 로그아웃 메서드
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    removeCookie("accessToken");
+    window.location.reload();
+  }
+
   return (
     <header className="fixed top-0 w-screen bg-white border-b border-gray-300 z-50 flex flex-col pb-1">
       {/* 헤더 최상단 로그인 관련 */}
       <div className="flex justify-end text-sm text-gray-600 p-1 pr-10 divide-x divide-gray-400">
-        <li onClick={() => handleNavigation("/login")} className="list-none cursor-pointer px-2">
-          LOGIN
-        </li>
-        <li onClick={() => handleNavigation("/sign-up")} className="list-none cursor-pointer px-2">JOIN US</li>
-        <li className="list-none cursor-pointer px-2">HELP</li>
+        { isLoggedIn ? 
+          <>
+            <li onClick={() => handleNavigation("/my-page")} className="list-none cursor-pointer px-2">이름 뜰 곳</li>
+            <li onClick={() => handleLogout()} className="list-none cursor-pointer px-2">
+              LOGOUT
+            </li>
+            <li onClick={() => handleNavigation("/my-page")} className="list-none cursor-pointer px-2">MY PAGE</li>
+          </>
+          :
+          <>
+            <li onClick={() => handleNavigation("/login")} className="list-none cursor-pointer px-2">
+            LOGIN
+            </li>
+            <li onClick={() => handleNavigation("/sign-up")} className="list-none cursor-pointer px-2">JOIN US</li>
+          </>
+        }
+        <li onClick={() => handleNavigation("/help")} className="list-none cursor-pointer px-2">HELP</li>
       </div>
 
       {/* 헤더 중반부 로고 */}
@@ -24,12 +63,12 @@ export default function Header() {
       </div>
 
       {/* 헤더 하단 네브바 */}
-      <div className="flex justify-center text-lg gap-4">
+      <div className="flex justify-center text-lg gap-4" onClick={() => handleNavigation("/")}>
         <li onClick={() => handleNavigation("/login")} className="list-none cursor-pointer">
           팝업
         </li>
-        <li className="list-none cursor-pointer">전시회</li>
-        <li className="list-none cursor-pointer">EVENT</li>
+        <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
+        <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
       </div>
     </header>
   );

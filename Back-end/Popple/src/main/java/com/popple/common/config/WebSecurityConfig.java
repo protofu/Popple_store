@@ -1,6 +1,7 @@
 package com.popple.common.config;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -100,15 +101,16 @@ public class WebSecurityConfig {
 		
 		return http.getOrBuild();			
 	}
-
-	private CorsConfigurationSource corsConfigurationSource() {
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
 		return request -> {
 			// CORS 정책 속성 설정을 위해 생성
 			CorsConfiguration config = new CorsConfiguration();
 			// 요청에 대해 허용되는 헤더 목록 설정 -> *를 통해 모든 헤더 허용
 			config.setAllowedHeaders(Collections.singletonList("*"));
 			// 허용되는 HTTP 메서드 목록 설정 -> *를 통해 모든 메서드 허용(GET, POST...)
-			config.setAllowedMethods(Collections.singletonList("*"));
+			config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 			// 허용할 도메인 패턴 설정 -> 클라이언트 도메인을 해주면됩니다.
 			config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:5173"));
 			// 자격증명(쿠키, 인증 헤더 ...)을 포함한 요청을 허용할지 결정 -> true 설정으로 클라이언트가 자격증명 요청을 서버로 전송 가능
