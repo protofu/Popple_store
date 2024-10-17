@@ -4,10 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.popple.auth.domain.OAuthUserInfo;
 import com.popple.auth.domain.response.LoginResponse;
 import com.popple.oauth.service.OAuthService;
 
@@ -23,22 +26,34 @@ public class OAuthController {
 	private final OAuthService oAuthService;
 	
 	@GetMapping("/{provider}")
-	public ResponseEntity<LoginResponse> OauthSignIn(@RequestParam("code") final String code, HttpServletResponse res, @PathVariable("provider") final String provider) {
+	public ResponseEntity<?> OauthSignIn(@RequestParam("code") final String code, HttpServletResponse res, @PathVariable("provider") final String provider) {
 		log.info("[OauthSignIn] code 정보 : {}", code);
-		String accessToken = oAuthService.oAuthSignIn(code, provider, res);
-		// code를 통해 사용자 정보를 받아서
-		// 사용자 정보를 조회하고
-		// 만약 기존에 있는 사용자라면 (oauth 값을 true로 변경)
-		// 만약 기존에 없는 사용자라면 (새로 가입 _ DB 추가)
-		// 사용자에 대한 정보로 accessToken과 refreshToken을 만들어서 반환
-		if (accessToken == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		OAuthUserInfo oAuthUserInfo = oAuthService.oAuthUser(code, provider);
+		// 이미 가입된 회원이면 로그인 처리
+		if (oAuthUserInfo.isAbleToLogin()) {
+			return oAuthLogin(oAuthUserInfo, res); // -> TOKEN 반환
 		}
-		
-		LoginResponse loginResponse = LoginResponse
-			.builder()
-			.accessToken(accessToken)
-			.build();
-		return ResponseEntity.ok(loginResponse);
+		// 가입 안한 최초 Oauth 인증자는 추가 정보를 얻기 위해  OAuthUserInfo response;
+		return ResponseEntity.ok(oAuthUserInfo); // ->  OAuthUserInfo 객체 반환
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> oAuthLogin(@RequestBody OAuthUserInfo oAuthUserInfo, HttpServletResponse res) {
+		log.info(oAuthUserInfo.toString());
+		try {
+			if (oAuthUserInfo.isAbleToLogin()) {
+				String accessToken = oAuthService.oAuthSignUpAndLogin(oAuthUserInfo, res);
+				LoginResponse loginResponse = LoginResponse
+						.builder()
+						.accessToken(accessToken)
+						.build();
+				return ResponseEntity.ok(loginResponse);				
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+
 }

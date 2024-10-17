@@ -55,12 +55,8 @@ public class User implements UserDetails {
 	@Column(nullable=false, unique=true)
 	private String email;
 	
-	@Column(nullable=false)
-	private String password;
-	
 	@Column(nullable=true)
-	@Builder.Default
-	private boolean oAuth = false;
+	private String password;
 	
 	@Column(nullable=false)
 	private LocalDate birth;
