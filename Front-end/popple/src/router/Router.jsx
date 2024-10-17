@@ -7,6 +7,7 @@ import MapViewPage from "../pages/MapViewPage";
 import SignUpPage from "../pages/SignUpPage";
 import AuthLayout from "../pages/layouts/AuthLayout";
 import OAuthLoginPage from "../pages/OAuthLoginPage";
+import ExhibitionRegist from "../pages/ExhibitionRegist";
 
 
 export default function Router() {
@@ -16,6 +17,7 @@ export default function Router() {
         {/* 레이아웃을 적용한 페이지들 */}
         <Route element={<Layout />}>
           <Route path="/" element={<MainPage />} />
+          <Route path="/regist" element={<ExhibitionRegist />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
