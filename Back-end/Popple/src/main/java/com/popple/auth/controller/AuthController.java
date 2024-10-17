@@ -39,7 +39,7 @@ public class AuthController {
 	
 	//회원가입
 	@Operation(summary = "회원가입", description = "회원가입을 진행합니다.")
-	@PostMapping("")
+	@PostMapping("/create")
 	public ResponseEntity<SignUpResponse> signUp(SignUpRequest req){
 		log.info("[SignUp] 회원가입 정보 : {}", req);
 		SignUpResponse signUpResponse =  authService.signUp(req);

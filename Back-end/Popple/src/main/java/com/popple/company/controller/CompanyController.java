@@ -31,14 +31,14 @@ public class CompanyController {
 	
 	
 	@Operation(summary = "기업 회원 가입", description = "기업 회원 가입을 진행합니다.")
-	@PostMapping("")
+	@PostMapping("/create")
 	public ResponseEntity<CompanyResponse> createCompany(CompanyRequest companyRequest){
 		CompanyResponse com = companyService.createCompany(companyRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(com);
 	}
 	
 	@Operation(summary = "기업 회원 정보 수정", description = "기업 회원 정보를 수정합니다.")
-	@PatchMapping("")
+	@PatchMapping("/update/{id}")
 	public ResponseEntity<CompanyResponse> updateCompany(CompanyRequest companyRequest, @AuthenticationPrincipal User user ) {
 		CompanyResponse com = companyService.updateCompany(companyRequest, user);
 		return ResponseEntity.ok(com);
@@ -52,7 +52,7 @@ public class CompanyController {
 	}
 	
 	@Operation(summary = "기업 삭제", description = "특정 기업을 삭제합니다.")
-	@PatchMapping("/{id}")
+	@PatchMapping("/delete/{id}")
 	public ResponseEntity<CompanyResponse> deleteCompany(@PathVariable("id") Long id, User user){
 		CompanyResponse com = companyService.deleteCompany(id, user);
 		return ResponseEntity.ok(com);
