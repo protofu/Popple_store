@@ -6,7 +6,8 @@ export const useLoginUserStore = create(
     (set) => ({
       loginUserName: null,
       loginUserNickname: null,
-      setLoginUser: (name, nickname) => set({ loginUserName: name, loginUserNickname: nickname })
+      loginUserRole: null,
+      setLoginUser: (name, nickname, role) => set({ loginUserName: name, loginUserNickname: nickname, loginUserRole: role })
     }),
     {
       name: 'login user state',

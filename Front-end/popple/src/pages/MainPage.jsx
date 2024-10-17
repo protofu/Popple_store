@@ -2,12 +2,21 @@ import { useNavigate } from "react-router-dom";
 import CateButton from "../components/common/CateButton";
 import PostCarousel from "../components/poster-card/PostCarousel";
 import styles from "./styles/MainPage.module.css";
+import EventCard from "../components/EventCard";
+// import eventImg from "../assets/event.png";
+import eventImg from "../assets/img2.png";
 
 export default function MainPage() {
   const navigate = useNavigate(); 
 
   const handleNavigate = (path) => {
     navigate(path);
+  };
+
+  const example = {
+    slogun: "DIALOGUE IN THE DARK",
+    title: "어둠속의대화",
+    duration: "오픈런",
   };
 
   return (
@@ -19,7 +28,7 @@ export default function MainPage() {
         <PostCarousel />
       </div>
       {/* <button onClick={() => handleNavigate("map-view")}> 맵 보기</button> */}
-      <button onClick={() => handleNavigate("/regist")}>팝업/전시 등록</button>
+      <EventCard slogun={example.slogun} title={example.title} duration={example.duration} img={eventImg}/>
     </div>
   );
 };

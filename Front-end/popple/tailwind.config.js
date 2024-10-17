@@ -11,6 +11,9 @@ export default {
         current: "currentColor",
         'popple':'#8900E1',
         'white':'#ffffff'
+      },
+      fontFamily: {
+        jua: ['"Jua-Regular"', 'sans-serif']
       }
     },
   },
