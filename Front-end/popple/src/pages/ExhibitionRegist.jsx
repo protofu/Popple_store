@@ -1,3 +1,5 @@
+import company from "../assets/company.png"
+
 export default function ExhibitionRegist() {
   return (
     <>
@@ -50,7 +52,7 @@ export default function ExhibitionRegist() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col justify-between">
             <div>
               <label className="text-sm">
                 장소<span className="text-red-500">*</span>
@@ -81,6 +83,50 @@ export default function ExhibitionRegist() {
           </div>
         </div>
       </div>
+      <div className="container mx-auto w-5/6 mt-10">
+        관람시간 정보<span className="text-red-500">*</span>
+      <div className="mt-5 flex justify-between">
+        <button><img src={company} alt="일요일"></img></button>
+        <img src={company} alt="월요일"></img>
+        <img src={company} alt="화요일"></img>
+        <img src={company} alt="수요일"></img>
+        <img src={company} alt="목요일"></img>
+        <img src={company} alt="금요일"></img>
+        <img src={company} alt="토요일"></img>
+      </div>
+      </div>
+      <div className="mt-5 w-5/6 container mx-auto">
+        <div className="border w-80 h-36 rounded-lg flex-col">
+          <div className="flex w-full justify-between p-3">
+            <div className="text-sm">default</div>
+            <div className="text-xs">
+              <input type="checkbox"/>
+              <span>휴무지정</span>
+            </div>
+          </div>
+          <div className="flex justify-between p-3 ">
+              <label className="block text-xs text-center" htmlFor="open">오픈</label>
+              <input type="time" id="open" className="w-24 border rounded-lg"/>
+              <label className="block text-xs text-center" htmlFor="close">마감</label>
+              <input type="time" id="close" className="w-24 rounded-lg border"/>
+          </div>
+          <div className="flex m-2 justify-end">
+            <button type="submit" className="border text-sm p-1 rounded-lg hover:bg-popple hover:text-white">완료</button>
+          </div>
+        </div>
+      </div>
+      <div className="container mx-auto w-5/6 mt-10">
+        제약사항<span className="text-red-500">*</span>
+      </div>
+      <div className="container mx-auto w-5/6">
+        <hr className="w-full mt-10"/>
+        <div className="flex justify-end items-center">
+          <button type="submit" className="border rounded-lg p-3 mt-10" >
+            다음
+          </button>
+        </div>
+      </div>
+      
     </>
   );
 }
