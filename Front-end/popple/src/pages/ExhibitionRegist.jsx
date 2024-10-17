@@ -4,7 +4,7 @@ export default function ExhibitionRegist() {
       <p className="text-lg mb-2">팝업/전시 등록</p>
       <hr className="w-full" />
       <div className="mt-2">기본 정보</div>
-      <div className="flex justify-between w-full container mx-auto">
+      <div className="container mx-auto w-5/6">
         <div className="grid grid-cols-2 gap-x-20 mt-10 h-full">
           <div className="flex flex-col gap-5">
             <div>
