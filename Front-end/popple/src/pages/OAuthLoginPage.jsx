@@ -23,6 +23,7 @@ export default function OAuthLoginPage() {
       console.log("res 데이터" + res.data);
       if (res.data.accessToken) {
         console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
+        window.location.href="/";
         return;
       }
       setAuthData(res.data);
@@ -56,6 +57,7 @@ export default function OAuthLoginPage() {
       });
       if (res.status == 200) {
         alert("이메일 인증 후 로그인 성공" + res.data.accessToken);
+        window.location.href="/";
       }
     } catch (err) {
       console.error(err);
@@ -63,17 +65,41 @@ export default function OAuthLoginPage() {
     }
   };
 
+  const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2"
+
   if (authData && !authData.ableToLogoin) {
+    
     return (
       <AuthLayout>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input className="bg-cyan-200 block m-1" {...register("email", { value: authData.email})} />
-          <input className="bg-cyan-200 block m-1" {...register("nickname", { value: authData.nickname})}/>
-          <input className="bg-cyan-200 block m-1" {...register("name", { value: authData.name})}/>
-          <input className="bg-cyan-200 block m-1" {...register("birth", { value: authData.birth})}/>
-          {/* <input className="bg-cyan-200 block m-1" {...register("gender")}/> */}
-          <button>확인</button>
-        </form>
+        <div className="flex justify-center items-center h-full">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+            {/* 이메일 필드 */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="email" className="w-24">이메일</label>
+              <input id="email" {...register("email")} defaultValue={authData.email} className={inputStyle}/>
+            </div>
+
+            {/* 닉네임 필드 */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="nickname" className="w-24">닉네임</label>
+              <input id="nickname" {...register("nickname")} defaultValue={authData.nickname} className={inputStyle} />
+            </div>
+
+            {/* 이름 필드 */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="name" className="w-24">이름</label>
+              <input id="name" {...register("name")} defaultValue={authData.name} className={inputStyle} />
+            </div>
+            {/* 생일 필드 */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="birth" className="w-24">생년월일</label>
+              <input id="birth" {...register("birth")} defaultValue={authData.birth} className={inputStyle} />
+            </div>
+
+            {/* 확인 버튼 */}
+            <button>확인</button>
+          </form>
+        </div>
       </AuthLayout>
     );
   }

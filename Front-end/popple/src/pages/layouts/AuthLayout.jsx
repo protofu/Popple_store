@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Logo from "../..//assets/MainLogo.png";
+import PropTypes from "prop-types";
 
 export default function AuthLayout({ children }) {
   return (
@@ -20,4 +21,9 @@ export default function AuthLayout({ children }) {
       {children ? children : <Outlet />}
     </div>
   );
+};
+
+// PropTypes 설정
+AuthLayout.propTypes = {
+  children: PropTypes.object,
 };
