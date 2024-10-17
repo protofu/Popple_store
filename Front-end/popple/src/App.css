@@ -1,0 +1,43 @@
+#birth {
+  position: relative;
+}
+
+
+#birth::before {
+  content: attr(placeholder);
+  width: 100%;
+  color: gray;
+  z-index: 0;
+  position: absolute;
+}
+
+
+#birth:valid::before {
+  display: none;
+}
+
+
+#birth::-webkit-datetime-edit-text,
+#birth::-webkit-datetime-edit-month-field,
+#birth::-webkit-datetime-edit-day-field,
+#birth::-webkit-datetime-edit-year-field {
+  -webkit-appearance: none;
+  display: none;
+}
+
+
+#birth:valid::-webkit-datetime-edit-text,
+#birth:valid::-webkit-datetime-edit-month-field,
+#birth:valid::-webkit-datetime-edit-day-field,
+#birth:valid::-webkit-datetime-edit-year-field {
+  display: inline;
+}
+
+
+#birth::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
