@@ -54,6 +54,8 @@ public class JwtProvider {
 				.expiration(expiredDate)			// 만료시간
 				.subject(user.getEmail())			// 토큰의 주제(Subject) 설정 -> 사용자 이메일
 				.claim("id", user.getId())
+				.claim("nickname", user.getNickname())
+				.claim("name", user.getName())
 				.claim("role", user.getRole().name())
 				.signWith(getSecretKey(), Jwts.SIG.HS256)	// 비밀키와 해시 알고리즘 사용, 토큰 설명값 설정
 				.compact();							// 토큰 정보들을 최종 압축, 문자열로 반환
