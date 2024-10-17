@@ -3,6 +3,7 @@ import { setCookie } from "../utils/CookieUtils";
 import { useEffect, useState } from "react";
 import { oauthAPI } from "../api/services/OAuth";
 import { useForm } from "react-hook-form";
+import AuthLayout from "./layouts/AuthLayout";
 
 
 export default function OAuthLoginPage() {
@@ -64,14 +65,16 @@ export default function OAuthLoginPage() {
 
   if (authData && !authData.ableToLogoin) {
     return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input className="bg-cyan-200 block m-1" {...register("email", { value: authData.email})} />
-        <input className="bg-cyan-200 block m-1" {...register("nickname", { value: authData.nickname})}/>
-        <input className="bg-cyan-200 block m-1" {...register("name", { value: authData.name})}/>
-        <input className="bg-cyan-200 block m-1" {...register("birth", { value: authData.birth})}/>
-        {/* <input className="bg-cyan-200 block m-1" {...register("gender")}/> */}
-        <button>확인</button>
-      </form>
+      <AuthLayout>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input className="bg-cyan-200 block m-1" {...register("email", { value: authData.email})} />
+          <input className="bg-cyan-200 block m-1" {...register("nickname", { value: authData.nickname})}/>
+          <input className="bg-cyan-200 block m-1" {...register("name", { value: authData.name})}/>
+          <input className="bg-cyan-200 block m-1" {...register("birth", { value: authData.birth})}/>
+          {/* <input className="bg-cyan-200 block m-1" {...register("gender")}/> */}
+          <button>확인</button>
+        </form>
+      </AuthLayout>
     );
   }
  

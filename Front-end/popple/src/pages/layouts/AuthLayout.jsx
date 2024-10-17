@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Logo from "../..//assets/MainLogo.png";
 
-export default function AuthLayout() {
+export default function AuthLayout({ children }) {
   return (
     <div className="
       items-center 
@@ -17,7 +17,7 @@ export default function AuthLayout() {
         bg-white
         block absolute left-[calc(50%-90px)] top-[calc(7.5%-31px)]
       "/>
-      <Outlet />
+      {children ? children : <Outlet />}
     </div>
   );
 };

@@ -68,7 +68,7 @@ public class OAuthService {
 		// 카카오라면 추가로 email을 받기
 		if (provider.equals("kakao")) {
 			key = oAuthUserNode.get("id").asText();
-			nickname = oAuthUserNode.get("nickname").asText();
+			nickname = oAuthUserNode.get("properties").get("nickname").asText();
 		} else if (provider.equals("google")) {
 			key = oAuthUserNode.get("sub").asText();
 			email = oAuthUserNode.get("email").asText();
