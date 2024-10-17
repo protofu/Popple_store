@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginCustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter{
 	private JwtAuthenticationService jwtAuthenticationService;
 	
-	private static final AntPathRequestMatcher LOGIN_PATH = new AntPathRequestMatcher("/api/auth/????", "POST"); // 설정해야함
+	private static final AntPathRequestMatcher LOGIN_PATH = new AntPathRequestMatcher("/api/auth/login", "POST"); // 설정해야함
 	
 	public LoginCustomAuthenticationFilter(
 			AuthenticationManager authenticationManager,

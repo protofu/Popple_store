@@ -1,7 +1,6 @@
 package com.popple.oauth.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/oauth")
 @RequiredArgsConstructor
 public class OAuthController {
-	private OAuthService oAuthService;
+	private final OAuthService oAuthService;
 	
 	@GetMapping("/{provider}")
 	public ResponseEntity<LoginResponse> OauthSignIn(@RequestParam("code") final String code, HttpServletResponse res, @PathVariable("provider") final String provider) {

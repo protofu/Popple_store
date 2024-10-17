@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { setCookie } from "../utils/CookieUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { oauthAPI } from "../api/services/OAuth";
 
 
 export default function OAuthLoginPage() {
@@ -13,9 +14,11 @@ export default function OAuthLoginPage() {
 
   // OAuth 로그인에 사용할 API 엔드포인트 매핑
   const oAuthAPI = {
-    "kakao" : (code) => oAuthAPI.kakaoLogin(code),
-    "google" : (code) => oAuthAPI.googleLogin(code),
+    "kakao" : (code) => oauthAPI.kakaoLogin(code),
+    "google" : (code) => oauthAPI.googleLogin(code),
   };
+
+  const [authData, setAuthData] = useState();
 
   const login = async () => {
     try {
@@ -35,6 +38,7 @@ export default function OAuthLoginPage() {
     login();
   }, [code]);
  
+
   return (
     <div>
       로그인 처리중...

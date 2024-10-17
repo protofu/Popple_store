@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;
 import com.popple.common.utils.TokenUtils;
@@ -29,6 +30,13 @@ public class JwtAuthenticationService {
 		// 리프레시 토큰을 DB에 저장
 		user.setRefreshToken(refreshToken);
 		userRepository.save(user);
+		
+		// 생성된 리프레시 토큰을 쿠키에 담아 응답
+		tokenUtils.setRefreshTokenCookie(res, refreshToken);
+		
+		// 생성된 액세스 토큰을 LoginResponse에 담아 응답
+		LoginResponse loginResponse = LoginResponse.builder().accessToken(accessToken).build();
+		tokenUtils.writeResponse(res, loginResponse);
 	}
 
 }

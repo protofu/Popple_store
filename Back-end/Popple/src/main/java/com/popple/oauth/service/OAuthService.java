@@ -2,14 +2,12 @@ package com.popple.oauth.service;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,9 @@ import com.popple.common.utils.TokenUtils;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
@@ -36,7 +36,9 @@ public class OAuthService {
 	
 	public String oAuthSignIn(String code, String provider, HttpServletResponse res) {
 		// code를 통해 provider에서 제공하는 accessToken을 가져오기
+		log.info("[oAuthSignIn] 여기를 못오나?");
 		String providedAccessToken = getAccessToken(code, provider);
+		log.info("[providedAccessToken] : {}", providedAccessToken);
 		// provider에서 제공하는 accessToken으로 사용자 정보를 추출
 		User user = generateOAuthUser(providedAccessToken, provider);
 		// 사용자 정보를 조회하고
@@ -61,20 +63,23 @@ public class OAuthService {
 
 	private String getAccessToken(String code, String provider) {
 		// 설정 가져오기
+		log.info("[getAccessToken] code : {}", code);
+		log.info("[getAccessToken] provider : {}", provider);
 		OAuth2Properties.Client client = oAuth2Properties.getClients().get(provider);
+		log.info("[getAccessToken] 1단계 완료");
 		// code를 통해 google에서 제공하는 accessToken을 가져온다
 		String decodedCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.setBasicAuth(client.getClientId(), client.getClientSecret());
-		
+		log.info("[getAccessToken] 2단계 완료");
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
 		params.add("client_id", client.getClientId());
 		params.add("client_secret", client.getClientSecret());
 		params.add("code", decodedCode);
 		params.add("grant_type", "authorization_code");
 		params.add("redirect_uri", client.getRedirectUri());
-		
+		log.info("[getAccessToken] 3단계 완료");
 		RestTemplate rt = new RestTemplate();
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
 		ResponseEntity<Map> responseEntity = rt.postForEntity(client.getTokenUri(), requestEntity, Map.class);
@@ -82,7 +87,7 @@ public class OAuthService {
 		if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 정보를 가져올 수 없음");
 		}
-		
+		log.info("[getAccessToken] 4단계 완료");
 		return (String) responseEntity.getBody().get("access_token");
 	}
 	
@@ -90,7 +95,7 @@ public class OAuthService {
 		// 설정 가져오기
 		OAuth2Properties.Client client = oAuth2Properties.getClients().get(provider);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer" + accessToken);
+		headers.add("Authorization", "Bearer " + accessToken);
 		
 		RestTemplate rt = new RestTemplate();
 		ResponseEntity<JsonNode> responseEntity = rt.exchange(client.getUserInfoRequestUri(), HttpMethod.GET, new HttpEntity<>(headers), JsonNode.class);
@@ -103,7 +108,7 @@ public class OAuthService {
 		String email = null;
 		String name = null;
 		User user = null;
-		
+		System.out.println(responseEntity.getBody());
 		try {
 			if (jsonNode.has("email") && jsonNode.has("name")) {
 				email = jsonNode.get("email").asText();
