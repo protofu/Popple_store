@@ -13,7 +13,10 @@ export default {
         'white':'#ffffff'
       },
       fontFamily: {
-        jua: ['"Jua-Regular"', 'sans-serif']
+        jua: ['Jua-Regular'],
+        notoSans: ['NotoSansKR-VariableFont_wght'],
+        GowunDodum: ['GowunDodum'],
+        nanumS: ['NanumSquareR'],
       }
     },
   },

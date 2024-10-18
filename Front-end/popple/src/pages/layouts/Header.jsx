@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "./Header.module.css";
 import mainLogo from "../../assets/MainLogo.png";
 import { useLoginStore } from "../../stores/LoginState";
 import { useEffect } from "react";
@@ -40,7 +41,7 @@ export default function Header() {
   }
 
   return (
-    <header className="fixed top-0 w-screen bg-white border-b border-gray-300 z-50 flex flex-col pb-1 font-jua">
+    <header className="fixed top-0 w-screen bg-white border-b border-gray-300 z-50 flex flex-col pb-1">
       {/* 헤더 최상단 로그인 관련 */}
       <div className="flex justify-end text-sm text-gray-600 p-1 pr-10 divide-x divide-gray-400">
         { isLoggedIn ? 

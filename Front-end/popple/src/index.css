@@ -3,9 +3,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* font */
 @font-face {
-  font-family: "Jua-Regular";
-  font-weight: normal;
-  src: url("./fonts/Jua-Regular.ttf") format("truetype");
+  font-family: "Gowun";
+  src: url("./fonts/GowunDodum-Regular.ttf") format("truetype");
 }
+
+
+
+
+@font-face {
+  font-family: "nanum";
+  src: url("./fonts/NanumSquareR.ttf") format("truetype");
+}
+
+
