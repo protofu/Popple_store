@@ -13,6 +13,7 @@ import PopUpPage from "../pages/PopUpPage";
 import EventPage from "../pages/EventPage";
 import HelpServicePage from "../pages/HelpServicePage";
 import MyPage from "../pages/MyPage";
+import PolicyPage from "../pages/PolicyPage";
 
 
 
