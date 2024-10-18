@@ -18,7 +18,7 @@ import { MdFastfood, MdNoFood } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
 import { useFetcher } from "react-router-dom";
 import { CgMonday } from "react-icons/cg";
-export default function ExhibitionRegist() {
+export default function ExhibitionRegistPage() {
   const [parking, setParking] = useState(false);
   const handleParking = () => {
     setParking(!parking);
