@@ -1,9 +1,9 @@
-#birth {
+input[type='date'] {
   position: relative;
 }
 
 
-#birth::before {
+input[type='date']::before {
   content: attr(placeholder);
   width: 100%;
   color: gray;
@@ -12,29 +12,29 @@
 }
 
 
-#birth:valid::before {
+input[type='date']:valid::before {
   display: none;
 }
 
 
-#birth::-webkit-datetime-edit-text,
-#birth::-webkit-datetime-edit-month-field,
-#birth::-webkit-datetime-edit-day-field,
-#birth::-webkit-datetime-edit-year-field {
+input[type='date']::-webkit-datetime-edit-text,
+input[type='date']::-webkit-datetime-edit-month-field,
+input[type='date']::-webkit-datetime-edit-day-field,
+input[type='date']::-webkit-datetime-edit-year-field {
   -webkit-appearance: none;
   display: none;
 }
 
 
-#birth:valid::-webkit-datetime-edit-text,
-#birth:valid::-webkit-datetime-edit-month-field,
-#birth:valid::-webkit-datetime-edit-day-field,
-#birth:valid::-webkit-datetime-edit-year-field {
+input[type='date']:valid::-webkit-datetime-edit-text,
+input[type='date']:valid::-webkit-datetime-edit-month-field,
+input[type='date']:valid::-webkit-datetime-edit-day-field,
+input[type='date']:valid::-webkit-datetime-edit-year-field {
   display: inline;
 }
 
 
-#birth::-webkit-calendar-picker-indicator {
+input[type='date']::-webkit-calendar-picker-indicator {
   position: absolute;
   right: 10px;
   top: 50%;
