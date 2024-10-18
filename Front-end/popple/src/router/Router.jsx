@@ -8,6 +8,11 @@ import SignUpPage from "../pages/SignUpPage";
 import AuthLayout from "../pages/layouts/AuthLayout";
 import OAuthLoginPage from "../pages/OAuthLoginPage";
 import ExhibitionRegist from "../pages/ExhibitionRegist";
+import ExhibitionPage from "../pages/ExhibitionPage";
+import PopUpPage from "../pages/PopUpPage";
+import EventPage from "../pages/EventPage";
+import HelpServicePage from "../pages/HelpServicePage";
+import MyPage from "../pages/MyPage";
 
 
 export default function Router() {
@@ -18,6 +23,11 @@ export default function Router() {
         <Route element={<Layout />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/regist" element={<ExhibitionRegist />} />
+          <Route path="/exhibition" element={<ExhibitionPage />} />
+          <Route path="/pop-up" element={<PopUpPage />} />
+          <Route path="/event" element={<EventPage />} />
+          <Route path="/help" element={<HelpServicePage />} />
+          <Route path="/my-page" element={<MyPage />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
@@ -28,6 +38,7 @@ export default function Router() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/policy" element={<PolicyPage />} />
         </Route>
       </Routes>
     </div>
