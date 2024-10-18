@@ -153,16 +153,16 @@ export default function MainPage() {
         )}
         </div>
         {/* 전시 팝업에 따른 변화 */}
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex flex-wrap justify-center gap-6 lg:grid lg:grid-cols-5 ">
           {isPop ?
             <>
               {example2.map((item, index) => (
-                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration}/>
+                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
               ))}
             </> :
             <>
               {example3.map((item, index) => (
-                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration}/>
+                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
               ))}
             </>
           }

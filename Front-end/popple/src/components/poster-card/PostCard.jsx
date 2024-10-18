@@ -1,8 +1,8 @@
 import CateButton from "../common/CateButton";
 
-export default function PostCard({ img, title, addr, duration  }) {
+export default function PostCard({ img, title, addr, duration, styles }) {
   return (
-    <div>
+    <div className={styles}>
       <img src={img} alt="포스터이미지" />
       <div className="mt-2">
         <CateButton text={"HOT"} />
