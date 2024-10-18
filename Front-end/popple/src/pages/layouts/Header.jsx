@@ -36,9 +36,11 @@ export default function Header() {
   // 로그아웃 메서드
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setLoginUser(null);
     removeCookie("accessToken");
     window.location.reload();
   }
+  console.log(loginUserRole);
 
   return (
     <header className="fixed top-0 w-screen bg-white border-b border-gray-300 z-50 flex flex-col pb-1">
@@ -71,22 +73,22 @@ export default function Header() {
       {/* 헤더 하단 네브바 */}
       
       <div className="flex justify-center text-xl gap-4">
-        { loginUserRole === "ROLE_USER" || loginUserName === null ? 
+        { loginUserRole === "ROLE_ADMIN" || loginUserRole === "ROLE_COMPANY" ? 
           <>
-            <li onClick={() => handleNavigation("/login")} className="list-none cursor-pointer">
-              팝업
-            </li>
-            <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
-            <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
-          </>
-          :
-          <>
-            <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">
+            <li onClick={() => handleNavigation("/pop-up")} className="list-none cursor-pointer">
               팝업
             </li>
             <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
             <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
             <li onClick={() => handleNavigation("/regist")} className="list-none cursor-pointer">팝업/전시등록</li>
+          </>
+          :
+          <>
+            <li onClick={() => handleNavigation("/pop-up")} className="list-none cursor-pointer">
+              팝업
+            </li>
+            <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
+            <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
           </>
         }
       </div>

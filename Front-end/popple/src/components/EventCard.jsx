@@ -74,7 +74,6 @@ export default function EventCard({ slogun, title, duration, img }) {
         hexPalette[key] = rgbToHex(r, g, b);
     }
     const textc = getTextColor(hexPalette["LightVibrant"]);
-    console.log(textc);
     setPalette(hexPalette["LightVibrant"]);
     setTextColor(textc);
     // DarkMuted"#5c6454"
