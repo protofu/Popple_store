@@ -27,8 +27,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Exhibition {
-	
-	
 	//id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,8 +54,8 @@ public class Exhibition {
 	@Column(nullable = true)
 	private String detailDescription;
 	
-	//관람시간
-	@Column(nullable = false)
+	//관람시간(이건 필요한가?)
+	@Column(nullable = true)
 	private String permittedTime;
 	
 	//전시주소
@@ -78,7 +76,7 @@ public class Exhibition {
 	
 	//홈페이지 링크
 	@Column(nullable = true)
-	private String hompageLink;
+	private String homepageLink;
 	
 	//인스타그램 링크
 	@Column(nullable = true)
