@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ExhibitionRequest {
+	private Long typeId;
 	private String exhibitionName;
 	private String subTitle;
 	private String detailDescription;
@@ -17,6 +18,7 @@ public class ExhibitionRequest {
 	private String grade;
 	private String homepageLink;
 	private String instagramLink;
+	private String fee;
 	private boolean park = false;
 	private boolean free = false;
 	private boolean pet = false;

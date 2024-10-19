@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.popple.auth.entity.User;
+import com.popple.type.ExhiType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,9 +40,10 @@ public class Exhibition {
 	@ManyToOne
 	private User user;
 	
-	//입장료
-	@Column(nullable = true)
-	private String fee;
+    // 전시 종류 (팝업 / 전시)
+    @JoinColumn(name = "type_id", nullable = false) // ExhiType 엔티티와 연결되는 컬럼
+    @ManyToOne // 전시 유형별로 여러 전시가 있을 수 있으므로 다대일 관계로 설정
+    private ExhiType type;
 	
 	//전시명
 	@Column(nullable = false)
@@ -73,6 +76,10 @@ public class Exhibition {
 	//관람등급
 	@Column(nullable = false)
 	private String grade;
+
+	//입장료
+	@Column(nullable = true)
+	private String fee;
 	
 	//홈페이지 링크
 	@Column(nullable = true)
@@ -153,6 +160,4 @@ public class Exhibition {
 	//삭제여부
 	@Column(name = "is_deleted", nullable = true)
 	private boolean isDeleted;
-	
-	
 }

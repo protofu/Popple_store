@@ -10,6 +10,7 @@ import lombok.Data;
 @Builder
 public class ExhibitionResponse {
     private Long id; // 전시 고유 ID
+    private Long typeId;
     private String exhibitionName;
     private String subTitle;
     private String detailDescription;
@@ -17,6 +18,7 @@ public class ExhibitionResponse {
     private String notice;
     private String terms;
     private String grade;
+    private String fee;
     private String homepageLink;
     private String instagramLink;
     private boolean park;
