@@ -1,8 +1,11 @@
 package com.popple.exhibition.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,12 +51,12 @@ public class ExhibitionController {
 	}
 //	
 //	
-//	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 반환합니다.")
-//	@GetMapping("")
-//	public ResponseEntity<List<ExhibitionResponse>> getAllPopUp(){
-//		List<ExhibitionResponse> exhibitionList = popUpService.getAllExhibition();
-//		return ResponseEntity.ok(exhibitionList);
-//	}
+	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 반환합니다.")
+	@GetMapping("")
+	public ResponseEntity<List<ExhibitionResponse>> getAllPopUp(){
+		List<ExhibitionResponse> exhibitionList = exService.getAllExhibition();
+		return ResponseEntity.ok(exhibitionList);
+	}
 	
 	
 	
