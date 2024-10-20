@@ -113,14 +113,26 @@ public class ExhibitionService {
 	            .build();
 	}
 
-//	// 팝업/전시 전체 조회
-//	public List<ExhibitionResponse> getAllExhibition() {
-//		List<Exhibition> exhibitions = exhibitionRepository.findAll();
-////		ExhibitionResponse exhibitionResponse = exhibitionResponse.builder()
-//		return exhibitions.stream().map(this::convertToResponse)
-//				.collect(Collectors.toList);
-//	}
-//	
-//	
+	// 팝업/전시 전체 조회
+	public List<ExhibitionResponse> getAllExhibition() {
+		List<Exhibition> exhibitions = exhibitionRepository.findAll();
+		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환
+		return exhibitions.stream()
+				.map(this::entityToResponse)
+				.collect(Collectors.toList());
+	}
+	
+	// [조회에서 사용] Exhibition -> Response로 변환 메서드
+	// {{{{ 이미지 넣어야해 }}}}
+	private ExhibitionResponse entityToResponse(Exhibition exhibition) {
+		return ExhibitionResponse.builder()
+				.exhibitionName(exhibition.getExhibitionName())
+				.address(exhibition.getAddress())
+				.startAt(exhibition.getStartAt())
+				.endAt(exhibition.getEndAt())
+				.build();
+	}
+	
+	
 	
 }
