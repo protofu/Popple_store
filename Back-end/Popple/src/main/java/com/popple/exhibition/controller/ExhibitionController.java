@@ -49,8 +49,7 @@ public class ExhibitionController {
 		ExhibitionResponse exhibition = exService.deleteExhibition(id, user);
 		return ResponseEntity.ok(exhibition);
 	}
-//	
-//	
+
 	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 반환합니다.")
 	@GetMapping("")
 	public ResponseEntity<List<ExhibitionResponse>> getAllPopUp(){
