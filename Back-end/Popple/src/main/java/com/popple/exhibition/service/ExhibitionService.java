@@ -1,5 +1,7 @@
 package com.popple.exhibition.service;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.List;import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -67,11 +69,10 @@ public class ExhibitionService {
 	    
 	    return response; // 응답 반환
 	}
-
-		
+	
 	// 팝업/전시 삭제
-	public ExhibitionResponse deleteExhibition(Long id, User user) throws IllegalAccessException {
-		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalAccessException("dd"));
+	public ExhibitionResponse deleteExhibition(Long id, User user) {
+		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
 		// 삭제 여부 바꿔주고
 		exhibition.setDeleted(true);
 		// 저장
@@ -84,6 +85,51 @@ public class ExhibitionService {
 	            .build();
 	}
 
+	// 팝업/전시 수정
+	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, User user) throws IOException {
+		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
+		
+		// 현재 사용자가 작성자가 맞는지 확인
+		if (!exhibition.getUser().getId().equals(user.getId())) {
+			throw new AccessDeniedException("본인이 만든 팝업/전시만 수정할 수 있습니다.");
+		}
+		
+		ExhiType changeType = exhiTypeRepository.findById(exhibitionRequest.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류를 찾을 수 없습니다."));
+		
+		// Exhibition 객체를 요청 데이터로 업데이트
+	    exhibition.setType(changeType);
+	    exhibition.setExhibitionName(exhibitionRequest.getExhibitionName());
+	    exhibition.setSubTitle(exhibitionRequest.getSubTitle());
+	    exhibition.setDetailDescription(exhibitionRequest.getDetailDescription());
+	    exhibition.setAddress(exhibitionRequest.getAddress());
+	    exhibition.setNotice(exhibitionRequest.getNotice());
+	    exhibition.setTerms(exhibitionRequest.getTerms());
+	    exhibition.setGrade(exhibitionRequest.getGrade());
+	    exhibition.setFee(exhibitionRequest.getFee());
+	    exhibition.setHomepageLink(exhibitionRequest.getHomepageLink());
+	    exhibition.setInstagramLink(exhibitionRequest.getInstagramLink());
+	    exhibition.setPark(exhibitionRequest.isPark());
+	    exhibition.setFree(exhibitionRequest.isFree());
+	    exhibition.setPet(exhibitionRequest.isPet());
+	    exhibition.setFood(exhibitionRequest.isFood());
+	    exhibition.setWifi(exhibitionRequest.isWifi());
+	    exhibition.setCamera(exhibitionRequest.isCamera());
+	    exhibition.setKids(exhibitionRequest.isKids());
+	    exhibition.setSunday(exhibitionRequest.getSunday());
+	    exhibition.setMonday(exhibitionRequest.getMonday());
+	    exhibition.setTuesday(exhibitionRequest.getTuesday());
+	    exhibition.setWednesday(exhibitionRequest.getWednesday());
+	    exhibition.setThursday(exhibitionRequest.getThursday());
+	    exhibition.setFriday(exhibitionRequest.getFriday());
+	    exhibition.setSaturday(exhibitionRequest.getSaturday());
+	    exhibition.setStartAt(exhibitionRequest.getStartAt());
+	    exhibition.setEndAt(exhibitionRequest.getEndAt());
+		
+		exhibitionRepository.save(exhibition);
+	    
+		return convertToExhibitionResponse(exhibition);
+	}
+	
 	// 팝업/전시 전체 조회
 	public List<ExhibitionResponse> getAllExhibition() {
 		List<Exhibition> exhibitions = exhibitionRepository.findAll();
@@ -94,10 +140,20 @@ public class ExhibitionService {
 	}
 	
 	// 특정 팝업 or 전시 조회(디테일)
-	public ExhibitionResponse getAllExhibitionById(Long id) throws IllegalAccessException {
-		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalAccessException("해당 팝업 혹은 전시가 존재하지 않습니다."));
+	public ExhibitionResponse getAllExhibitionById(Long id) {
+		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업 혹은 전시가 존재하지 않습니다."));
 		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(exhibition);
 		return exhibitionResponse;
+	}
+
+	// 자신이 만든 팝업/전시 찾기
+	public List<ExhibitionResponse> getAllExhibitionByUser(User user) {
+		// User로 모든 팝업/전시 찾고
+		List<Exhibition> myExhibitions = exhibitionRepository.findAllByUser(user);
+		// 엔티티를 리스폰스로 변환 후
+		List<ExhibitionResponse> myExhibitionsResponse = myExhibitions.stream().map(this::convertToExhibitionResponse).collect(Collectors.toList());
+		// 반환
+		return myExhibitionsResponse;
 	}
 	
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
@@ -144,5 +200,7 @@ public class ExhibitionService {
 				.endAt(exhibition.getEndAt())
 				.build();
 	}
+
+
     
 }
