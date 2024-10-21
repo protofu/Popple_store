@@ -1,6 +1,4 @@
-package com.popple.image.entity;
-
-import com.popple.exhibition.entity.Exhibition;
+package com.popple.exhibition.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,23 +17,27 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor	
-public class Image {
+public class Poster {
 	//id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
 	private Long id;
+
+	// 포스터
+	@Column(nullable = false)
+	private String posterName;
 	
-	//전시 id
-	@JoinColumn(name = "exhibition_id", nullable = false)
-	@ManyToOne
-	private Exhibition exhibition;
+	// 저장된 포스터 이름
+	@Column(nullable = false, name = "saved_name")
+	private String savedName;
 	
-	//이미지
-	@Column(nullable = true)
-	private String iamge;
-	
-	//대표이미지 여부
-	@Column(name = "is_main")
-	private boolean isMain;
+	// 파일 사이즈
+	@Column(nullable = false, name = "file_size")
+	private Long fileSize;
+
+	// 전시와의 다대일 관계 설정
+    @ManyToOne
+    @JoinColumn(name = "exhibition_id")
+    private Exhibition exhibition;
 }

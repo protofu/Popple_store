@@ -5,11 +5,14 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.auth.entity.User;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.entity.Exhibition;
+import com.popple.exhibition.entity.Image;
+import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.type.ExhiType;
 import com.popple.type.repository.ExhiTypeRepository;
@@ -23,11 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 public class ExhibitionService {
 	private final ExhibitionRepository exhibitionRepository;
 	private final ExhiTypeRepository exhiTypeRepository;
+	private final ImageService imageService;
+	private final PosterService posterService;
 
 	// 팝업/전시 생성
-	public ExhibitionResponse createExhibition(ExhibitionRequest req, User user) {
+	public ExhibitionResponse createExhibition(ExhibitionRequest req, List<MultipartFile> images, List<MultipartFile> posters, User user) {
 		// 타입 가져오기
 		ExhiType type = exhiTypeRepository.findById(req.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류가 없습니다."));
+		// 이미지 저장하기
+		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
+		// 포스터 저장하기
+		List<Poster> savePosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
 		
 		// Exhibition 객체를 요청 데이터로 초기화
 	    Exhibition exhibition = Exhibition.builder()
@@ -59,6 +68,8 @@ public class ExhibitionService {
 	            .saturday(req.getSaturday())
 	            .startAt(req.getStartAt())
 	            .endAt(req.getEndAt())
+	            .images(savedImages)
+	            .posters(savePosters)
 	            .build();
 	    
 	    // Exhibition 객체를 데이터베이스에 저장
@@ -86,7 +97,7 @@ public class ExhibitionService {
 	}
 
 	// 팝업/전시 수정
-	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, User user) throws IOException {
+	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, List<MultipartFile> images, List<MultipartFile> posters, User user) throws IOException {
 		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
 		
 		// 현재 사용자가 작성자가 맞는지 확인
@@ -94,6 +105,21 @@ public class ExhibitionService {
 			throw new AccessDeniedException("본인이 만든 팝업/전시만 수정할 수 있습니다.");
 		}
 		
+		// 이미지들을 삭제
+		List<Image> prevImages = exhibition.getImages();
+		prevImages.forEach(image -> imageService.deleteImage(image.getId()));
+		
+		// 새로운 이미지들을 저장
+		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
+		
+		// 포스터들을 삭제
+		List<Poster> prevPosters = exhibition.getPosters();
+		prevPosters.forEach(poster -> posterService.deletePoster(poster.getId()));
+		
+		// 새로운 포스터들을 저장
+		List<Poster> savedPosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
+		
+		// 바뀐 타입 불러오기
 		ExhiType changeType = exhiTypeRepository.findById(exhibitionRequest.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류를 찾을 수 없습니다."));
 		
 		// Exhibition 객체를 요청 데이터로 업데이트
@@ -124,6 +150,8 @@ public class ExhibitionService {
 	    exhibition.setSaturday(exhibitionRequest.getSaturday());
 	    exhibition.setStartAt(exhibitionRequest.getStartAt());
 	    exhibition.setEndAt(exhibitionRequest.getEndAt());
+	    exhibition.setImages(savedImages);
+	    exhibition.setPosters(savedPosters);
 		
 		exhibitionRepository.save(exhibition);
 	    
@@ -154,6 +182,12 @@ public class ExhibitionService {
 		List<ExhibitionResponse> myExhibitionsResponse = myExhibitions.stream().map(this::convertToExhibitionResponse).collect(Collectors.toList());
 		// 반환
 		return myExhibitionsResponse;
+	}
+	
+	// 키워드 검색
+	public List<ExhibitionResponse> searchByKeyword(String keyword) {
+		List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+		return exList.stream().map(this::convertToExhibitionResponse).collect(Collectors.toList());
 	}
 	
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
@@ -200,6 +234,9 @@ public class ExhibitionService {
 				.endAt(exhibition.getEndAt())
 				.build();
 	}
+
+
+
 
 
     

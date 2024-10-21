@@ -2,20 +2,24 @@ package com.popple.exhibition.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.popple.auth.entity.User;
 import com.popple.type.ExhiType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,10 +60,6 @@ public class Exhibition {
 	//상세설명
 	@Column(nullable = true)
 	private String detailDescription;
-	
-	//관람시간(이건 필요한가?)
-	@Column(nullable = true)
-	private String permittedTime;
 	
 	//전시주소
 	@Column(nullable = false)
@@ -160,4 +160,17 @@ public class Exhibition {
 	//삭제여부
 	@Column(name = "is_deleted", nullable = true)
 	private boolean isDeleted;
+	
+	// 대표 이미지 등등..
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_id")
+	private List<Image> images;
+	
+	// 상세설명 포스터
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_id")
+	private List<Poster> posters;
+	
+	
+	
 }

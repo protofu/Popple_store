@@ -13,4 +13,6 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
 
 	List<Exhibition> findAllByUser(User user);
 
+	List<Exhibition> findByExhibitionNameContainsOrAddressContains(String keyword, String keyword2);
+
 }
