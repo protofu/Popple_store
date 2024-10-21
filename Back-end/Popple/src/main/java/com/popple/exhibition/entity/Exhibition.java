@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.Modifying;
 
 import com.popple.auth.entity.User;
 import com.popple.type.ExhiType;
@@ -146,8 +149,14 @@ public class Exhibition {
 	private String saturday;
 	
 	//생성일자
+	@CreatedDate
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
+	
+	//생성일자
+	@LastModifiedDate
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 	
 	//시작일자
 	@Column(name = "start_at", nullable = false)

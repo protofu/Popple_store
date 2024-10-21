@@ -1,12 +1,9 @@
-package com.popple.event.entity;
+package com.popple.reservation.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.popple.exhibition.entity.Exhibition;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +11,6 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,42 +22,26 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Event {
-	
+public class Reservation {
+
 	//id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
 	private Long id;
 	
-	//전시id
-	@JoinColumn(name = "exhibition_id", nullable = false)
-	@ManyToOne
-	private Exhibition exhibition;
+	// 팝업
 	
-	//이벤트이름
-	@Column(nullable = false)
-	private String eventName;
+	// 유저
 	
-	//요약설명
-	@Column(nullable = false)
-	private String summary;
+	// 예약 일자
 	
-	//상세설명
-	@Column(nullable = false)
-	private String description;
-	
-	//시작일자
-	@Column(name = "start_at", nullable = false)
-	private LocalDate startAt;
-	
-	//종료일자
-	@Column(name = "end_at", nullable = false)
-	private LocalDate endAt;
-	
-	//생성일자
+	// 예약 생성 일자
 	@CreatedDate
-	@Column(name = "created_at", nullable = false)
+	@Column(name="created_at", nullable = false)
 	private LocalDateTime createdAt;
 	
+	// 예약 취소 시간
+	@Column(name="deleted_at", nullable = true)
+	private LocalDateTime deletedAt;
 }

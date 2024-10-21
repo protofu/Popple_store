@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.popple.auth.domain.SignUpRequest;
-import com.popple.auth.domain.UserDeleteRequest;
+import com.popple.auth.domain.request.SignUpRequest;
+import com.popple.auth.domain.request.UserDeleteRequest;
+import com.popple.auth.domain.request.UserEditRequest;
 import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.domain.response.SignUpResponse;
 import com.popple.auth.entity.User;
@@ -62,7 +63,7 @@ public class AuthController {
 		boolean isNotDuplicate = authService.duplicateNicknameCheck(nickname);
 		return ResponseEntity.ok(isNotDuplicate);
 	}
-	
+
 	//회원 탈퇴
 	@Operation(summary = "회원탈퇴", description = "회원탈퇴를 진행합니다.")
 	@PatchMapping("/delete/{id}")
@@ -78,12 +79,11 @@ public class AuthController {
 	//회원 정보 수정
 	@Operation(summary = "회원수정", description = "회원수정을 진행합니다.")
 	@PatchMapping("/update/{id}")
-	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user, SignUpRequest signUpRequest){
-		SignUpResponse updateUser = authService.updateUser(user, signUpRequest);
+	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user, UserEditRequest userEditRequest){
+		SignUpResponse updateUser = authService.updateUser(user, userEditRequest);
 		return ResponseEntity.ok(updateUser);
 		
 	}
-	
 	
 	//토큰 재발급
 	@Operation(summary = "토큰 재발급", description = "토큰을 재발급합니다.")

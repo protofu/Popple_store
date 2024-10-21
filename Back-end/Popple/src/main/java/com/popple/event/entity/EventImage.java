@@ -1,6 +1,4 @@
-package com.popple.eventposter.entity;
-
-import com.popple.event.entity.Event;
+package com.popple.event.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor		
-public class EventPoster {
+public class EventImage {
 	//id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +29,9 @@ public class EventPoster {
 	@ManyToOne
 	private Event event;
 		
-	//이벤트 포스터
+	//이벤트 이미지
 	@Column(nullable = true)
-	private String poster;
+	private String iamge;
+		
+	
 }

@@ -7,8 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.popple.auth.domain.SignUpRequest;
-import com.popple.auth.domain.UserDeleteRequest;
+import com.popple.auth.domain.request.SignUpRequest;
+import com.popple.auth.domain.request.UserDeleteRequest;
+import com.popple.auth.domain.request.UserEditRequest;
 import com.popple.auth.domain.response.SignUpResponse;
 import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;
@@ -45,12 +46,19 @@ public class AuthService {
 		return SignUpResponse.toDTO(savedUser);
 	}
 	//회원 수정
-	public SignUpResponse updateUser(User user, SignUpRequest signUpRequest) {
+	public SignUpResponse updateUser(User user, UserEditRequest userEditRequest) {
 		User updateUser = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없음"));
 		if(user.getId() == updateUser.getId()) {
-			if(signUpRequest.getPassword() != null) updateUser.setPassword(signUpRequest.getPassword());
+			if(userEditRequest.getPassword() != null) {
+				updateUser.setPassword(userEditRequest.getPassword());
+				
+			}
+			if (userEditRequest.getNickname() != null) {
+				updateUser.setNickname(userEditRequest.getNickname());
+			}
 			userRepository.save(updateUser);
 		}
+		
 		return SignUpResponse.toDTO(updateUser);
 	}
 	

@@ -3,6 +3,7 @@ package com.popple.company.entity;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,4 +60,9 @@ public class Company {
 	@CreatedDate
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
+	
+	//수정 시간
+	@LastModifiedDate
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 }
