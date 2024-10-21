@@ -1,9 +1,10 @@
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { register } from "swiper/element";
 import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
+
 
 
 export default function CompanySignUpPage(){
@@ -17,13 +18,15 @@ export default function CompanySignUpPage(){
     setValue,
     watch,
   } = useForm();
+
+  //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
     {
       id: 1,
       name: "com-num",
       label: "사업자 등록번호",
-      type: "number",
-      placeholder: "1234567890",
+      type: "text",
+      placeholder: "111-11-11111",
       condition: { required: "사업자 등록번호는 필수값입니다.", maxLength: 255 },
     },
     {
@@ -42,8 +45,26 @@ export default function CompanySignUpPage(){
       placeholder: "최인규",
       condition: { required: "대표자 성명은 필수값입니다.", maxLength: 255 },
     },
+  ]);
+  const [companyField2, setCompanyField2] = useState([
     {
-      id: 4,
+      id: 1,
+      name: "tel",
+      label: "연락처",
+      type: "text",
+      placeholder: "010-1234-5678",//형식 지정?
+      condition: { required: "연락처는 필수값입니다.", maxLength: 255 },
+    },
+    {
+      id: 2,
+      name: "address",
+      label: "주소",
+      type: "text",
+      placeholder: "예) 국립중앙박물관, 대왕빌딩",// 맵 api
+      condition: { required: "주소는 필수값입니다.", maxLength: 255 },
+    },
+    {
+      id: 3,
       name: "sector",
       label: "기업 업종",
       type: "text",
@@ -55,27 +76,13 @@ export default function CompanySignUpPage(){
       ],
       condition: { required: true},
     },
-    {
-      id: 5,
-      name: "address",
-      label: "주소",
-      type: "text",
-      placeholder: "예) 국립중앙박물관, 대왕빌딩",// 맵 api
-      condition: { required: "주소는 필수값입니다.", maxLength: 255 },
-    },
-    {
-      id: 6,
-      name: "tel",
-      label: "연락처",
-      type: "text",
-      placeholder: "01012345678",//형식 지정?
-      condition: { required: "연락처는 필수값입니다.", maxLength: 255 },
-    },
     
   ]);
+
+  //email 입력필드
   const [emailField, setEmailField] = useState([
     {
-      id: 8,
+      id: 1,
       name: "email",
       label: "이메일",
       type: "email",
@@ -83,7 +90,7 @@ export default function CompanySignUpPage(){
       condition: { required: "이메일은 필수값이다.", maxLength: 255 },
     }, 
     {
-      id: 9,
+      id: 2,
       name: "password",
       label: "비밀번호",
       type: "password",
@@ -97,7 +104,7 @@ export default function CompanySignUpPage(){
     },
     },
     {
-      id: 10,
+      id: 3,
       name: "password-chk",
       label: "비밀번호 확인",
       type: "password",
@@ -121,19 +128,80 @@ export default function CompanySignUpPage(){
   return(
    <form onSubmit={handleSubmit(onsubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-xl"> 기업 정보입력</h1>
-      {companyField.map((c) => {
-        return (
-            <div key={c.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-10">
-              <label l
-                htmlFor={c.name}
+      <div className="flex flex-col mx-auto w-5/6"> 
+        <div className="grid grid-cols-2 gap-x-15"> 
+          <div className="flex flex-col gap-10">
+            {companyField.map((a)=>{
+              return(
+                <div key={a.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-1">
+              <label
+                htmlFor={a.name}
                 className="block text-sm font-medium text-gray-900 dark:text-white text-center"
               >
-                {c.label}<span className="text-red-500">*</span>
+                {a.label}<span className="text-red-500">*</span>
               </label>
+              <div className="flex w-1/2">
+                <input key={a.id}
+                  type={a.type}
+                  id={a.name}
+                  {...register(a.name, a.condition)}
+                  className={inputStyle}
+                  placeholder={a.placeholder}
+                  required={true}
+                />
+                {errors[a.name] && (
+                  <div>
+                    <p className="text-red-500 text-xs mt-1">
+                      {
+                        errors[a.name].message
+                      }
+                    </p>
+                  </div>
+                )}
+                  
+              </div>
             </div>
-        );
-      })}
-      <hr className="w-3/5  mx-auto my-4" />
+              )
+            })}
+          </div>
+          <div className="flex flex-col gap-10">
+          {companyField2.map((a)=>{
+              return(
+                <div key={a.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-1">
+              <label
+                htmlFor={a.name}
+                className="block text-sm font-medium text-gray-900 dark:text-white text-center"
+              >
+                {a.label}<span className="text-red-500">*</span>
+              </label>
+              <div className="flex w-1/2">
+                <input key={a.id}
+                  type={a.type}
+                  id={a.name}
+                  {...register(a.name, a.condition)}
+                  className={inputStyle}
+                  placeholder={a.placeholder}
+                  required={true}
+                />
+                {errors[a.name] && (
+                  <div>
+                    <p className="text-red-500 text-xs mt-1">
+                      {
+                        errors[a.name].message
+                      }
+                    </p>
+                  </div>
+                )}
+                  
+              </div>
+            </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+      
+      <hr className="w-1/2  mx-auto my-4" />
       <h1 className="mt-[30px] text-center mb-10 text-xl"> Email 정보입력</h1>
       {emailField.map((e) => {
         return (
@@ -144,6 +212,26 @@ export default function CompanySignUpPage(){
               >
                 {e.label}<span className="text-red-500">*</span>
               </label>
+              <div className="flex w-1/2">
+                <input key={e.id}
+                  type={e.type}
+                  id={e.name}
+                  {...register(e.name, e.condition)}
+                  className={inputStyle}
+                  placeholder={e.placeholder}
+                  required={true}
+                />
+                {errors[e.name] && (
+                  <div>
+                    <p className="text-red-500 text-xs mt-1">
+                      {
+                        errors[e.name].message
+                      }
+                    </p>
+                  </div>
+                )}
+                  
+              </div>
             </div>
         );
       })}

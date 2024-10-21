@@ -154,6 +154,7 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
   return (
     <form onSubmit={oAuth ? handleSubmit(onOAuthSubmit) : handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-xl">회원가입</h1>
+      
       {signUpField.map((f) => {
         return (
           <div key={f.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-10">
