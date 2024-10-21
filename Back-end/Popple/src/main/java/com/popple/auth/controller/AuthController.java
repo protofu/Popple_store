@@ -8,7 +8,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.popple.auth.domain.request.SignUpRequest;
@@ -41,7 +43,7 @@ public class AuthController {
 	//회원가입
 	@Operation(summary = "회원가입", description = "회원가입을 진행합니다.")
 	@PostMapping("/create")
-	public ResponseEntity<SignUpResponse> signUp(SignUpRequest req){
+	public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest req){
 		log.info("[SignUp] 회원가입 정보 : {}", req);
 		SignUpResponse signUpResponse =  authService.signUp(req);
 		return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
@@ -50,7 +52,7 @@ public class AuthController {
 	//이메일 중복 확인
 	@Operation(summary = "이메일 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
 	@GetMapping("/email")
-	public ResponseEntity<Boolean> emailCheck(String email){
+	public ResponseEntity<Boolean> emailCheck(@RequestParam String email){
 		boolean isNotDuplicate = authService.duplicateEmailCheck(email);
 		return ResponseEntity.ok(isNotDuplicate);
 		
@@ -59,7 +61,7 @@ public class AuthController {
 	//닉네임 중복 확인
 	@Operation(summary = "닉네임 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
 	@GetMapping("/nickname")
-	public ResponseEntity<Boolean> nicknameCheck(String nickname){
+	public ResponseEntity<Boolean> nicknameCheck(@RequestParam String nickname){
 		boolean isNotDuplicate = authService.duplicateNicknameCheck(nickname);
 		return ResponseEntity.ok(isNotDuplicate);
 	}
@@ -67,7 +69,7 @@ public class AuthController {
 	//회원 탈퇴
 	@Operation(summary = "회원탈퇴", description = "회원탈퇴를 진행합니다.")
 	@PatchMapping("/delete/{id}")
-	public ResponseEntity<?> deleteUser(UserDeleteRequest userDeleteRequest){
+	public ResponseEntity<?> deleteUser(@RequestBody UserDeleteRequest userDeleteRequest){
 		authService.deleteUser(userDeleteRequest);
 		if(!userDeleteRequest.getEmail().isEmpty()) {
 			return ResponseEntity.ok(null);
@@ -79,7 +81,7 @@ public class AuthController {
 	//회원 정보 수정
 	@Operation(summary = "회원수정", description = "회원수정을 진행합니다.")
 	@PatchMapping("/update/{id}")
-	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user, UserEditRequest userEditRequest){
+	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user,@RequestBody UserEditRequest userEditRequest){
 		SignUpResponse updateUser = authService.updateUser(user, userEditRequest);
 		return ResponseEntity.ok(updateUser);
 		
