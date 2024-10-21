@@ -3,11 +3,12 @@ import { useForm } from "react-hook-form";
 import { register } from "swiper/element";
 import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
 
   const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
-  
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
@@ -17,23 +18,14 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
   } = useForm();
   
 
-  const [isDuplicateEmail, setIsDuplicateEmail] = useState(null);
-  const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
+  // const [isDuplicateEmail, setIsDuplicateEmail] = useState(null);
+  // const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
 
-  // const submit= async (data) => {
-  //   if(isDuplicateEmail) alert("중복된 이메일");
-  //   if(isDuplicateNickname) alert("중복된 닉네임");
+  // // const submit= async (data) => {
+  // //   if(isDuplicateEmail) alert("중복된 이메일");
+  // //   if(isDuplicateNickname) alert("중복된 닉네임");
     
   //   } 
-  const [isSamePassword, setIsSamePassword] = useState(false);
-  const samePassword = () => {
-    if(signUpField('password').value === signUpField('password-chk').value){
-      setIsSamePassword(!isSamePassword);
-    }else{
-      setIsSamePassword(isSamePassword);
-    }
-    
-  }
 
 
   // const handleDuplicate = async () => {
@@ -89,18 +81,21 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
     },
     {
       id: 4,
-      onChange: "samePassword",
       name: "password-chk",
       label: "비밀번호 확인",
       type: "password",
       placeholder: "비밀번호 재입력",
       condition: {
           required: "비밀번호 확인은 필수 입력값입니다.",
+          validate: (value) => {
+            if (watch('password') != value) {
+              return "비밀번호가 일치하지 않습니다."
+            }
+          },
           pattern: {
-            message: "비밀번호가 일치하지 않습니다.",
-            value: /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/,
+            message: "비밀번호는 알파벳 소문자와 숫자를 포함하여 8글자 이상으로 작성해주세요.",
+            values: /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/, 
         },
-        
       },
     },
     {
@@ -128,7 +123,7 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
         { label: "남성", value: true },
         { label: "여성", value: false },
       ],
-      condition: { required: true, valueAsDate: true },
+      condition: { required: true},
     },
   ]);
   useEffect(() => {
@@ -138,18 +133,24 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
       setValue("nickname", authData?.nickname)
       setSignUpField(prev => prev.filter(field => field.type !== 'password'));
     }  
-  }, []);
-  useEffect(() => {
+
     
   }, []);
-  
-  console.log(watch());
-  console.log("사인업",signUpField);
+
   const onSubmit = async (data) => {
-    const res = await authAPI.create(data)
-    console.log(data);
-    alert("성공");
+    try {
+      data.birth = data.birth.toISOString().split('T')[0];
+      const res = await authAPI.create(data);
+      alert("가입 성공");
+      navigate('/login');
+    } catch (error) {
+      console.error("가입 실패"+error)
+      alert("가입 실패"+error.data || error.message)
+    }
   }
+
+
+  
   return (
     <form onSubmit={oAuth ? handleSubmit(onOAuthSubmit) : handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-xl">회원가입</h1>
@@ -169,8 +170,8 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
                     <input
                       type={f.type}
                       id={g.label}
-                      name={f.name}
                       value={g.value}
+                      {...register(f.name, { required: true })}
                     />
                     <label htmlFor={g.label} className="ml-2 mr-4">
                       {g.label}
@@ -190,7 +191,7 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
                   required={f.type==="date" ? true : false}
                 />
                 {errors[f.name] && (
-                  <div onChange={samePassword}>
+                  <div>
                     <p className="text-red-500 text-xs mt-1">
                       {
                         errors[f.name].message

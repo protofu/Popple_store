@@ -24,7 +24,6 @@ import com.popple.common.utils.TokenUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +51,7 @@ public class AuthController {
 	//이메일 중복 확인
 	@Operation(summary = "이메일 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
 	@GetMapping("/email")
-	public ResponseEntity<Boolean> emailCheck(@RequestParam String email){
+	public ResponseEntity<Boolean> emailCheck(@RequestParam("email") String email){
 		boolean isNotDuplicate = authService.duplicateEmailCheck(email);
 		return ResponseEntity.ok(isNotDuplicate);
 		
@@ -61,7 +60,7 @@ public class AuthController {
 	//닉네임 중복 확인
 	@Operation(summary = "닉네임 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
 	@GetMapping("/nickname")
-	public ResponseEntity<Boolean> nicknameCheck(@RequestParam String nickname){
+	public ResponseEntity<Boolean> nicknameCheck(@RequestParam("nickname") String nickname){
 		boolean isNotDuplicate = authService.duplicateNicknameCheck(nickname);
 		return ResponseEntity.ok(isNotDuplicate);
 	}
