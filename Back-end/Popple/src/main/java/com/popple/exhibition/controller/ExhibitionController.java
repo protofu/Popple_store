@@ -19,8 +19,6 @@ import com.popple.auth.entity.User;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.service.ExhibitionService;
-import com.popple.exhibition.service.ImageService;
-import com.popple.exhibition.service.PosterService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,8 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/exhibition")
 public class ExhibitionController {
 	private final ExhibitionService exService;
-	private final ImageService imageService;
-	private final PosterService posterService;
 	
 	@Value("${spring.upload.image_location}")
 	private String imageUploadPath;
@@ -44,7 +40,7 @@ public class ExhibitionController {
 	
 	// 등록
 	@Operation(summary = "팝업/전시 추가", description = "팝업/전시를 생성합니다.")
-	@PostMapping("/resist/")
+	@PostMapping("/resist")
 	public ResponseEntity<ExhibitionResponse> createPopUp(
 			ExhibitionRequest req, 
 			@RequestParam(name="image") List<MultipartFile> images, 
