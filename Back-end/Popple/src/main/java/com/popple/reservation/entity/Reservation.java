@@ -3,6 +3,7 @@ package com.popple.reservation.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -58,4 +59,9 @@ public class Reservation {
 	// 예약 취소 시간
 	@Column(name="deleted_at", nullable = true)
 	private LocalDateTime deletedAt;
+	
+	// 참석 여부
+	@Builder.Default
+	@Column(name="is_attend", nullable = false)
+	private boolean isAttend = false;
 }

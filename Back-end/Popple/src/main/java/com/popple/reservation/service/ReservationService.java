@@ -11,6 +11,7 @@ import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.reservation.ReservationRepository;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
+import com.popple.reservation.domain.ReserverResponse;
 import com.popple.reservation.entity.Reservation;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,18 @@ public class ReservationService {
 				.build())
 			.collect(Collectors.toList());
 		return resList;
+	}
+
+	// 특정 팝업/전시에 대한 예약자 리스트
+	public List<ReserverResponse> getReserveList(Long id) {
+		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유효하지 않은 팝업/전시 입니다."));
+		List<Reservation> reserverList = reservationRepository.findByExhibition(exhibition);
+		return reserverList.stream().map(reservation -> ReserverResponse.builder()
+				.id(reservation.getId())
+				.reserverName(reservation.getUser().getName())
+				.reserveTime(reservation.getReservationDate())
+				.isAttend(reservation.isAttend())
+				.build()).collect(Collectors.toList());
 	}
 	
 

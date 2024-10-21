@@ -91,59 +91,59 @@ public class Exhibition {
 	private String instagramLink;
 	
 	//주차 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean park;
 	
 	//입장료 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean free;
 	
 	//동물 출입 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean pet;
 	
 	//음식 반입 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean food;
 	
 	//와이파이 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean wifi;
 	
 	//사진촬영 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean camera;
 	
 	//애들 출입 여부
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private boolean kids;
 	
 	//일요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String sunday;
 	
 	//월요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String monday;
 	
 	//화요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String tuesday;
 	
 	//수요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String wednesday;
 	
 	//목요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String thursday;
 	
 	//금요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String friday;
 	
 	//토요일
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String saturday;
 	
 	//생성일자
@@ -169,12 +169,10 @@ public class Exhibition {
 	private boolean isDeleted;
 	
 	// 대표 이미지 등등..
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
 	private List<Image> images;
 	
 	// 상세설명 포스터
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
 	private List<Poster> posters;
 	
