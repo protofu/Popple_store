@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,23 +39,26 @@ public class ReservationController {
 	}
 	
 	// 자신의 예약 목록
-	@Operation(summary = "예약 등록", description = "예약을 생성합니다.")
+	@Operation(summary = "자신의 예약 목록", description = "자신이 예약한 목록을 조회합니다.")
 	@GetMapping("")
 	public ResponseEntity<List<ReservationResponse>> getAllReserve(@AuthenticationPrincipal User user) {
 		List<ReservationResponse> reserveList = reservationService.getAllReserve(user);
 		return ResponseEntity.ok(reserveList);
 	}
 	
-	
 	// 특정 팝업에 대한 예약 목록
-	@Operation(summary = "예약 등록", description = "예약을 생성합니다.")
+	@Operation(summary = "특정 팝업에 대한 예약자 목록", description = "특정 팝업에 대한 예약자 목록을 조회합니다.")
 	@GetMapping("/reserver-list/{id}")
 	public ResponseEntity<List<ReserverResponse>> exhibitionReserverList(@PathVariable("id") Long id) {
 		List<ReserverResponse> reserverList = reservationService.getReserveList(id);
 		return ResponseEntity.ok(reserverList);
 	}
 	
-	
-	
 	// 예약 취소
+	@Operation(summary = "예약 취소", description = "예약을 취소합니다.")
+	@PatchMapping("/reserver-list/{id}")
+	public ResponseEntity<ReservationResponse> cancel(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
+		ReservationResponse res = reservationService.cancelReserve(exId, user);
+		return ResponseEntity.ok(res);
+	}
 }

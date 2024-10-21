@@ -1,5 +1,6 @@
 package com.popple.reservation.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,22 @@ public class ReservationService {
 				.reserveTime(reservation.getReservationDate())
 				.isAttend(reservation.isAttend())
 				.build()).collect(Collectors.toList());
+	}
+
+	// 예약 취소
+	public ReservationResponse cancelReserve(Long exId, User user) {
+		Reservation reservation = reservationRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시가 존재하지 않습니다."));
+		if (!user.getId().equals(reservation.getUser().getId())) {
+			throw new IllegalArgumentException("예약자 본인만 취소 가능합니다.");
+		}
+		reservation.setDeletedAt(LocalDateTime.now());
+		Reservation savedReservation = reservationRepository.save(reservation);
+		return ReservationResponse.builder()
+				.id(savedReservation.getId())
+				.exhibitionName(savedReservation.getExhibition().getExhibitionName())
+				.reserver(savedReservation.getUser().getName())
+				.reservationDate(savedReservation.getReservationDate())
+				.build();
 	}
 	
 
