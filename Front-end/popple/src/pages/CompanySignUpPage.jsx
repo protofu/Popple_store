@@ -4,10 +4,11 @@ import { register } from "swiper/element";
 import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
+import { CompanyAuthAPI } from "../api/services/CompanyAuth";
 
 export default function CompanySignUpPage() {
   const inputStyle =
-    "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
+    "w-[280px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
   const navigate = useNavigate();
   const {
     register,
@@ -122,27 +123,38 @@ export default function CompanySignUpPage() {
       },
     },
   ]);
+  
+  const onSubmit = async(data) => {
+    try {
+      const res = await CompanyAuthAPI.create(data)
+      alert("가입 성공");
+      navigate('/login');
+    } catch (error) {
+      console.error("가입 실패"+error)
+      alert("가입 실패"+error.data || error.message)
+    } 
+  }
 
   return (
-    <form onSubmit={handleSubmit(onsubmit)}>
-      <h1 className="mt-[30px] text-center mb-10 text-xl"> 기업 정보입력</h1>
-      <div className="flex flex-col mx-auto w-5/6 mb-4">
-        <div className="grid grid-cols-2 mx-10 ">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1 className="mt-[30px] text-center mb-10 text-2xl"> 기업 정보입력</h1>
+      <div className="flex flex-col mx-auto w-5/6 mb-10">
+        <div className="grid grid-cols-2 gap-x-32 mx-10 ">
           <div className="flex flex-col gap-3 ">
             {companyField.map((a) => {
               return (
                 <div
                   key={a.id}
-                  className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-1"
+                  className="flex w-full h-3/4 container justify-between items-center my-1"
                 >
                   <label
                     htmlFor={a.name}
-                    className="block text-sm font-medium text-gray-900 dark:text-white text-center"
+                    className="block text-sm font-medium text-gray-900 dark:text-white text-left"
                   >
                     {a.label}
                     <span className="text-red-500">*</span>
                   </label>
-                  <div className="flex w-1/2">
+                  <div className="flex flex-col items-start">
                     <input
                       key={a.id}
                       type={a.type}
@@ -169,7 +181,7 @@ export default function CompanySignUpPage() {
               return (
                 <div
                   key={a.id}
-                  className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-1"
+                  className="flex w-full h-3/4 container justify-between items-center my-1"
                 >
                   <label
                     htmlFor={a.name}
@@ -178,7 +190,7 @@ export default function CompanySignUpPage() {
                     {a.label}
                     <span className="text-red-500">*</span>
                   </label>
-                  <div className="flex w-1/2">
+                  <div className="flex flex-col items-start">
                     <input
                       key={a.id}
                       type={a.type}
@@ -204,12 +216,12 @@ export default function CompanySignUpPage() {
       </div>
 
       <hr className="w-3/4  mx-auto my-4" />
-      <h1 className="mt-[30px] text-center mb-10 text-xl"> Email 정보입력</h1>
+      <h1 className="mt-[30px] text-center mb-10 text-2xl"> Email 정보입력</h1>
       {emailField.map((e) => {
         return (
           <div
             key={e.id}
-            className="flex w-1/5 h-3/4 container mx-auto items-center justify-between my-5"
+            className="flex w-1/3  container mx-auto items-center justify-between my-5"
           >
             <label
               htmlFor={e.name}
@@ -218,7 +230,7 @@ export default function CompanySignUpPage() {
               {e.label}
               <span className="text-red-500">*</span>
             </label>
-            <div className="flex w-1/2">
+            <div className="flex flex-col w-1/2">
               <input
                 key={e.id}
                 type={e.type}
