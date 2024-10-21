@@ -114,8 +114,8 @@ public class ExhibitionController {
 	@GetMapping("/qr-code")
 	public ResponseEntity<byte[]> qrMaker(@RequestParam("link") String url) throws Exception {
 		// QR 정보
-		int width = 400;
-		int height = 400;
+		int width = 500;
+		int height = 500;
 		
 		// QR code - BitMatrix: qr code 정보 생성
 		BitMatrix encode = new MultiFormatWriter()
