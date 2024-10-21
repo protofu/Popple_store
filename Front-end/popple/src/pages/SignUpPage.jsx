@@ -1,11 +1,14 @@
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { register } from "swiper/element";
+import { authAPI } from "../api/services/Auth";
+import { data } from "autoprefixer";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
 
   const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
-  
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors },
@@ -14,6 +17,37 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
     watch,
   } = useForm();
   
+
+  // const [isDuplicateEmail, setIsDuplicateEmail] = useState(null);
+  // const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
+
+  // // const submit= async (data) => {
+  // //   if(isDuplicateEmail) alert("중복된 이메일");
+  // //   if(isDuplicateNickname) alert("중복된 닉네임");
+    
+  //   } 
+
+
+  // const handleDuplicate = async () => {
+  //   try {
+  //     const emailForm = {
+  //       email: email,
+  //     };
+  //     const res = await authAPI.duplicateEmail(email);
+  //     const data = res.data;
+  //     if (data === true) {
+  //       alert("이미 있는 아이디");
+  //       setIsDuplicateEmail(true);
+  //     } else {
+  //       alert("가능");
+  //       setIsDuplicateEmail(false);
+  //     }
+  //   } catch (error) {
+  //     navigate("/error");
+  //   }
+  // };
+
+ //////////////////////////// 
   const [signUpField, setSignUpField] = useState([
     {
       id: 1,
@@ -53,9 +87,14 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
       placeholder: "비밀번호 재입력",
       condition: {
           required: "비밀번호 확인은 필수 입력값입니다.",
+          validate: (value) => {
+            if (watch('password') != value) {
+              return "비밀번호가 일치하지 않습니다."
+            }
+          },
           pattern: {
             message: "비밀번호는 알파벳 소문자와 숫자를 포함하여 8글자 이상으로 작성해주세요.",
-            value: /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/,
+            values: /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/, 
         },
       },
     },
@@ -84,7 +123,7 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
         { label: "남성", value: true },
         { label: "여성", value: false },
       ],
-      condition: { required: true, valueAsDate: true },
+      condition: { required: true},
     },
   ]);
   useEffect(() => {
@@ -94,12 +133,28 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
       setValue("nickname", authData?.nickname)
       setSignUpField(prev => prev.filter(field => field.type !== 'password'));
     }  
+
+    
   }, []);
+
+  const onSubmit = async (data) => {
+    try {
+      data.birth = data.birth.toISOString().split('T')[0];
+      const res = await authAPI.create(data);
+      alert("가입 성공");
+      navigate('/login');
+    } catch (error) {
+      console.error("가입 실패"+error)
+      alert("가입 실패"+error.data || error.message)
+    }
+  }
+
+
   
-  const onSubmit = (data) => console.log(data);
   return (
     <form onSubmit={oAuth ? handleSubmit(onOAuthSubmit) : handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-xl">회원가입</h1>
+      
       {signUpField.map((f) => {
         return (
           <div key={f.id} className="flex w-2/5 h-3/4 container mx-auto items-center justify-between my-10">
@@ -107,7 +162,7 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
               htmlFor={f.name}
               className="block text-sm font-medium text-gray-900 dark:text-white text-center"
             >
-              {f.label}
+              {f.label}<span className="text-red-500">*</span>
             </label>
             {f.type === "radio" ? (
               <div key={f.id} className="flex w-1/2 ">
@@ -116,8 +171,8 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
                     <input
                       type={f.type}
                       id={g.label}
-                      name={f.name}
                       value={g.value}
+                      {...register(f.name, { required: true })}
                     />
                     <label htmlFor={g.label} className="ml-2 mr-4">
                       {g.label}
@@ -137,58 +192,22 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
                   required={f.type==="date" ? true : false}
                 />
                 {errors[f.name] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[f.name].message}
-                  </p>
+                  <div>
+                    <p className="text-red-500 text-xs mt-1">
+                      {
+                        errors[f.name].message
+                      }
+                    </p>
+                  </div>
                 )}
               </div>
             )}
           </div>
         );
       })}
-      {/* <div className="flex flex-col gap-12 w-1/3">
-          { signUpField.map(f => (
-              <label
-                key={f.id}
-                htmlFor={f.name}
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center"
-              >
-                {f.label}
-              </label>
-          ))}
-          </div> */}
-
-      {/* <div className="flex flex-col gap-8 w-2/3">
-          { signUpField.map(f => {
-            if (f.type === "radio") {
-              return <div key={f.id} className="inline">
-                { f.array.map((g, index) => (
-                    <>
-                      <input type={f.type} id={g.label} name={f.name} value={g.value} />
-                      <label htmlFor={g.label} className="ml-2 mr-4">{g.label}</label>
-                    </>
-                ))}
-                </div>
-            } else {
-              return (
-                <div>
-                  <input
-                    key={f.id}
-                    type={f.type}
-                    id={f.name}
-                    {...register(f.name, f.condition)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
-                    placeholder={f.placeholder}
-                    required
-                  />
-                  {errors[f.name] && <p className="text-red-500 text-xs mt-1">This field is required</p>}
-                </div>
-              )
-            }
-          })}
-          </div> */}
+      
       <div className="flex justify-center items-center">
-        <button type="submit" className=" bg-popple text-white rounded-lg p-3">
+        <button className=" bg-popple text-white rounded-lg p-3">
           가입하기
         </button>
       </div>

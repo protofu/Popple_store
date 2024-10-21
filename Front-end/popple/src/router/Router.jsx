@@ -14,6 +14,7 @@ import EventPage from "../pages/EventPage";
 import HelpServicePage from "../pages/HelpServicePage";
 import MyPage from "../pages/MyPage";
 import PolicyPage from "../pages/PolicyPage";
+import CompanySignUpPage from "../pages/CompanySignUpPage";
 
 
 
@@ -41,6 +42,7 @@ export default function Router() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/policy" element={<PolicyPage />} />
+          <Route path="/company" element={<CompanySignUpPage/>}/>
         </Route>
       </Routes>
     </div>
