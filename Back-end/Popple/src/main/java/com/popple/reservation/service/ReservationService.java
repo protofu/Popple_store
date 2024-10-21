@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.popple.auth.entity.User;
+import com.popple.auth.repository.UserRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.reservation.ReservationRepository;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final UserRepository userRepository;
 	
 	// 예약
 	public ReservationResponse reserve(ReservationRequest request, User user) {
@@ -81,6 +83,24 @@ public class ReservationService {
 				.exhibitionName(savedReservation.getExhibition().getExhibitionName())
 				.reserver(savedReservation.getUser().getName())
 				.reservationDate(savedReservation.getReservationDate())
+				.build();
+	}
+
+	// 방문 확인
+	public ReserverResponse checkReserver(Long exId, User user) {
+		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("잘못된 팝업/전시 입니다."));
+		Reservation reservation = reservationRepository.findByExhibitionAndUser(exhibition, user).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
+		if (!reservation.getUser().getId().equals(user.getId()) ) {
+			return null;
+		}
+		reservation.setAttend(true);
+		Reservation savedReservation = reservationRepository.save(reservation);
+		
+		return ReserverResponse.builder()
+				.id(savedReservation.getId())
+				.reserverName(savedReservation.getExhibition().getExhibitionName())
+				.reserveTime(savedReservation.getReservationDate())
+				.isAttend(savedReservation.isAttend())
 				.build();
 	}
 	

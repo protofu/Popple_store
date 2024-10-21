@@ -1,6 +1,7 @@
 package com.popple.reservation;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 	List<Reservation> findByUser(User user);
 
 	List<Reservation> findByExhibition(Exhibition exhibition);
+
+	Optional<Reservation> findByExhibitionAndUser(Exhibition exhibition, User user);
 
 }

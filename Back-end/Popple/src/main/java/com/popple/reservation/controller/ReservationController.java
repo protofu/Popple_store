@@ -2,6 +2,7 @@ package com.popple.reservation.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mysql.cj.protocol.x.Ok;
 import com.popple.auth.entity.User;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
@@ -56,9 +59,23 @@ public class ReservationController {
 	
 	// 예약 취소
 	@Operation(summary = "예약 취소", description = "예약을 취소합니다.")
-	@PatchMapping("/reserver-list/{id}")
+	@PatchMapping("/cancel")
 	public ResponseEntity<ReservationResponse> cancel(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
 		ReservationResponse res = reservationService.cancelReserve(exId, user);
+		return ResponseEntity.ok(res);
+	}
+	
+	// 방문 확인
+	@Operation(summary = "방문 확인", description = "예약을 확인 처리 합니다.")
+	@PatchMapping("/check")
+	public ResponseEntity<?> checkReserver(@RequestParam("id") Long exId, @AuthenticationPrincipal User user) {
+		if (user == null) {
+			ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		ReserverResponse res = reservationService.checkReserver(exId, user);
+		if (res == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청");
+		}
 		return ResponseEntity.ok(res);
 	}
 }

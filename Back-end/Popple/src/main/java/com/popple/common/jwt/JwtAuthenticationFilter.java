@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtProvider jwtProvider;
 	private final static String HEADER_AUTHORIZATION = "Authorization";
-	private final static String TOKEN_PREFIX = "Bearer";
+	private final static String TOKEN_PREFIX = "Bearer ";
 
 	// HTTP 요청이 들어올 때마다 실행되는 필터
 	@Override

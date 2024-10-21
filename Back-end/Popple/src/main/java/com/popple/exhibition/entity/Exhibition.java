@@ -168,13 +168,13 @@ public class Exhibition {
 	@Column(name = "is_deleted", nullable = true)
 	private boolean isDeleted;
 	
-	// 대표 이미지 등등..
-    @JoinColumn(name = "exhibition_id")
-	private List<Image> images;
-	
-	// 상세설명 포스터
-    @JoinColumn(name = "exhibition_id")
-	private List<Poster> posters;
+//	// 대표 이미지 등등..
+//    @JoinColumn(name = "exhibition_id")
+//	private List<Image> images;
+//	
+//	// 상세설명 포스터
+//    @JoinColumn(name = "exhibition_id")
+//	private List<Poster> posters;
 	
 	
 	
