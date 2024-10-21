@@ -1,9 +1,9 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import PostMiniCard from "./PostMiniCard";
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/autoplay";
 import "./styles/zIndex.css";
 import Img1 from "../../assets/img1.png";
 import Img2 from "../../assets/img2.png";
@@ -26,7 +26,6 @@ export default function PostCarousel() {
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
     <div className="flex justify-center relative w-full">
-      <button className="arrow-left arrow">좌</button>
       <Swiper
         loop
         slidesPerView={5}
@@ -37,10 +36,15 @@ export default function PostCarousel() {
           dynamicBullets: true,
           clickable: true,
         }}
-        modules={[Navigation, Pagination]}
-        className="mySwiper w-full"
+        autoplay={{ // 자동 재생
+          delay: 3000, // 지연 시간 (한 슬라이더에 머물르는 시간)
+          disableOnInteraction: false, // 마우스 제어 이후 자동 재생을 막을지 말지
+        }}
+        speed={500}
+        modules={[Pagination, Autoplay]}
+        className="postCarouselSwiper mySwiper w-full"
       >
-        {arr.map((data, index) => (
+        {arr.map((data) => (
           <SwiperSlide key={data.id} >
           {({ isActive, isPrev, isNext }) => (
             <PostMiniCard 
@@ -53,7 +57,6 @@ export default function PostCarousel() {
         </SwiperSlide>
         ))}
       </Swiper>
-      <button className="arrow-right arrow">우</button>
     </div>
   );
 }

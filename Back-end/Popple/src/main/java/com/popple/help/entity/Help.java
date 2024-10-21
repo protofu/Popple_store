@@ -2,6 +2,8 @@ package com.popple.help.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import com.popple.auth.entity.User;
 
 import jakarta.persistence.Column;
@@ -46,6 +48,7 @@ public class Help {
 	private String answer;
 	
 	//문의 일자
+	@CreatedDate
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 	

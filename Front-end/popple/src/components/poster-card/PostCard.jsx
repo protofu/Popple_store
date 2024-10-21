@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import CateButton from "../common/CateButton";
 
-export default function PostCard({ img, title, addr, duration  }) {
+export default function PostCard({ img, title, addr, duration, styles }) {
   return (
-    <div>
+    <div className={styles}>
       <img src={img} alt="포스터이미지" />
       <div className="mt-2">
         <CateButton text={"HOT"} />
@@ -12,4 +13,13 @@ export default function PostCard({ img, title, addr, duration  }) {
       </div>
     </div>
   );
+};
+
+// PropTypes 정의
+PostCard.propTypes = {
+  img: PropTypes.object.isRequired,      // 이미지 URL
+  title: PropTypes.object.isRequired,     // 제목
+  addr: PropTypes.object.isRequired,      // 주소
+  duration: PropTypes.object.isRequired,  // 기간
+  styles: PropTypes.object.isRequired,    // 스타일
 };

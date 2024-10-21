@@ -1,4 +1,4 @@
-package com.popple.auth.domain;
+package com.popple.auth.domain.request;
 
 import lombok.Getter;
 import lombok.ToString;

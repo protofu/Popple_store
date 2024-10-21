@@ -1,11 +1,11 @@
-.swiper-slide {
+.postCarouselSwiper .swiper-slide {
     z-index: 1;
     opacity: 0.5;
 }
-.swiper-slide-prev, .swiper-slide-next {
+.postCarouselSwiper .swiper-slide-prev, .postCarouselSwiper .swiper-slide-next {
     z-index: 50
 }
-.swiper-slide-active {
+.postCarouselSwiper .swiper-slide-active {
     z-index : 100;
     opacity: 1;
 }

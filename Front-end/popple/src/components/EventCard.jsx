@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Vibrant from "node-vibrant";
+import PropTypes from "prop-types";
 
 export default function EventCard({ slogun, title, duration, img }) {
   const [palette, setPalette] = useState([]);
@@ -74,7 +75,6 @@ export default function EventCard({ slogun, title, duration, img }) {
         hexPalette[key] = rgbToHex(r, g, b);
     }
     const textc = getTextColor(hexPalette["LightVibrant"]);
-    console.log(textc);
     setPalette(hexPalette["LightVibrant"]);
     setTextColor(textc);
     // DarkMuted"#5c6454"
@@ -112,3 +112,11 @@ export default function EventCard({ slogun, title, duration, img }) {
     </div>
   );
 }
+
+// PropTypes 정의
+EventCard.propTypes = {
+  slogun: PropTypes.string.isRequired,   // 슬로건
+  title: PropTypes.string.isRequired,     // 제목
+  duration: PropTypes.string.isRequired,  // 기간
+  img: PropTypes.string.isRequired,       // 이미지 URL
+};
