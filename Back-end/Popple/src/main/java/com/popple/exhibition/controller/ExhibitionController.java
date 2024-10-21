@@ -1,10 +1,12 @@
 package com.popple.exhibition.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.popple.auth.entity.User;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
@@ -101,7 +107,36 @@ public class ExhibitionController {
 	public ResponseEntity<List<ExhibitionResponse>> search(@RequestParam("keyword") String keyword) {
 		List<ExhibitionResponse> result = exService.searchByKeyword(keyword);
 		return ResponseEntity.ok(result);
+	}
+	
+	// QR 생성
+	@Operation(summary = "QR 생성", description = "QR 코드를 생성합니다.")
+	@GetMapping("/qr-code")
+	public ResponseEntity<byte[]> qrMaker(@RequestParam("link") String url) throws Exception {
+		// QR 정보
+		int width = 400;
+		int height = 400;
 		
+		// QR code - BitMatrix: qr code 정보 생성
+		BitMatrix encode = new MultiFormatWriter()
+				.encode(url, BarcodeFormat.QR_CODE, width, height);
+		
+		// QR code - Image 생성 : 1회성으로 생성
+		// stream으로 Generate(1회성 아니면 File로)
+		try {
+			// output Stream
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			// Bitmatrix, file.format, outputStream
+			MatrixToImageWriter.writeToStream(encode, "PNG", out);
+			
+			return ResponseEntity.ok()
+					.contentType(MediaType.IMAGE_PNG)
+					.body(out.toByteArray());
+		} catch (Exception e) {
+			log.warn("QR Code OutputStream 중 Exception 발생 : {}", e.getMessage());
+		}
+		return null;
 	}
 }
 

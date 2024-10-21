@@ -15,6 +15,7 @@ import HelpServicePage from "../pages/HelpServicePage";
 import MyPage from "../pages/MyPage";
 import PolicyPage from "../pages/PolicyPage";
 import CompanySignUpPage from "../pages/CompanySignUpPage";
+import QRPage from "../pages/QRPage";
 
 
 
@@ -43,6 +44,7 @@ export default function Router() {
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/policy" element={<PolicyPage />} />
           <Route path="/company" element={<CompanySignUpPage/>}/>
+          <Route path="/qr-code" element={<QRPage/>}/>
         </Route>
       </Routes>
     </div>
