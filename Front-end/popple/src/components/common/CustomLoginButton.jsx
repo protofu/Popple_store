@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function CustomLoginButton({img, text, path}) {
   const navigate = useNavigate();
   // 단순 페이지 이동 핸들러
-  const handleNavigate = () => {
-    navigate(path);
+  const handleNavigate = (customPath) => {
+    navigate(customPath); 
   };
 
   // OAuth 로그인 핸들러
@@ -29,6 +29,9 @@ export default function CustomLoginButton({img, text, path}) {
       const GOOGLE_URL = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 
       window.location.href = GOOGLE_URL;
+    } else if (text === "기업 회원가입") {
+      // 기업 약관은 2번
+      navigate(`${path}/2`);
     }
   };
 
@@ -36,7 +39,7 @@ export default function CustomLoginButton({img, text, path}) {
   
   if (img === undefined) {
     return (
-      <div className={condiStyle} onClick={() => handleNavigate(path)}>
+      <div className={condiStyle} onClick={() => handleNavigate(`${path}/1`)}>
         <div className="w-full text-center text-[16px] font-semibold">
           {text}
         </div>

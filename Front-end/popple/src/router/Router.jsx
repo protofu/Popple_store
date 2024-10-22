@@ -52,8 +52,8 @@ export default function Router() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
-          <Route path="/policy" element={<PolicyPage />} />
-          <Route path="/company" element={<CompanySignUpPage/>}/>
+          <Route path="/policy/:id" element={<PolicyPage />} />
+          <Route path="/company-signup" element={<CompanySignUpPage/>}/>
           <Route path="/qr-code" element={<QRPage/>}/>
         </Route>
       </Routes>

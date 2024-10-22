@@ -67,7 +67,7 @@ export default function LoginPage() {
             <CustomLoginButton text={"로그인"} type="submit"/>
           </button>
         </form>
-        <CustomLoginButton text={"회원가입"} path="/sign-up" />
+        <CustomLoginButton text={"회원가입"} path="/policy" />
         <div className="flex items-center my-4 w-[300px]">
           <hr className="flex-grow border-t border-[#ccc]" />
           <span className="mx-2 text-[#888]">or</span>
@@ -75,7 +75,7 @@ export default function LoginPage() {
         </div>
         <CustomLoginButton img={kakao} text={"카카오 로그인"} />
         <CustomLoginButton img={google} text={"구글 로그인"} />
-        <CustomLoginButton img={company} text={"기업 회원가입"} />
+        <CustomLoginButton img={company} text={"기업 회원가입"} path={"/policy"} />
       </div>
     </div>
   );

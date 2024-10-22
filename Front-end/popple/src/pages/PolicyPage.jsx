@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function PolicyPage() {
   const [allCheck, setAllCheck] = useState(false);
@@ -10,6 +10,8 @@ export default function PolicyPage() {
   const [m1, setM1] = useState(false);
   const [m2, setM2] = useState(false);
   const [m3, setM3] = useState(false);
+
+  const type = useParams();
 
   const navigate = useNavigate(); 
 
@@ -194,7 +196,7 @@ export default function PolicyPage() {
           <div className="flex justify-center items-center">
             {popple === true ? (
               <div>
-                <button className="w-40 bg-popple text-white h-10 border mt-20 rounded-lg" onClick={()=>navigate('/sign-up')} >
+                <button className="w-40 bg-popple text-white h-10 border mt-20 rounded-lg" onClick={()=>navigate('/sign-up', type.id)} >
                   약관 동의
                 </button>
               </div>

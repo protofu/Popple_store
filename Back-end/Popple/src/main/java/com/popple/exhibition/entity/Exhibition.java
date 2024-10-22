@@ -70,7 +70,7 @@ public class Exhibition {
 	@Column(nullable = true)
 	private String notice;
 	
-	//이용조건
+	//이용조건 (할지 모르겠음)
 	@Column(nullable = true)
 	private String terms;
 	
