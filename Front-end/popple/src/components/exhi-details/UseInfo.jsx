@@ -13,6 +13,7 @@ export default function UseInfo({ data }) {
   // 남여 비율은 백엔드에서 계산하여 % 값만 front로 던져줌
 
   // 나이대별 비율도 100% 기준 10대부터 %값으로 주어짐
+  // 차트라이브러리 고민해봐야함
   const visitAge = {
     teenagers: 15,
     twenties: 30, 
