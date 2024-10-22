@@ -1,5 +1,6 @@
 package com.popple.company.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.popple.auth.entity.User;
@@ -18,12 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyService {
 	private final CompanyRepository companyRepository;
 	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	public CompanyResponse createCompany(CompanyRequest companyRequest) {
 //		닉네임, 이메일이 중복이면 진행을 안 하게(유저 기준)
 		Company company = companyRequest.toEntity();
 		Company savedCompany = companyRepository.save(company);
 		User user = companyRequest.toUserEntity();
+		String encodedPassword = bCryptPasswordEncoder.encode(companyRequest.getPassword());
+		user.setPassword(encodedPassword);
 		user.setCompId(savedCompany.getId());
 		userRepository.save(user);
 		return null;

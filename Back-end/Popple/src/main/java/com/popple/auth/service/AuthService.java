@@ -133,7 +133,7 @@ public class AuthService {
 		log.info("추출한 이메일 : {}", userEmail);
 		// 이메일을 통해 사용자를 조회하고 refreshToken 비교
 		User user = userRepository.findByEmailAndDeletedAtIsNull(userEmail)
-				.orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저 찾을 수 없습니다."));
 		// user가 없거나 user의 refreshToken이 같지 않다면 null 반환
 		if (user == null || refreshToken != user.getRefreshToken()) {
 			return null;

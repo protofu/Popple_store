@@ -101,6 +101,7 @@ public class AuthController {
 		return ResponseEntity.ok(LoginResponse.builder().accessToken(tokenMap.get("accessToken")).build());
 	}
 	
+	//로그인
 	@Operation(summary = "로그인", description = "로그인을 진행합니다.")
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest){
