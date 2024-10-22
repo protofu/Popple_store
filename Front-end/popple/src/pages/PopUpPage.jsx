@@ -1,12 +1,17 @@
-import PostCarousel from "../components/poster-card/PostCarousel";
+
 import eventImg from "../assets/img1.png";
 import eventImg2 from "../assets/img2.png";
 import eventImg3 from "../assets/img3.png";
 import eventImg4 from "../assets/img4.png";
+
+import eventIcon from "../assets/icons/party.png";
+import popupIcon from "../assets/icons/popup-icon.png";
+import popularIcon from "../assets/icons/popular-icon.png";
+import { useEffect, useState } from "react";
+import PostCarousel from "../components/poster-card/PostCarousel";
 import PostCard from "../components/poster-card/PostCard";
 import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
-import { useEffect, useState } from "react";
 
 export default function PopUpPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -138,24 +143,31 @@ export default function PopUpPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, []);
-
+  const titleStyle = "flex items-center w-full m-10 ml-0";
+  const textStyle = "text-2xl ml-2 font-bold";
+  const titleImgStyle = "inline w-[2.5rem]";
 
   return (
     <div className="
     w-screen mx-auto 
     xl: max-w-full
+    mt-4 
     "
     >
       <PostCarousel />
-      <div className="mx-auto"> 
-        <h1>현재</h1>
+      <div className={titleStyle}> 
+        <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
+        <h1 className={textStyle}>인기있는 POP-UP</h1>
       </div>
       {/* 가장 많이 방문한 POP-UP */}
       <div className="flex justify-center mx-auto">
         <PosterSlide items={popUp}/>
       </div>
       {/* EVENT */}
-      <h1>EVENT</h1>
+      <div className={titleStyle}>
+        <img src={eventIcon} alt="이벤트 아이콘" className={titleImgStyle} />
+        <h1 className={textStyle}>EVENT</h1>
+      </div>
       <div className="flex flex-wrap justify-center gap-4">
         {
           eventList.map((item, index) => (
@@ -164,6 +176,10 @@ export default function PopUpPage() {
         }
       </div>
       {/* POP-UP */}
+      <div className={titleStyle}>
+        <img src={popupIcon} alt="팝업 아이콘" className={titleImgStyle} />
+        <h1 className={textStyle}>POP-UP 둘러보기</h1>
+      </div>
       <div>
         <div className="
         flex flex-wrap justify-center gap-6 

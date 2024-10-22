@@ -3,6 +3,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
 import PostCard from "./PostCard";
 import PropTypes from "prop-types";
 
@@ -11,8 +12,8 @@ export default function PosterSlide({ items }) {
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
-    <div className="flex justify-center relative overflow-hidden w-full">
-      <button className="arrow-left arrow">좌</button>
+    <div className="flex justify-center items-center relative overflow-hidden w-full">
+      <IoArrowBackCircleOutline className="arrow-left arrow size-[3rem] left-0 top-[40%] transform -translate-y-1/2 z-10 cursor-pointer text-zinc-600" />
       <Swiper
         slidesPerView={6}
         centeredSlides={false}
@@ -38,7 +39,7 @@ export default function PosterSlide({ items }) {
         </SwiperSlide>
         ))}
       </Swiper>
-      <button className="arrow-right arrow">우</button>
+      <IoArrowForwardCircleOutline className="arrow-right arrow size-[3rem] right-0 transform -translate-y-1/2 z-10 cursor-pointer text-zinc-600" />
     </div>
   );
 }

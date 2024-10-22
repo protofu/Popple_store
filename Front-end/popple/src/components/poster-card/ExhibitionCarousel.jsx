@@ -1,36 +1,32 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import PostMiniCard from "./PostMiniCard";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
-import "./styles/zIndex.css";
-import Img1 from "../../assets/img1.png";
-import Img2 from "../../assets/img2.png";
-import Img3 from "../../assets/img3.png";
-import Img4 from "../../assets/img4.png";
+import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
+import PropTypes from "prop-types";
+import Exhi1 from "../../assets/exhi/exhi1.png";
+import Exhi2 from "../../assets/exhi/exhi2.png";
+import ExhibitionCard from "./ExhibitionCard";
 
 export default function ExhibitionCarousel() {
-  const arr = [
-    { id: 1, title: Img1 },
-    { id: 2, title: Img2 },
-    { id: 3, title: Img3 },
-    { id: 4, title: Img4 },
-    { id: 5, title: Img1 },
-    { id: 6, title: Img2 },
-    { id: 7, title: Img3 },
-    { id: 8, title: Img4 },
-  ];
+  const items = [
+    { id: 1, img: Exhi1},
+    { id: 2, img: Exhi2},
+    { id: 3, img: Exhi1},
+    { id: 4, img: Exhi2},
+  ]
 
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
-    <div className="flex justify-center relative w-full">
+    <div className="flex justify-cente items-center relative overflow-hidden w-full">
+      <IoArrowBackCircleOutline className="arrow-left arrow size-[3rem] absolute left-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-zinc-400" />
       <Swiper
         loop
-        slidesPerView={5}
-        centeredSlides={true}
-        spaceBetween={0}
+        slidesPerView={1}
+        centeredSlides={false}
         navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
         pagination={{
           dynamicBullets: true,
@@ -41,22 +37,25 @@ export default function ExhibitionCarousel() {
           disableOnInteraction: false, // 마우스 제어 이후 자동 재생을 막을지 말지
         }}
         speed={500}
-        modules={[Pagination, Autoplay]}
-        className="postCarouselSwiper mySwiper w-full"
+        modules={[Navigation, Pagination, Autoplay]}
+        className="w-full h-full"
       >
-        {arr.map((data) => (
-          <SwiperSlide key={data.id} >
-          {({ isActive, isPrev, isNext }) => (
-            <PostMiniCard 
-              isActive={isActive} 
-              isPrev={isPrev} 
-              isNext={isNext} 
-              data={data} 
-            />
-          )}
+        {items.map((item, index) => (
+          <SwiperSlide key={index}>
+            <ExhibitionCard img={item.img} />
         </SwiperSlide>
         ))}
+        <IoArrowForwardCircleOutline className="arrow-right arrow size-[3rem] absolute right-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-zinc-400" />
       </Swiper>
     </div>
   );
 }
+
+ExhibitionCarousel.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.shape({
+    img: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    addr: PropTypes.string.isRequired,
+    duration: PropTypes.string.isRequired,
+  })).isRequired,
+};

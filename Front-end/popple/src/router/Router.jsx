@@ -8,6 +8,7 @@ import SignUpPage from "../pages/SignUpPage";
 import AuthLayout from "../pages/layouts/AuthLayout";
 import OAuthLoginPage from "../pages/OAuthLoginPage";
 import ExhibitionRegistPage from "../pages/ExhibitionRegistPage";
+// 전시 팝업 관련
 import ExhibitionPage from "../pages/ExhibitionPage";
 import PopUpPage from "../pages/PopUpPage";
 import EventPage from "../pages/EventPage";
