@@ -17,6 +17,7 @@ import MyPage from "../pages/MyPage";
 import PolicyPage from "../pages/PolicyPage";
 import CompanySignUpPage from "../pages/CompanySignUpPage";
 import QRPage from "../pages/QRPage";
+import DetailPage from "../pages/DetailPage";
 
 
 
@@ -26,13 +27,21 @@ export default function Router() {
       <Routes>
         {/* 레이아웃을 적용한 페이지들 */}
         <Route element={<Layout />}>
+          {/* 메인 페이지 */}
           <Route path="/" element={<MainPage />} />
-          <Route path="/regist" element={<ExhibitionRegistPage />} />
+          {/* 팝업/전시 메인페이지 */}
           <Route path="/exhibition" element={<ExhibitionPage />} />
           <Route path="/pop-up" element={<PopUpPage />} />
+          {/* 팝업/전시 디테일 페이지 */}
+          <Route path="/exhibition/detail/:id" element={<DetailPage />} />
+          <Route path="/pop-up/detail/:id" element={<DetailPage />} />
+          {/* 팝업/전시 등록 페이지 */}
+          <Route path="/regist" element={<ExhibitionRegistPage />} />
+          {/* 마이 페이지 */}
+          <Route path="/my-page" element={<MyPage />} />
+          {/* 고객센터, 이벤트 페이지 */}
           <Route path="/event" element={<EventPage />} />
           <Route path="/help" element={<HelpServicePage />} />
-          <Route path="/my-page" element={<MyPage />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}

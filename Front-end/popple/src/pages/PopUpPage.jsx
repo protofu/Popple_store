@@ -155,11 +155,11 @@ export default function PopUpPage() {
     "
     >
       <PostCarousel />
+      {/* 인기있는 POP-UP */}
       <div className={titleStyle}> 
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>인기있는 POP-UP</h1>
       </div>
-      {/* 가장 많이 방문한 POP-UP */}
       <div className="flex justify-center mx-auto">
         <PosterSlide items={popUp}/>
       </div>

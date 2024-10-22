@@ -8,7 +8,7 @@ import PostCard from "./PostCard";
 import PropTypes from "prop-types";
 
 export default function PosterSlide({ items }) {
-  console.log(items);
+
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
@@ -29,7 +29,8 @@ export default function PosterSlide({ items }) {
         {items.map((item, index) => (
           <SwiperSlide key={index}>
             <PostCard 
-              key={index} 
+              key={index}
+              id={index}
               img={item.img} 
               title={item.title} 
               addr={item.addr} 

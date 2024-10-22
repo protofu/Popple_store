@@ -120,7 +120,7 @@ export default function MainPage() {
   ];
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-4">
       <div className={styles.cateButton}>
         <CateButton text={"NEW"} />
       </div>
