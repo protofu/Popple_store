@@ -22,8 +22,10 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
   
 
   const [isNotDuplicateEmail, setIsNotDuplicateEmail] = useState(false);
-  const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
+  const [isNotDuplicateNickname, setIsNotDuplicateNickname] = useState(false);
 
+
+  ///이메일 체크
   const duplicateEmail = async() => {
     console.log("이메일 체크");
     const email = getValues("email");
@@ -41,8 +43,8 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
             setIsNotDuplicateEmail(false);
             setError("email", {
               type: 'custom',
-              message: '중복된 이메일입.',
-              duplicateError: '중복된 이메일.' });
+              message: '중복된 이메일입니다.',
+              duplicateError: '중복된 이메일입니다.' });
         }
     } else {
         // 이메일 정규식 체크 실패 또는 중복된 이메일일 경우.
@@ -53,6 +55,36 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
 const emailInputReset = () => {
   setIsNotDuplicateEmail(false);
 }
+
+////////////////닉네임 체크
+const duplicateNickname = async() => {
+  console.log("닉네임 체크");
+  const nickname = getValues("nickname");
+  const regExp = /^(?!.*[^\w가-힣])[a-zA-Z0-9가-힣]{2,}$/;
+  
+  // 닉네임 정규식 체크하여, 통과하면 중복체크
+  if(regExp.test(nickname)) {
+      // 중복체크
+      const res = await authAPI.duplicateEmail(nickname);
+      if (res.data) {
+          // 중복체크 성공 시
+          setIsNotDuplicateNickname(true);
+          clearErrors("nickname");
+      } else {
+          setIsNotDuplicateEmail(false);
+          setError("nickname", {
+            type: 'custom',
+            message: '중복된 닉네임입니다.',
+            duplicateError: '중복된 닉네임입니다.' });
+      }
+  } else {
+      // 이메일 정규식 체크 실패 또는 중복된 이메일일 경우.
+      setIsNotDuplicateNickname(false);
+      setError("nickname", { type: 'custom', message: '올바른 닉네임 형식이 아닙니다.' });
+  }
+}
+
+
 
 
  //////////////////////////// 
