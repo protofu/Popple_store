@@ -1,6 +1,4 @@
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import company from "../assets/company.png";
 
 import {
   LuParkingCircle,
@@ -11,33 +9,53 @@ import {
 import { MdFastfood, MdNoFood, MdAttachMoney } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
 import PostCode from "../components/common/PostCode";
-import { FaDog, FaUserSlash, FaUser } from "react-icons/fa6";
+import { FaDog, FaUserSlash, FaUser, FaArrowDown19, FaArrowUp19 } from "react-icons/fa6";
 import { data } from "autoprefixer";
 import Markdown from "../components/common/Markdown";
 
 export default function ExhibitionRegistPage() {
   const [address, setAddress] = useState({});
 
-  const [holiday, setHoliday] = useState(false);
+  //공지사항 마크다운
+  const [notice, setNotice] = useState("");
+  const handleNotice = (value) => {
+    setNotice(value);
+  };
 
+  //상세설명 마크다운
+  const [detailDescription, setDetailDescription] = useState("");
+  const handleDescription = (value) => {
+    setDetailDescription(value);
+  };
+
+  //휴무 지정 체크박스
+  const [holiday, setHoliday] = useState(false);
   const handleHoliday = () => {
     setHoliday(!holiday);
-  }
+  };
 
+  //금지 토글 상태 관리
   const [kids, setKids] = useState(false);
   const handleKids = () => {
     setKids(!kids);
-  }
+  };
 
+
+  //제한사항 토글
   const [pet, setPet] = useState(false);
   const handlePet = () => {
     setPet(!pet);
-  }
+  };
+
+  const [adult, setAdult] = useState(false);
+  const handleAdult = () => {
+    setAdult(!adult);
+  };
 
   const [fee, setFee] = useState(false);
   const handleFee = () => {
     setFee(!fee);
-  }
+  };
 
   const [parking, setParking] = useState(false);
   const handleParking = () => {
@@ -59,6 +77,22 @@ export default function ExhibitionRegistPage() {
     setCamera(!camera);
   };
 
+  //청소년 관람 불가 누르면 어린이도 금지되는 버튼
+  const adultCheck = () => {
+    const newCheck = !adult;
+    setAdult(newCheck);
+    setKids(newCheck);
+  }
+  const [twoCheck, setTwoCheck] = useState(false);
+  const handleTwoCheck = () => {
+
+    const adult2 = adult && kids; 
+    setTwoCheck(adult2);
+  }
+  
+  
+
+  //요일 필드(이미지)
   const [weekField, setWeekField] = useState([
     {
       d: 1,
@@ -72,7 +106,7 @@ export default function ExhibitionRegistPage() {
     },
     {
       d: 3,
-      label: "화요일",      
+      label: "화요일",
       alt: "tuesday.png",
     },
     {
@@ -96,23 +130,26 @@ export default function ExhibitionRegistPage() {
       alt: "saturday.png",
     },
   ]);
-  
+
   //달력 누르면 창에 이름 들어감
-  const [week, setWeek] = useState("default"); 
+  const [week, setWeek] = useState("default");
   const handleWeek = (w) => {
     setWeek(w);
   };
   
-  
+
   return (
     <>
       <p className="text-lg mb-2">팝업/전시 등록</p>
       <hr className="w-full" />
       <div className="mt-2">기본 정보</div>
-      <div className="flex flex-col w-5/6 mx-auto gap-5">
+      {/* 맨 위 박스  */}
+      <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
         <div>
           <div className="grid grid-cols-2 gap-x-20 h-full">
-            <div className="flex flex-col gap-5">
+
+            {/* 전시명, 부제, 입장료, 전시기간 */}
+            <div className="flex flex-col gap-10">
               <div>
                 <label className="text-sm">
                   팝업/전시명<span className="text-red-500">*</span>
@@ -135,7 +172,7 @@ export default function ExhibitionRegistPage() {
                 <div className="flex justify-between w-full">
                   <label className="text-sm w-full">입장료</label>
                   <div className="flex items-center w-full">
-                    <input type="checkbox" className=""/>
+                    <input type="checkbox" className="" />
                     <span className="ml-3 text-sm">무료 입장</span>
                   </div>
                 </div>
@@ -164,17 +201,10 @@ export default function ExhibitionRegistPage() {
                   />
                 </div>
               </div>
-              <div>
-                <label htmlFor="notice" className="text-sm">
-                  공지사항
-                </label>
-                <div>
-                  <Markdown/>
-                </div>
-              </div>
             </div>
-
-            <div className="flex flex-col justify-between">
+             
+            {/* 장소, 홈페이지 링크, 인스타그램 링크 */}
+            <div className="flex flex-col justify-between ">
               <div>
                 <label className="text-sm block">
                   장소<span className="text-red-500">*</span>
@@ -185,7 +215,11 @@ export default function ExhibitionRegistPage() {
                   value={address.roadAddress}
                   readOnly
                 />
-                <PostCode className="border p-2 rounded-lg" value="검색" setAddress={setAddress} />
+                <PostCode
+                  className="border p-2 rounded-lg"
+                  value="검색"
+                  setAddress={setAddress}
+                />
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   placeholder="상세주소"
@@ -205,23 +239,37 @@ export default function ExhibitionRegistPage() {
                   placeholder="인스타그램 링크(URL)을 입력해주세요"
                 />
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 공지사항, 상세설명 마크다운 */}
+        <div className="flex mt-10">
+          <div className="grid grid-cols-2 gap-x-20  w-full ">
+            <div>
+              <label htmlFor="notice" className="text-sm">
+                공지사항
+              </label>
               <div>
-                <label htmlFor="description" className="text-sm">
-                  상세설명
-                </label>
-                <div>
-                  <input
-                    placeholder="마크다운이 들어갈 곳"
-                    id="description"
-                    type="textarea"
-                    className="bg-gray-50 border rounded-lg inline w-full p-2.5"
-                  />
-                </div>
+                <Markdown content={notice} contentChange={handleNotice} />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="description" className="text-sm">
+                상세설명
+              </label>
+              <div>
+                <Markdown
+                  content={detailDescription}
+                  contentChange={handleDescription}
+                />
               </div>
             </div>
           </div>
         </div>
-        <div>
+
+        {/* 관람시간 정보  */}
+        <div className="mt-10">
           관람시간 정보<span className="text-red-500">*</span>
           <div className="mt-5 flex justify-between">
             {weekField.map((w) => {
@@ -238,14 +286,21 @@ export default function ExhibitionRegistPage() {
             })}
           </div>
         </div>
+
+        {/* 시간 설정 div */}
         <div className="flex justify-center">
           <div className="border w-80 h-36 rounded-lg">
             <div className="flex justify-between p-3 text-xs">
-                <span>{week}</span>
-                <div>
-                  <input type="checkbox" id="holiday" checked={holiday} onChange={handleHoliday}/>
-                  <label htmlFor="holiday">휴무지정</label>
-                </div>
+              <span>{week}</span>
+              <div>
+                <input
+                  type="checkbox"
+                  id="holiday"
+                  checked={holiday}
+                  onChange={handleHoliday}
+                />
+                <label htmlFor="holiday">휴무지정</label>
+              </div>
             </div>
             <div className="flex justify-between p-3 ">
               <label className="block text-xs text-center" htmlFor="open">
@@ -276,8 +331,9 @@ export default function ExhibitionRegistPage() {
           </div>
         </div>
 
+        {/* 제한사항 */}
         <div className="mt-10">
-          제약사항<span className="text-red-500">*</span>
+          제한사항<span className="text-red-500">*</span>
           <div className="grid grid-cols-4 gap-1 w-3/5">
             <div onClick={handleParking} className="mt-5">
               {parking ? (
@@ -384,18 +440,18 @@ export default function ExhibitionRegistPage() {
               {pet ? (
                 <div>
                   <div className="flex justify-center">
-                    <FaDog  style={{ color: "red", fontSize: "30px" }} />
+                    <FaDog style={{ color: "red", fontSize: "30px" }} />
                   </div>
                   <div className="flex justify-center">
                     <label className="text-red-500 text-xs font-bold">
-                      반려동물 금지 
+                      반려동물 금지
                     </label>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="flex justify-center">
-                    <FaDog  style={{ fontSize: "30px" }} />
+                    <FaDog style={{ fontSize: "30px" }} />
                   </div>
                   <div className="flex justify-center">
                     <label className=" text-xs font-bold">반려동물 가능 </label>
@@ -407,21 +463,48 @@ export default function ExhibitionRegistPage() {
               {kids ? (
                 <div>
                   <div className="flex justify-center">
-                    <FaUserSlash  style={{ color: "red", fontSize: "30px" }} />
+                    <FaUserSlash style={{ color: "red", fontSize: "30px" }} />
                   </div>
                   <div className="flex justify-center">
                     <label className="text-red-500 text-xs font-bold">
-                      어린이 출입 불가
+                      노키즈존
                     </label>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="flex justify-center">
-                    <FaUser  style={{ fontSize: "30px" }} />
+                    <FaUser style={{ fontSize: "30px" }} />
                   </div>
                   <div className="flex justify-center">
-                    <label className=" text-xs font-bold">어린이 출입 가능 </label>
+                    <label className=" text-xs font-bold">
+                      어린이 출입 가능
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div onClick={handleAdult} className="mt-5">
+              {adult ? (
+                <div>
+                  <div className="flex justify-center">
+                    <FaArrowUp19 style={{ color: "red", fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className="text-red-500 text-xs font-bold">
+                      청소년 관람 불가
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex justify-center">
+                    <FaArrowDown19 style={{ fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className=" text-xs font-bold">
+                      전연령 관람 가능
+                    </label>
                   </div>
                 </div>
               )}
@@ -440,4 +523,5 @@ export default function ExhibitionRegistPage() {
     </>
   );
 }
-//https://www.flaticon.com/kr/free-icon/monday_8144169 요일 아이콘
+
+
