@@ -10,10 +10,16 @@ export default function PolicyPage() {
   const [m1, setM1] = useState(false);
   const [m2, setM2] = useState(false);
   const [m3, setM3] = useState(false);
-
+  const [path, setPath] = useState("/sign-up");
+    
   const type = useParams();
+  
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); 
+  const handleNavigate = () => {
+    if (type.id === "2") navigate("/company-signup");
+    else navigate(path);
+  }
 
   const handleAgree = () => {
     setLocation(true);
@@ -52,6 +58,8 @@ export default function PolicyPage() {
   const handleInfoCheck = () => handleIndividualCheck(setInfo, info);
   const handleMarketingCheck = () =>
     handleIndividualCheck(setMarketing, marketing);
+  
+
 
 
   useEffect(() => {
@@ -62,7 +70,7 @@ export default function PolicyPage() {
     } else {
       setAllCheck(allChecked);
     }
-  }, [popple, location, info, marketing]);
+  }, [popple, location, info, marketing, type]);
 
 
   const policyField = [
@@ -196,7 +204,7 @@ export default function PolicyPage() {
           <div className="flex justify-center items-center">
             {popple === true ? (
               <div>
-                <button className="w-40 bg-popple text-white h-10 border mt-20 rounded-lg" onClick={()=>navigate('/sign-up', type.id)} >
+                <button className="w-40 bg-popple text-white h-10 border mt-20 rounded-lg" onClick={() => handleNavigate()} >
                   약관 동의
                 </button>
               </div>
