@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class) // 생성, 수정 날짜 추적 -> Application.java (@EnableJpaAuditing)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Company {
@@ -53,7 +56,7 @@ public class Company {
 	private String leader;
 	
 	//탈퇴 시간
-	@Column(name = "deleted_at", nullable = true)
+	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 	
 	//둥록 시간

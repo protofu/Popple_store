@@ -36,7 +36,6 @@ public class CompanyRequest {
 	public User toUserEntity() {
 		return User.builder()
 				.email(email)
-				.password(password)
 				.name(leader)
 				.nickname(name)
 				.birth(LocalDate.now())

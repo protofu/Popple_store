@@ -15,47 +15,67 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
     handleSubmit,
     setValue,
     watch,
+    getValues,
+    clearErrors,
+    setError
   } = useForm();
   
 
-  // const [isDuplicateEmail, setIsDuplicateEmail] = useState(null);
-  // const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
+  const [isNotDuplicateEmail, setIsNotDuplicateEmail] = useState(false);
+  const [isDuplicateNickname, setIsDuplicateNickname] = useState(null);
 
-  // // const submit= async (data) => {
-  // //   if(isDuplicateEmail) alert("중복된 이메일");
-  // //   if(isDuplicateNickname) alert("중복된 닉네임");
+  const duplicateEmail = async() => {
+    console.log("이메일 체크");
+    const email = getValues("email");
+    const regExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
-  //   } 
+    // 이메일 정규식 체크하여, 통과하면 중복체크
+    if(regExp.test(email)) {
+        // 중복체크
+        const res = await authAPI.duplicateEmail(email);
+        if (res.data) {
+            // 중복체크 성공 시
+            setIsNotDuplicateEmail(true);
+            clearErrors("email");
+        } else {
+            setIsNotDuplicateEmail(false);
+            setError("email", {
+              type: 'custom',
+              message: '중복된 이메일입.',
+              duplicateError: '중복된 이메일.' });
+        }
+    } else {
+        // 이메일 정규식 체크 실패 또는 중복된 이메일일 경우.
+        setIsNotDuplicateEmail(false);
+        setError("email", { type: 'custom', message: '올바른 이메일 형식이 아닙니다.' });
+    }
+}
+const emailInputReset = () => {
+  setIsNotDuplicateEmail(false);
+}
 
-
-  // const handleDuplicate = async () => {
-  //   try {
-  //     const emailForm = {
-  //       email: email,
-  //     };
-  //     const res = await authAPI.duplicateEmail(email);
-  //     const data = res.data;
-  //     if (data === true) {
-  //       alert("이미 있는 아이디");
-  //       setIsDuplicateEmail(true);
-  //     } else {
-  //       alert("가능");
-  //       setIsDuplicateEmail(false);
-  //     }
-  //   } catch (error) {
-  //     navigate("/error");
-  //   }
-  // };
 
  //////////////////////////// 
   const [signUpField, setSignUpField] = useState([
     {
       id: 1,
+      onInput: emailInputReset,
+      duplicateEmail:duplicateEmail,
+      vali: "  isNotDuplicate: () => isNotDuplicateEmail || '고구마'", 
       name: "email",
       label: "이메일",
       type: "email",
       placeholder: "123@naver.com",
-      condition: { required: "이메일은 필수값이다.", maxLength: 255 },
+      condition: {
+        required: "이메일은 필수값이다.",
+        maxLength: 255,
+        duplicateError: '중복된 이메일입니다.',  // 중복 메시지 포함
+        validate: () => isNotDuplicateEmail? clearErrors() : "고구마",
+        pattern:{
+          message:"올바른 이메일 형식이 아닙니다.",
+          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        }
+    },
     },
     {
       id: 2,
@@ -137,15 +157,17 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
     
   }, []);
 
+  console.log(watch())
   const onSubmit = async (data) => {
     try {
+      
       data.birth = data.birth.toISOString().split('T')[0];
       const res = await authAPI.create(data);
       alert("가입 성공");
       navigate('/login');
     } catch (error) {
       console.error("가입 실패"+error)
-      alert("가입 실패"+error.data || error.message)
+      alert("가입 실패" + error.message)
     }
   }
 
@@ -182,11 +204,19 @@ export default function SignUpPage({oAuth = false, authData, onOAuthSubmit}) {
               </div>
             ) : (
               <div className="w-1/2">
+                
                 <input
                   key={f.id}
+                  onInput={f.onInput}
+                  onChange={f.duplicateEmail}
                   type={f.type}
                   id={f.name}
-                  {...register(f.name, f.condition)}
+                  {...register(f.name, {
+                    ...f.condition,
+                    validate: {
+                      
+                    },
+                })}
                   className={inputStyle}
                   placeholder={f.placeholder}
                   required={f.type==="date" ? true : false}

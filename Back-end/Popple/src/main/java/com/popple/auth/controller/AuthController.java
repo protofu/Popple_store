@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.popple.auth.domain.request.LoginRequest;
 import com.popple.auth.domain.request.SignUpRequest;
 import com.popple.auth.domain.request.UserDeleteRequest;
 import com.popple.auth.domain.request.UserEditRequest;
@@ -98,6 +99,14 @@ public class AuthController {
 		tokenUtils.setRefreshTokenCookie(res, tokenMap.get("refreshToken"));
 		
 		return ResponseEntity.ok(LoginResponse.builder().accessToken(tokenMap.get("accessToken")).build());
+	}
+	
+	//로그인
+	@Operation(summary = "로그인", description = "로그인을 진행합니다.")
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest){
+		LoginResponse loginUser =  authService.loginUser(loginRequest);
+		return ResponseEntity.ok(loginUser);
 	}
 	
 }
