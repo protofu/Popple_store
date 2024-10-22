@@ -22,7 +22,7 @@ export default function CompanySignUpPage() {
   const [companyField, setCompanyField] = useState([
     {
       id: 1,
-      name: "com-num",
+      name: "buisinessNumber",
       label: "사업자 등록번호",
       type: "text",
       placeholder: "111-11-11111",
@@ -123,9 +123,11 @@ export default function CompanySignUpPage() {
       },
     },
   ]);
+  console.log(watch())
   
   const onSubmit = async(data) => {
     try {
+      console.log("데이타"+data)
       const res = await CompanyAuthAPI.create(data)
       alert("가입 성공");
       navigate('/login');
@@ -134,6 +136,7 @@ export default function CompanySignUpPage() {
       alert("가입 실패"+error.data || error.message)
     } 
   }
+  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -53,7 +53,7 @@ public class Company {
 	private String leader;
 	
 	//탈퇴 시간
-	@Column(name = "deleted_at", nullable = true)
+	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 	
 	//둥록 시간

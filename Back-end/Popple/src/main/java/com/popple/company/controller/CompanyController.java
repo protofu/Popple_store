@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,14 +33,14 @@ public class CompanyController {
 	
 	@Operation(summary = "기업 회원 가입", description = "기업 회원 가입을 진행합니다.")
 	@PostMapping("/create")
-	public ResponseEntity<CompanyResponse> createCompany(CompanyRequest companyRequest){
+	public ResponseEntity<CompanyResponse> createCompany(@RequestBody CompanyRequest companyRequest){
 		CompanyResponse com = companyService.createCompany(companyRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(com);
 	}
 	
 	@Operation(summary = "기업 회원 정보 수정", description = "기업 회원 정보를 수정합니다.")
 	@PatchMapping("/update/{id}")
-	public ResponseEntity<CompanyResponse> updateCompany(CompanyRequest companyRequest, @AuthenticationPrincipal User user ) {
+	public ResponseEntity<CompanyResponse> updateCompany(@RequestBody CompanyRequest companyRequest, @AuthenticationPrincipal User user ) {
 		CompanyResponse com = companyService.updateCompany(companyRequest, user);
 		return ResponseEntity.ok(com);
 	}
