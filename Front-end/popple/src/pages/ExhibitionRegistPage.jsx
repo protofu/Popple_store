@@ -1,12 +1,6 @@
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import company from "../assets/company.png";
-import sunday from "../assets/week/sunday.png";
-import monday from "../assets/week/monday.png";
-import tuesday from "../assets/week/tuesday.png";
-import wednesday from "../assets/week/wednesday.png";
-import thursday from "../assets/week/thursday.png";
-import friday from "../assets/week/friday.png";
-import saturday from "../assets/week/saturday.png";
 
 import {
   LuParkingCircle,
@@ -14,11 +8,37 @@ import {
   LuCamera,
   LuCameraOff,
 } from "react-icons/lu";
-import { MdFastfood, MdNoFood } from "react-icons/md";
+import { MdFastfood, MdNoFood, MdAttachMoney } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
-import { useFetcher } from "react-router-dom";
-import { CgMonday } from "react-icons/cg";
+import PostCode from "../components/common/PostCode";
+import { FaDog, FaUserSlash, FaUser } from "react-icons/fa6";
+import { data } from "autoprefixer";
+import Markdown from "../components/common/Markdown";
+
 export default function ExhibitionRegistPage() {
+  const [address, setAddress] = useState({});
+
+  const [holiday, setHoliday] = useState(false);
+
+  const handleHoliday = () => {
+    setHoliday(!holiday);
+  }
+
+  const [kids, setKids] = useState(false);
+  const handleKids = () => {
+    setKids(!kids);
+  }
+
+  const [pet, setPet] = useState(false);
+  const handlePet = () => {
+    setPet(!pet);
+  }
+
+  const [fee, setFee] = useState(false);
+  const handleFee = () => {
+    setFee(!fee);
+  }
+
   const [parking, setParking] = useState(false);
   const handleParking = () => {
     setParking(!parking);
@@ -39,55 +59,50 @@ export default function ExhibitionRegistPage() {
     setCamera(!camera);
   };
 
-  const [weekFeild, setWeekFeild] = useState([
+  const [weekField, setWeekField] = useState([
     {
       d: 1,
       label: "일요일",
-      src: sunday,
-      alt: "일요일",
+      alt: "sunday.png",
     },
     {
       d: 2,
       label: "월요일",
-      src: monday,
-      alt: "월요일",
+      alt: "monday.png",
     },
     {
       d: 3,
-
-      label: "화요일",
-      src: tuesday,
-      alt: "화요일",
+      label: "화요일",      
+      alt: "tuesday.png",
     },
     {
       d: 4,
       label: "수요일",
-      src: wednesday,
-      alt: "수요일",
+      alt: "wednesday.png",
     },
     {
       d: 5,
       label: "목요일",
-      src: thursday,
-      alt: "목요일",
+      alt: "thursday.png",
     },
     {
       d: 6,
       label: "금요일",
-      src: friday,
-      alt: "금요일",
+      alt: "friday.png",
     },
     {
       d: 7,
       label: "토요일",
-      src: saturday,
-      alt: "토요일",
+      alt: "saturday.png",
     },
   ]);
+  
+  //달력 누르면 창에 이름 들어감
+  const [week, setWeek] = useState("default"); 
   const handleWeek = (w) => {
-    setWeek(w)
-  }
-  const [week, setWeek] = useState("");
+    setWeek(w);
+  };
+  
   
   return (
     <>
@@ -117,7 +132,13 @@ export default function ExhibitionRegistPage() {
                 />
               </div>
               <div>
-                <label className="text-sm ">입장료</label>
+                <div className="flex justify-between w-full">
+                  <label className="text-sm w-full">입장료</label>
+                  <div className="flex items-center w-full">
+                    <input type="checkbox" className=""/>
+                    <span className="ml-3 text-sm">무료 입장</span>
+                  </div>
+                </div>
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   placeholder="입장료를 입력해주세요"
@@ -148,12 +169,7 @@ export default function ExhibitionRegistPage() {
                   공지사항
                 </label>
                 <div>
-                  <input
-                    placeholder="마크다운이 들어갈 곳"
-                    id="notice"
-                    type="textarea"
-                    className="bg-gray-50 border rounded-lg inline w-full p-2.5"
-                  />
+                  <Markdown/>
                 </div>
               </div>
             </div>
@@ -166,8 +182,10 @@ export default function ExhibitionRegistPage() {
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-2/3 p-2.5 inline "
                   placeholder="도로명주소"
+                  value={address.roadAddress}
+                  readOnly
                 />
-                <button className="border p-2 rounded-lg">검색</button>
+                <PostCode className="border p-2 rounded-lg" value="검색" setAddress={setAddress} />
                 <input
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   placeholder="상세주소"
@@ -206,29 +224,28 @@ export default function ExhibitionRegistPage() {
         <div>
           관람시간 정보<span className="text-red-500">*</span>
           <div className="mt-5 flex justify-between">
-            {weekFeild.map((w) => {
-              return(
-                <img src={w.src} alt={w.alt} className="w-20 hover:cursor-pointer" onClick={()=>{
-                  handleWeek(w.label);
-                }}/>
-              )
+            {weekField.map((w) => {
+              return (
+                <img
+                  src={`/week/${w.alt}`}
+                  alt={w.alt}
+                  className="w-20 hover:cursor-pointer"
+                  onClick={() => {
+                    handleWeek(w.label);
+                  }}
+                />
+              );
             })}
           </div>
         </div>
         <div className="flex justify-center">
           <div className="border w-80 h-36 rounded-lg">
-            <div className="flex w-full justify-between p-3">
-              {/* {week.filter((w)=>{
-                return (
-                  <div>{w.label}</div>
-                )
-              })
-              
-              } */}
-              <div className="text-xs">
-                <input type="checkbox" />
-                <span>휴무지정</span>
-              </div>
+            <div className="flex justify-between p-3 text-xs">
+                <span>{week}</span>
+                <div>
+                  <input type="checkbox" id="holiday" checked={holiday} onChange={handleHoliday}/>
+                  <label htmlFor="holiday">휴무지정</label>
+                </div>
             </div>
             <div className="flex justify-between p-3 ">
               <label className="block text-xs text-center" htmlFor="open">
@@ -359,6 +376,52 @@ export default function ExhibitionRegistPage() {
                   </div>
                   <div className="flex justify-center">
                     <label className=" text-xs font-bold">촬영 가능 </label>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div onClick={handlePet} className="mt-5">
+              {pet ? (
+                <div>
+                  <div className="flex justify-center">
+                    <FaDog  style={{ color: "red", fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className="text-red-500 text-xs font-bold">
+                      반려동물 금지 
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex justify-center">
+                    <FaDog  style={{ fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className=" text-xs font-bold">반려동물 가능 </label>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div onClick={handleKids} className="mt-5">
+              {kids ? (
+                <div>
+                  <div className="flex justify-center">
+                    <FaUserSlash  style={{ color: "red", fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className="text-red-500 text-xs font-bold">
+                      어린이 출입 불가
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex justify-center">
+                    <FaUser  style={{ fontSize: "30px" }} />
+                  </div>
+                  <div className="flex justify-center">
+                    <label className=" text-xs font-bold">어린이 출입 가능 </label>
                   </div>
                 </div>
               )}
