@@ -1,45 +1,52 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import detailExam from "../assets/detail-exam.png";
 import Calendar from "react-calendar";
 import moment from "moment";
-import momentTZ from "moment-timezone";
+// import momentTZ from "moment-timezone";
 import "react-calendar/dist/Calendar.css";
 import "./styles/calendar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import UseInfo from "../components/exhi-details/UseInfo";
+import axios from "axios";
 
 export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
   const [value, onChange] = useState(curDate); // 클릭한 날짜 (초기값으로 현재 날짜 넣어줌)
-  const activeDate = moment(value).format('YYYY-MM-DD'); // 클릭한 날짜 (년-월-일))
+  // const activeDate = moment(value).format('YYYY-MM-DD'); // 클릭한 날짜 (년-월-일))
   const [selectedTime, setSelectedTime] = useState(""); // 선택된 시간 상태
   const [showTimePicker, setShowTimePicker] = useState(false); // 시간 선택 UI 가시성
   const [selectTab, setSelectTab] = useState("이용정보");
 
-  const { id } = useParams();
-  console.log(showTimePicker);
+  // json데이터 담을 state
+  const [data, setData] = useState(null);
 
+  // const { id } = useParams();
   // API 호출로 정보를 받아오고
   // State 값으로 저장
 
   // 예시 데이터
-  const example = {
-    id: id,
-    exhibitionName: "스폰지밥 25주년 팝업 전시 <스폰지밥 캠핑데이>",
-    fee: "20,000",
-    sub_title: "",
-    detailDescription: "",
-    premittedTime: "",
-    address: "서울특별시 서대문구 연세로 13 현대백화점 유플렉스 지하2층",
-    notice: "",
-    field: "",
-    grade: "전연령",
-    createdAt: "",
-    duration: "24.10.18 - 24.10.31",
-    poster: detailExam,
+  useEffect(() => {
+    const axiosData = async () => {
+      try {
+        // axios로 public 폴더에 있는 JSON 파일 불러오기
+        const response = await axios.get('/jsons/detail.json');
+        response.data.poster = detailExam;
+        setData(response.data); // 불러온 데이터를 상태에 저장
+        console.log("리스폰", data);
+      } catch (error) {
+        console.error('Error fetching JSON data:', error);
+      }
+    };
 
-  };
-  const combinedDateTime = selectedTime ? `${activeDate}T${selectedTime}:00.000Z` : null;
-  const momentDateTime = combinedDateTime ? momentTZ(combinedDateTime).tz('Asia/Seoul') : null;
+    axiosData(); // 비동기 함수 호출
+  }, []);
+
+  if (!data) {
+    return <div>Loading...</div>; // 데이터 로딩 중 표시
+  }
+
+  // const combinedDateTime = selectedTime ? `${activeDate}T${selectedTime}:00.000Z` : null;
+  // const momentDateTime = combinedDateTime ? momentTZ(combinedDateTime).tz('Asia/Seoul') : null;
   // "2024-10-22T14:30:00.000Z"
 
   const handleDateChange = (date) => {
@@ -63,7 +70,7 @@ export default function DetailPage() {
 
   return (
     <div className="mt-10">
-      <h1 className="text-2xl m-10">{example.exhibitionName}</h1>
+      <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
         <div className="col-span-5">
@@ -71,21 +78,21 @@ export default function DetailPage() {
           <div className="grid grid-cols-2">
             {/* 포스터 */}
             <div className="">
-              <img src={example.poster} alt="포스터 이미지" className="w-[70%] mx-auto" />
+              <img src={data.poster} alt="포스터 이미지" className="w-[70%] mx-auto" />
             </div>
             
             {/* 간략 내용 */}
             <div className="grid grid-cols-3 my-auto gap-14">
               <label htmlFor="location" className={infoGridStyle}>장소</label>
-              <h1 id="location" className={infoH1GridStyle}>{example.address}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{data.address}</h1>
               <label htmlFor="location" className={infoGridStyle}>기간</label>
-              <h1 id="location" className={infoH1GridStyle}>{example.duration}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{data.duration}</h1>
               <label htmlFor="location" className={infoGridStyle}>관람연령</label>
-              <h1 id="location" className={infoH1GridStyle}>{example.grade}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{data.grade}</h1>
               <label htmlFor="location" className={infoGridStyle}>입장료</label>
-              <h1 id="location" className={infoH1GridStyle}>{example.fee} 원</h1>
+              <h1 id="location" className={infoH1GridStyle}>{data.fee} 원</h1>
               <label htmlFor="location" className={infoGridStyle}>주의사항</label>
-              <h1 id="location" className={infoH1GridStyle}>{example.address}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{data.address}</h1>
             </div>
           </div>
           <div className="mt-8 border-b-2 border-[#868686]">
@@ -95,13 +102,10 @@ export default function DetailPage() {
               <div className={tabStyle} onClick={() => handleTab("EVENT")}>EVENT</div>
             </nav>
           </div>
-          <div className="flex justify-center mt-4">
-            {selectTab === "이용정보" && <span>1</span>}
+          <div className="mt-4">
+            {selectTab === "이용정보" && <UseInfo data={data} />}
             {selectTab === "리뷰" && <span>2</span>}
             {selectTab === "EVENT" && <span>3</span>}
-          </div>
-          <div>
-            방문통계 자~리
           </div>
         </div>
         {/* 캘린더 */}
