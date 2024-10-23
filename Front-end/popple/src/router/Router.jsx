@@ -18,6 +18,7 @@ import PolicyPage from "../pages/PolicyPage";
 import CompanySignUpPage from "../pages/CompanySignUpPage";
 import QRPage from "../pages/QRPage";
 import DetailPage from "../pages/DetailPage";
+import EventRegister from "../pages/EventRegister";
 
 
 
@@ -37,6 +38,8 @@ export default function Router() {
           <Route path="/pop-up/detail/:id" element={<DetailPage />} />
           {/* 팝업/전시 등록 페이지 */}
           <Route path="/regist" element={<ExhibitionRegistPage />} />
+          {/* 이벤트 등록 페이지 */}
+          <Route path="/event-regist" element={<EventRegister/>}/>
           {/* 마이 페이지 */}
           <Route path="/my-page" element={<MyPage />} />
           {/* 고객센터, 이벤트 페이지 */}

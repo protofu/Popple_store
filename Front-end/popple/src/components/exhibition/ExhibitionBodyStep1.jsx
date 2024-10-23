@@ -16,7 +16,7 @@ import Markdown from "../common/Markdown";
 import FileCarousel from "./FileCarousel";
 
 const ExhibitionBodyStep1 = () => {
-  const fileMax = 3;
+  const fileMax = 10;
   //주소 상태 관리
   const [address, setAddress] = useState({});
   
@@ -382,7 +382,7 @@ const ExhibitionBodyStep1 = () => {
                   accept="image/*"
                 />
                 {preview2.length > 0 ? (
-                  <FileCarousel preview2={preview2} />
+                    <FileCarousel preview2={preview2} deleteImg={deleteImg} />
                 ) : (
                   <div className="flex flex-col rounded-lg justify-center text-center items-center">
                     <p className="font-medium text-lg my-5 mb-2.5">
