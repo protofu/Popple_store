@@ -1,5 +1,6 @@
 package com.popple.help.service;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,4 +36,15 @@ public class FAQService {
     public void clearFAQs() {
         faqRepository.deleteAll();
     }
+
+
+	public FAQ getFAQById(Long id) {
+		Optional<FAQ> faq = faqRepository.findById(id);
+	    if (faq.isPresent()) {
+	        return faq.get();
+	    } else {
+	        log.warn("FAQ with id {} not found", id); // 로그 추가
+	        return null; // 또는 Exception 던지기
+	    }
+	}
 }

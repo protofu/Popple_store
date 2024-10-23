@@ -5,6 +5,6 @@ export const helpAPI = {
     fetchFAQs: () => api.get("/help"),
   
     // 특정 FAQ 요청 (상세보기)
-    fetchFAQById: (id) => api.get(`/help/detail/${id}`),
+    fetchFAQById: (id) => api.get(`/help/detail?id=${id}`),
   };
   
