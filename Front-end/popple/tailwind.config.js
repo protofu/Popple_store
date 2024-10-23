@@ -14,7 +14,7 @@ export default {
           "DEFAULT": "#8900E1",
           "dark": "#6700AD"
         },
-        'white':'#ffffff'
+        'white':'#ffffff',
       },
       fontFamily: {
         jua: ['Jua-Regular'],

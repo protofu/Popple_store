@@ -8,6 +8,7 @@ import "./styles/calendar.css";
 import { useEffect, useState } from "react";
 import UseInfo from "../components/exhi-details/UseInfo";
 import axios from "axios";
+import ReviewInDetail from "../components/review/ReviewInDetail";
 
 export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
@@ -77,7 +78,7 @@ export default function DetailPage() {
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 h-full">
       <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
@@ -112,7 +113,7 @@ export default function DetailPage() {
           </div>
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={data} chart={chartData} />}
-            {selectTab === "리뷰" && <span>2</span>}
+            {selectTab === "리뷰" && <ReviewInDetail />}
             {selectTab === "EVENT" && <span>3</span>}
           </div>
         </div>
