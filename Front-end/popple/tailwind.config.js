@@ -10,7 +10,7 @@ export default {
         transparent: "transparent",
         current: "currentColor",
         'popple':'#8900E1',
-        'white':'#ffffff'
+        'white':'#ffffff',
       },
       fontFamily: {
         jua: ['Jua-Regular'],

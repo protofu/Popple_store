@@ -1,21 +1,73 @@
 import { useState } from "react";
-
 import {
+  LuFilePlus,
   LuParkingCircle,
   LuParkingCircleOff,
   LuCamera,
   LuCameraOff,
 } from "react-icons/lu";
-import { MdFastfood, MdNoFood, MdAttachMoney } from "react-icons/md";
+import { MdFastfood, MdNoFood } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
 import PostCode from "../components/common/PostCode";
 import { FaDog, FaUserSlash, FaUser, FaArrowDown19, FaArrowUp19 } from "react-icons/fa6";
-import { data } from "autoprefixer";
+
 import Markdown from "../components/common/Markdown";
 
 export default function ExhibitionRegistPage() {
+  //주소 상태 관리
   const [address, setAddress] = useState({});
 
+  //드래그앤 드랍 상태 관리
+  const [isActive, setIsActive] = useState(false);
+
+  const handleDragStart = () => setIsActive(true);
+
+  const handleDragEnd = () => setIsActive(false);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsActive(false);
+    const files = Array.from(e.dataTransfer.files);
+    console.log("올린 파일:", files)
+    onUpload2(files);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsActive(true);
+  };
+
+
+  //포스터 이미지 상태 관리
+  const [preview, setPreview] = useState(null);
+
+  const onUpload = (e) => {
+      const file = e.target.files[0];
+      console.log('Selected file:', file); // 파일 확인
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+          console.log('File content:', reader.result); // 결과 확인
+          setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
+      };
+  };
+  //상세 이미지 상태 관리
+  const [preview2, setPreview2] = useState([]);
+  const onUpload2 = (files) => {
+    const preview = files.map((f) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(f);
+      return new Promise((resolve) => {
+        reader.onload = () => resolve(reader.result);
+      });
+    });
+    Promise.all(preview).then((newPreviews) => {
+      setPreview2((prevPreviews) => [...prevPreviews, ...newPreviews]);
+    });
+    
+  };
   //공지사항 마크다운
   const [notice, setNotice] = useState("");
   const handleNotice = (value) => {
@@ -136,6 +188,7 @@ export default function ExhibitionRegistPage() {
   const handleWeek = (w) => {
     setWeek(w);
   };
+  
   
 
   return (
@@ -267,6 +320,47 @@ export default function ExhibitionRegistPage() {
             </div>
           </div>
         </div>
+
+         {/* 포스터, 상세 이미지 */}
+         <div className="flex mt-10">
+          <div className="grid grid-cols-2 gap-x-20  w-full ">
+            <div>
+              <label htmlFor="poster" className="text-sm">
+                포스터
+              </label>
+                <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
+                  <input id="poster" className="hidden w-fit h-fit" type="file" onChange={onUpload} accept="image/*" />
+                  {preview ? (<img className="w-full" src={preview} alt="포스터"/>):(
+                    <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl"/>
+                  )}
+                  
+                </label>
+            </div>
+            <div>
+              <label htmlFor="detailImage" className="text-sm">
+                상세 이미지
+              </label>
+              <label className={`preview ${isActive ? 'active' : ' '} w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`} onDragEnter={handleDragStart}  onDragOver={handleDragOver} onDrop={handleDrop} onDragLeave={handleDragEnd} >
+                <input type="file" id="detailImage" className="hidden" multiple onChange={onUpload2} accept="image/*"/>
+                {preview2.length > 0 ? (
+                  <div className="grid grid-cols-3 gap-3">
+                    {preview2.map((preview, index)=>(
+                      <img key={index} src={preview} alt={`Preview ${index}`}/>
+                    ))}
+                  </div> 
+                ) : (
+                  <div className="flex flex-col rounded-lg w-full justify-center text-center items-center">
+                    <p className="font-medium text-lg my-5 mb-2.5">클릭 혹은 파일을 이곳에 드랍</p>
+                    <p className="m-0 text-sm">파일당 최대 3MB</p>
+                  </div>
+                )}
+                
+              </label>
+              
+            </div>
+          </div>
+        </div>
+
 
         {/* 관람시간 정보  */}
         <div className="mt-10">
