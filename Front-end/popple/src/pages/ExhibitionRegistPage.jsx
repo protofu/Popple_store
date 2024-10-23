@@ -23,6 +23,9 @@ export default function ExhibitionRegistPage() {
       
     }
   };
+  const handleNavigate = () => {
+    navigate('/event-regist');
+  }
   return (
     <>
       <ExhibitionHeader step={step} />
@@ -56,7 +59,7 @@ export default function ExhibitionRegistPage() {
               >
                 이전
               </button>
-              <button type="submit" className="border rounded-lg p-3 mt-10">
+              <button type="submit" className="border rounded-lg p-3 mt-10" onClick={handleNavigate}>
                 이벤트 등록
               </button>
               <button

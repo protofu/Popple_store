@@ -48,6 +48,8 @@ export default function CompanySignUpPage() {
       condition: { required: "대표자 성명은 필수값입니다.", maxLength: 255 },
     },
   ]);
+
+  //필드 - 2
   const [companyField2, setCompanyField2] = useState([
     {
       id: 1,
@@ -70,7 +72,7 @@ export default function CompanySignUpPage() {
       name: "sector",
       label: "기업 업종",
       type: "text",
-      placeholder: "증권", //드롭다운임
+      placeholder: "선택 또는 작성.", //드롭다운임
       condition: { required: "기업업종은 필수값입니다.", maxLength: 255 },
       array: [{ label: "증권" }, { label: "의료" }],
       condition: { required: true },
@@ -137,6 +139,9 @@ export default function CompanySignUpPage() {
     } 
   }
   
+  //드롭다운 상태 관리
+  const [dropdown, setDropdown] = useState(false);
+  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -182,6 +187,7 @@ export default function CompanySignUpPage() {
           <div className="flex flex-col gap-3">
             {companyField2.map((a) => {
               return (
+                <>
                 <div
                   key={a.id}
                   className="flex w-full h-3/4 container justify-between items-center my-1"
@@ -193,7 +199,7 @@ export default function CompanySignUpPage() {
                     {a.label}
                     <span className="text-red-500">*</span>
                   </label>
-                  <div className="flex flex-col items-start">
+                  {a.name === 3 ? (<div className="flex flex-col items-start">
                     <input
                       key={a.id}
                       type={a.type}
@@ -210,8 +216,26 @@ export default function CompanySignUpPage() {
                         </p>
                       </div>
                     )}
-                  </div>
+                  </div>):(<div className="flex flex-col items-start">
+                    <input
+                      key={a.id}
+                      type={a.type}
+                      id={a.name}
+                      {...register(a.name, a.condition)}
+                      className={inputStyle}
+                      placeholder={a.placeholder}
+                      required={true}
+                    />
+                    {errors[a.name] && (
+                      <div>
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors[a.name].message}
+                        </p>
+                      </div>
+                    )}
+                  </div>)}
                 </div>
+                </>
               );
             })}
           </div>
