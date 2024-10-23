@@ -34,11 +34,10 @@ export default function AgeChart({ chart }) {
     return acc;
   }, {});
 
-  // key 값만 담긴 배열
-  const keyArray = Object.keys(barChart);
-  console.log(keyArray);
+  
   // Convert to array for Nivo
   const barChartData = Object.entries(barChart).map(([key, value]) => ({
+    key : key,
     ageGroup: key,
     count: value,
     value: Math.round((value / totalCount) * 100 * 100) / 100,
@@ -46,26 +45,39 @@ export default function AgeChart({ chart }) {
   // 눈금 최대치 구하기 위해 맥스값 계산
   const maxValueItem = barChartData.reduce((max, item) => (item.value > max.value ? item : max), barChartData[0]);
   console.log(barChartData);
+  // key 값 : value 만 담긴 배열
+  const keyValue = barChartData.reduce((acc, item) => {
+    acc[item.ageGroup] = item.value; // ageGroup과 value로 구성
+    return acc;
+  }, {});
+
+  console.log(keyValue);
+
+  const ageGroupColors = {
+    "10대": "#1f77b4",
+    "20대": "#ff7f0e",
+    "30대": "#2ca02c",
+    "40대": "#d62728",
+    "50대~": "#9467bd",
+  };
+  
   
   return (
     <div className="w-full h-[200px] mx-auto">
       <ResponsiveBar
           data={barChartData}
           key={barChartData => barChartData.ageGroup}
-          keys={['value']}
           indexBy={"ageGroup"}
           margin={{ top: 20, right: 100, bottom: 50, left: 0 }}
           padding={0.3}
           maxValue={Math.floor(maxValueItem.value+10)}
           valueScale={{ type: 'linear' }}
           indexScale={{ type: 'band', round: true }}
-          colors={{ scheme: 'category10' }}
-          colorBy="id"
-          id="ageGroup"
+          colors={(bar) => ageGroupColors[bar.data.ageGroup] || "#000"}
           tooltip={ point => {
               return (
                   <div className="bg-white p-2 rounded-lg shadow-md text-black">
-                      {point.data.generation} ({point.data.count}명)
+                      {point.data.ageGroup} ({point.data.count}명)
                   </div>
               )
           }}
@@ -86,7 +98,7 @@ export default function AgeChart({ chart }) {
           }}
           legends={[
             {
-                dataFrom: 'keys',
+                dataFrom: 'indexes',
                 anchor: 'right',
                 direction: 'column',
                 justify: false,
