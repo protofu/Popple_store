@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LuFilePlus,
   LuParkingCircle,
@@ -6,6 +6,7 @@ import {
   LuCamera,
   LuCameraOff,
 } from "react-icons/lu";
+import { TiDelete } from "react-icons/ti";
 import { MdFastfood, MdNoFood } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
 import PostCode from "../components/common/PostCode";
@@ -14,27 +15,37 @@ import { FaDog, FaUserSlash, FaUser, FaArrowDown19, FaArrowUp19 } from "react-ic
 import Markdown from "../components/common/Markdown";
 
 export default function ExhibitionRegistPage() {
+  const fileMax = 3;
   //주소 상태 관리
   const [address, setAddress] = useState({});
-
+  
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
+  const [uploadPossible, setUploadPossible] = useState(true);
+  
+  const handleDragStart = () => setIsActive(true)
 
-  const handleDragStart = () => setIsActive(true);
-
-  const handleDragEnd = () => setIsActive(false);
+  const handleDragEnd = () => setIsActive(false)
 
   const handleDrop = (e) => {
     e.preventDefault();
     setIsActive(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log("올린 파일:", files)
+    console.log("올라갈 파일:", files)
     onUpload2(files);
   };
   const handleDragOver = (e) => {
+    if (!uploadPossible) return false;
     e.preventDefault();
     setIsActive(true);
-  };
+  };  
+
+  //파일 이미지 삭제
+  function deleteImg(index){
+    const deletePreview2 = [...preview];
+    deletePreview2.splice(index,1);
+    setPreview2(deletePreview2);
+  }
 
 
   //포스터 이미지 상태 관리
@@ -56,6 +67,12 @@ export default function ExhibitionRegistPage() {
   //상세 이미지 상태 관리
   const [preview2, setPreview2] = useState([]);
   const onUpload2 = (files) => {
+    // 파일이 2개 이상이면 업로드 안함
+    if (preview2.length >= fileMax) {
+      console.log("나 업로드 안할래");
+      setUploadPossible(false);
+      return false;
+    }
     const preview = files.map((f) => {
       const reader = new FileReader();
       reader.readAsDataURL(f);
@@ -64,10 +81,16 @@ export default function ExhibitionRegistPage() {
       });
     });
     Promise.all(preview).then((newPreviews) => {
-      setPreview2((prevPreviews) => [...prevPreviews, ...newPreviews]);
+      setPreview2((prevPreviews) => {
+        const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
+        if (fileCount > fileMax) {
+          newPreviews = newPreviews.splice(0, fileCount-fileMax);
+        }
+        return [...prevPreviews, ...newPreviews]});
     });
-    
+    console.log("업로드 완료! 파일 개수", preview2.length);
   };
+
   //공지사항 마크다운
   const [notice, setNotice] = useState("");
   const handleNotice = (value) => {
@@ -340,22 +363,30 @@ export default function ExhibitionRegistPage() {
               <label htmlFor="detailImage" className="text-sm">
                 상세 이미지
               </label>
-              <label className={`preview ${isActive ? 'active' : ' '} w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`} onDragEnter={handleDragStart}  onDragOver={handleDragOver} onDrop={handleDrop} onDragLeave={handleDragEnd} >
-                <input type="file" id="detailImage" className="hidden" multiple onChange={onUpload2} accept="image/*"/>
-                {preview2.length > 0 ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    {preview2.map((preview, index)=>(
-                      <img key={index} src={preview} alt={`Preview ${index}`}/>
-                    ))}
-                  </div> 
-                ) : (
-                  <div className="flex flex-col rounded-lg w-full justify-center text-center items-center">
-                    <p className="font-medium text-lg my-5 mb-2.5">클릭 혹은 파일을 이곳에 드랍</p>
-                    <p className="m-0 text-sm">파일당 최대 3MB</p>
-                  </div>
-                )}
-                
-              </label>
+              <div className="flex h-full">
+                <label className={`preview ${isActive ? 'active' : ' '} w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`} onDragEnter={handleDragStart}  onDragOver={handleDragOver} onDrop={handleDrop} onDragLeave={handleDragEnd} >
+                  <input type="file" id="detailImage" className="hidden" multiple onChange={onUpload2} accept="image/*" />
+                  {preview2.length > 0 ? (
+                    <div>
+                      <div className="grid grid-cols-3 gap-3">
+                      {preview2.map((preview, index)=>(
+                        <div key={index}>
+                          <button type="button" onClick={()=>deleteImg(index)}><TiDelete/></button>
+                          <img src={preview} alt={`Preview ${index}`}/>
+                        </div>
+                      ))}
+                        
+                      </div> 
+                    </div>
+                  ) : (
+                    <div className="flex flex-col rounded-lg justify-center text-center items-center">
+                      <p className="font-medium text-lg my-5 mb-2.5">클릭 혹은 파일을 이곳에 드랍</p>
+                      <p className="m-0 text-sm">파일당 최대 3MB</p>
+                    </div>
+                  )}
+                </label>
+                <div className="text-xs">{preview2.length}/{fileMax}</div>
+              </div>
               
             </div>
           </div>
