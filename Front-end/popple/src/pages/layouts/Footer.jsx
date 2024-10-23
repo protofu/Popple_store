@@ -17,9 +17,9 @@ export default function Footer() {
     <div className="w-full border-t border-gray-400">
       <div 
         style={{ maxWidth: "calc(100% - 530px)" }}
-        className="mx-auto pt-4 pb-5 flex justify-between items-center md:max-w-full xl:flex-row flex-col md:items-start"
+        className="mx-auto pt-4 pb-5 grid grid-cols-[1fr_2fr] gap-32 items-center md:max-w-full xl:flex-row flex-col md:items-start"
       >
-        <div className="text-gray-400 flex justify-between md:mb-0 mb-5">
+        <div className="text-gray-400 flex md:mb-0 mb-5">
           <div>
             <p className="m-1 text-[13px]">Popeye</p>
             <p className="m-1 text-[13px]">서울특별시 종로구 우정국로2길 21 대왕빌딩 7층</p>
@@ -45,7 +45,7 @@ export default function Footer() {
             />
           </div>
         </div>
-        <div className="flex gap-7 text-lg">
+        <div className="flex text-lg w-full gap-32 justify-end">
           <ul>
             <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
               팝업/전시회
