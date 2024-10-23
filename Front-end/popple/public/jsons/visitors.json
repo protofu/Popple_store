@@ -55,7 +55,7 @@
     "user": {
       "id": 4,
       "name": "최은주",
-      "gender": false,
+      "gender": true,
       "birth": "1995-07-10"
     },
     "company": {
@@ -87,7 +87,7 @@
     "user": {
       "id": 6,
       "name": "송민지",
-      "gender": false,
+      "gender": true,
       "birth": "1988-08-17"
     },
     "company": {
@@ -310,6 +310,22 @@
     "pop_id": 1,
     "user": {
       "id": 20,
+      "name": "서지현",
+      "gender": false,
+      "birth": "1978-11-11"
+    },
+    "company": {
+      "id": 1,
+      "name": "인규스트리"
+    }
+  },  
+  {
+    "id": 21,
+    "weekday": 6,
+    "timeZone": 6,
+    "pop_id": 1,
+    "user": {
+      "id": 21,
       "name": "서지현",
       "gender": false,
       "birth": "1978-11-11"

@@ -2,11 +2,12 @@ import { ResponsiveBar } from "@nivo/bar";
 
 export default function AgeChart({ chart }) {
   const curYear = new Date().getFullYear();
+  let totalCount = 0;
 
   const barChart = chart.reduce((acc, item) => {
     const birthYear = new Date(item.user.birth).getFullYear();
     const age = curYear - birthYear;
-
+    totalCount += 1;
     // Determine age group
     let ageKey;
     if (age < 10) {
@@ -32,43 +33,67 @@ export default function AgeChart({ chart }) {
     acc[ageKey] += 1;
     return acc;
   }, {});
-
   // Convert to array for Nivo
   const barChartData = Object.entries(barChart).map(([key, value]) => ({
     ageGroup: key,
     count: value,
+    value: Math.round((value / totalCount) * 100 * 100) / 100,
   }));
-
-  const totalCount = barChartData.reduce((acc, item) => acc + item.count, 0);
-
-  console.log(barChartData);
+  // 눈금 최대치 구하기 위해 맥스값 계산
+  const maxValueItem = barChartData.reduce((max, item) => (item.value > max.value ? item : max), barChartData[0]);
 
   return (
     <div className="w-[400px] h-[200px]">
       <ResponsiveBar
-        data={barChartData}
-        keys={['count']}
-        indexBy="ageGroup"
-        margin={{ top: 50, right: 30, bottom: 50, left: 30 }}
-        padding={0.2}
-        barThickness={10} // 막대 너비 조정
-        axisLeft={{
-          tickValues: [], // 눈금 제거
-          // 추가적인 설정이 필요하면 여기에 추가
-        }}
-        gridYValues={[]} // Y축 그리드 라인 제거
-        label={(d) => {
-          const percentage = ((d.value / totalCount) * 100).toFixed(1); // 백분율 계산
-          return `${percentage}%`; // 퍼센트로 표시
-        }}
-        labelTextColor="#fff"
-        labelTextSize={10}
-        // labelSkipHeight={20} // 레이블의 최소 높이 설정
-        colors="#8900E1" // 막대 색상 설정
-        labelPosition="top" // 레이블을 막대의 상단에 위치
-        role="application"
-        ariaLabel="Nivo bar chart demo"
-        barAriaLabel={e => `${e.id}: ${e.formattedValue} in age group: ${e.indexValue}`}
+          data={barChartData}
+          key={bar => bar.generation}
+          indexBy={"ageGroup"}
+          margin={{ top: 20, right: 50, bottom: 50, left: 50 }}
+          padding={0.3}
+          maxValue={Math.floor(maxValueItem.value+10)}
+          valueScale={{ type: 'linear' }}
+          indexScale={{ type: 'band', round: true }}
+          colors={{ scheme: 'category10' }}
+          colorBy="id"
+          id="ageGroup"
+          tooltip={ point => {
+              return (
+                  <div className="bg-white p-2 rounded-lg shadow-md text-black">
+                      {point.data.generation} ({point.data.count}명)
+                  </div>
+              )
+          }}
+          axisTop={null}
+          axisRight={null}
+          axisBottom={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: '나이대',
+              legendPosition: 'middle',
+              legendOffset: 32,
+          }}
+          axisLeft={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: '방문자 수',
+              legendPosition: 'middle',
+              legendOffset: -40,
+          }}
+          enableTotals={true}
+          enableLabel={false}
+          labelSkipWidth={12}
+          labelSkipHeight={12}
+          labelTextColor={{
+              from: 'color',
+              modifiers: [
+                  [
+                      'darker',
+                      1.6
+                  ]
+              ]
+          }}
       />
     </div>
   );

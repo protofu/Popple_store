@@ -5,7 +5,7 @@ export default function UseInfo({ data, chart }) {
   console.log("데이터", data);
   console.log("차트", chart);
   const h1Style = "font-bold text-[1.25rem]";
-  const innerInfo = "mx-6";
+  const innerInfo = "m-6";
 
   const sections = [
     { title: "관람정보", content: data.notice },
@@ -19,7 +19,7 @@ export default function UseInfo({ data, chart }) {
   // 나이대별 비율도 100% 기준 10대부터 %값으로 주어짐
 
   return (
-    <div className="flex flex-col gap-8 mb-[2rem] mx-12">
+    <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12">
       {sections.map((section, index) => (
         <div key={index}>
           <h1 className={h1Style}>{section.title}</h1>
