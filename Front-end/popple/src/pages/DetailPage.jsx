@@ -16,9 +16,10 @@ export default function DetailPage() {
   const [selectedTime, setSelectedTime] = useState(""); // 선택된 시간 상태
   const [showTimePicker, setShowTimePicker] = useState(false); // 시간 선택 UI 가시성
   const [selectTab, setSelectTab] = useState("이용정보");
-
+  
   // json데이터 담을 state
   const [data, setData] = useState(null);
+  const [chartData, setChartData] = useState(null);
 
   // const { id } = useParams();
   // API 호출로 정보를 받아오고
@@ -29,9 +30,11 @@ export default function DetailPage() {
     const axiosData = async () => {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
-        const response = await axios.get('/jsons/detail.json');
-        response.data.poster = detailExam;
-        setData(response.data); // 불러온 데이터를 상태에 저장
+        const resDetail = await axios.get('/jsons/detail.json');
+        const resChartData = await axios.get('/jsons/visitors.json');
+        resDetail.data.poster = detailExam;
+        setData(resDetail.data); // 불러온 데이터를 상태에 저장
+        setChartData(resChartData.data);
         console.log("리스폰", data);
       } catch (error) {
         console.error('Error fetching JSON data:', error);
@@ -44,6 +47,11 @@ export default function DetailPage() {
   if (!data) {
     return <div>Loading...</div>; // 데이터 로딩 중 표시
   }
+
+  if (!chartData) {
+    return <div>Loading...</div>; // 데이터 로딩 중 표시
+  }
+
 
   // const combinedDateTime = selectedTime ? `${activeDate}T${selectedTime}:00.000Z` : null;
   // const momentDateTime = combinedDateTime ? momentTZ(combinedDateTime).tz('Asia/Seoul') : null;
@@ -103,7 +111,7 @@ export default function DetailPage() {
             </nav>
           </div>
           <div className="mt-4">
-            {selectTab === "이용정보" && <UseInfo data={data} />}
+            {selectTab === "이용정보" && <UseInfo data={data} chart={chartData} />}
             {selectTab === "리뷰" && <span>2</span>}
             {selectTab === "EVENT" && <span>3</span>}
           </div>
