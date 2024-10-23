@@ -14,7 +14,10 @@ export default function ExhibitionRegistPage() {
         }
         <div>
           <hr className="w-full mt-10" />
-          <div className="flex justify-end items-center">
+          <div className="flex justify-between items-center">
+            <button type="submit" className="border rounded-lg p-3 mt-10" onClick={() => setStep(step => step-1)}>
+              이전
+            </button>
             <button type="submit" className="border rounded-lg p-3 mt-10" onClick={() => setStep(step => step+1)}>
               다음
             </button>

@@ -363,7 +363,7 @@ const ExhibitionBodyStep1 = () => {
             <label htmlFor="detailImage" className="text-sm">
               상세 이미지
             </label>
-            <div className="flex h-full">
+            <div className="h-full">
               <label
                 className={`preview ${
                   isActive ? "active" : " "
