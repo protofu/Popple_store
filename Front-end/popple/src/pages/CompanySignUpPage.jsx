@@ -6,6 +6,7 @@ import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
 import { CompanyAuthAPI } from "../api/services/CompanyAuth";
 import PostCode from "../components/common/PostCode";
+import Dropdown from "../components/exhibition/Dropdown";
 
 export default function CompanySignUpPage() {
   const inputStyle =
@@ -18,8 +19,14 @@ export default function CompanySignUpPage() {
     setValue,
     watch,
   } = useForm();
-
+  //주소 상태 관리
   const [address, setAddress] = useState({});
+
+  //드롭다운 값 관리
+  const [drop, setDrop] = useState('');
+  const handleDropdown = (e) => {
+    setDrop(e.target.value);
+  }
 
   //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
@@ -211,7 +218,9 @@ export default function CompanySignUpPage() {
                         className={inputStyle}
                         placeholder={a.placeholder}
                         required={true}
+                        value={drop}
                       />
+                      <Dropdown onChange={handleDropdown}/>
                       {errors[a.name] && (
                         <div>
                           <p className="text-red-500 text-xs mt-1">
