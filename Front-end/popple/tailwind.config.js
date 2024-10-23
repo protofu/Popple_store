@@ -9,7 +9,11 @@ export default {
       colors:{
         transparent: "transparent",
         current: "currentColor",
-        'popple':'#8900E1',
+        'popple':{
+          "light" : "#A933F1",
+          "DEFAULT": "#8900E1",
+          "dark": "#6700AD"
+        },
         'white':'#ffffff'
       },
       fontFamily: {

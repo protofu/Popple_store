@@ -33,6 +33,10 @@ export default function AgeChart({ chart }) {
     acc[ageKey] += 1;
     return acc;
   }, {});
+
+  // key 값만 담긴 배열
+  const keyArray = Object.keys(barChart);
+  console.log(keyArray);
   // Convert to array for Nivo
   const barChartData = Object.entries(barChart).map(([key, value]) => ({
     ageGroup: key,
@@ -41,14 +45,16 @@ export default function AgeChart({ chart }) {
   }));
   // 눈금 최대치 구하기 위해 맥스값 계산
   const maxValueItem = barChartData.reduce((max, item) => (item.value > max.value ? item : max), barChartData[0]);
-
+  console.log(barChartData);
+  
   return (
-    <div className="w-[400px] h-[200px]">
+    <div className="w-full h-[200px] mx-auto">
       <ResponsiveBar
           data={barChartData}
-          key={bar => bar.generation}
+          key={barChartData => barChartData.ageGroup}
+          keys={['value']}
           indexBy={"ageGroup"}
-          margin={{ top: 20, right: 50, bottom: 50, left: 50 }}
+          margin={{ top: 20, right: 100, bottom: 50, left: 0 }}
           padding={0.3}
           maxValue={Math.floor(maxValueItem.value+10)}
           valueScale={{ type: 'linear' }}
@@ -63,26 +69,10 @@ export default function AgeChart({ chart }) {
                   </div>
               )
           }}
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: '나이대',
-              legendPosition: 'middle',
-              legendOffset: 32,
-          }}
-          axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: '방문자 수',
-              legendPosition: 'middle',
-              legendOffset: -40,
-          }}
+          axisLeft={null}
           enableTotals={true}
           enableLabel={false}
+          enableGridY={false}
           labelSkipWidth={12}
           labelSkipHeight={12}
           labelTextColor={{
@@ -94,6 +84,30 @@ export default function AgeChart({ chart }) {
                   ]
               ]
           }}
+          legends={[
+            {
+                dataFrom: 'keys',
+                anchor: 'right',
+                direction: 'column',
+                justify: false,
+                translateX: 120,
+                translateY: 0,
+                itemsSpacing: 2,
+                itemWidth: 100,
+                itemHeight: 20,
+                itemDirection: 'left-to-right',
+                itemOpacity: 0.85,
+                symbolSize: 20,
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemOpacity: 1
+                        }
+                    }
+                ]
+            }
+        ]}
       />
     </div>
   );
