@@ -5,6 +5,7 @@ import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
 import { CompanyAuthAPI } from "../api/services/CompanyAuth";
+import PostCode from "../components/common/PostCode";
 
 export default function CompanySignUpPage() {
   const inputStyle =
@@ -17,6 +18,8 @@ export default function CompanySignUpPage() {
     setValue,
     watch,
   } = useForm();
+
+  const [address, setAddress] = useState({});
 
   //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
@@ -126,22 +129,22 @@ export default function CompanySignUpPage() {
     },
   ]);
   console.log(watch())
-  
-  const onSubmit = async(data) => {
+
+  const onSubmit = async (data) => {
     try {
-      console.log("데이타"+data)
+      console.log("데이타" + data)
       const res = await CompanyAuthAPI.create(data)
       alert("가입 성공");
       navigate('/login');
     } catch (error) {
-      console.error("가입 실패"+error)
-      alert("가입 실패"+error.data || error.message)
-    } 
+      console.error("가입 실패" + error)
+      alert("가입 실패" + error.data || error.message)
+    }
   }
-  
+
   //드롭다운 상태 관리
   const [dropdown, setDropdown] = useState(false);
-  
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -188,53 +191,83 @@ export default function CompanySignUpPage() {
             {companyField2.map((a) => {
               return (
                 <>
-                <div
-                  key={a.id}
-                  className="flex w-full h-3/4 container justify-between items-center my-1"
-                >
-                  <label
-                    htmlFor={a.name}
-                    className="block text-sm font-medium text-gray-900 dark:text-white text-center"
+                  <div
+                    key={a.id}
+                    className="flex w-full h-3/4 container justify-between items-center my-1"
                   >
-                    {a.label}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  {a.name === 3 ? (<div className="flex flex-col items-start">
-                    <input
-                      key={a.id}
-                      type={a.type}
-                      id={a.name}
-                      {...register(a.name, a.condition)}
-                      className={inputStyle}
-                      placeholder={a.placeholder}
-                      required={true}
-                    />
-                    {errors[a.name] && (
-                      <div>
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors[a.name].message}
-                        </p>
+                    <label
+                      htmlFor={a.name}
+                      className="block text-sm font-medium text-gray-900 dark:text-white text-center"
+                    >
+                      {a.label}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    {a.id === 3 ? (<div className="flex flex-col items-start">
+                      <input
+                        key={a.id}
+                        type={a.type}
+                        id={a.name}
+                        {...register(a.name, a.condition)}
+                        className={inputStyle}
+                        placeholder={a.placeholder}
+                        required={true}
+                      />
+                      {errors[a.name] && (
+                        <div>
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors[a.name].message}
+                          </p>
+                        </div>
+                      )}
+                    </div>) : a.id === 2 ? (
+                      <div className="flex flex-col items-start">
+                        <div className="flex w-280">
+                          <input
+                            key={a.id}
+                            type={a.type}
+                            id={a.name}
+                            {...register(a.name, a.condition)}
+                            className="w-240 h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2" 
+                            placeholder={a.placeholder}
+                            required={true}
+                          />
+                          <PostCode
+                          className="border p-2 rounded-lg"
+                          value="검색"
+                          setAddress={setAddress}
+                          />
+                        </div>
+
+
+                        {errors[a.name] && (
+                          <div>
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors[a.name].message}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-start">
+                        <input
+                          key={a.id}
+                          type={a.type}
+                          id={a.name}
+                          {...register(a.name, a.condition)}
+                          className={inputStyle}
+                          placeholder={a.placeholder}
+                          required={true}
+                        />
+                        {errors[a.name] && (
+                          <div>
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors[a.name].message}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
-                  </div>):(<div className="flex flex-col items-start">
-                    <input
-                      key={a.id}
-                      type={a.type}
-                      id={a.name}
-                      {...register(a.name, a.condition)}
-                      className={inputStyle}
-                      placeholder={a.placeholder}
-                      required={true}
-                    />
-                    {errors[a.name] && (
-                      <div>
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors[a.name].message}
-                        </p>
-                      </div>
-                    )}
-                  </div>)}
-                </div>
+                  </div>
                 </>
               );
             })}
