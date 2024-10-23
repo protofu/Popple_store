@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import "./Header.module.css";
-import mainLogo from "../../assets/MainLogo.png";
 import { useLoginStore } from "../../stores/LoginState";
 import { useEffect } from "react";
 import { getCookie, removeCookie } from "../../utils/CookieUtils";
@@ -67,7 +66,7 @@ export default function Header() {
 
       {/* 헤더 중반부 로고 */}
       <div className="flex justify-center py-2.5">
-        <img src={mainLogo} alt="메인 로고" onClick={() => handleNavigation("/")} className="list-none cursor-pointer"/>
+        <img src="/popple_logo(2).png" alt="메인 로고" onClick={() => handleNavigation("/")} className="list-none cursor-pointer w-[120px] h-auto"/>
       </div>
 
       {/* 헤더 하단 네브바 */}
