@@ -4,9 +4,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./styles/zIndex.css";
-
-export default function FileCarousel({ preview2 }) {
+import { TiDelete } from "react-icons/ti";
+export default function FileCarousel({ preview2, deleteImg }) {
   console.log(preview2)
+
+  
+  //파일 이미지 삭제
+ 
 
   return (
     <Swiper
@@ -20,7 +24,10 @@ export default function FileCarousel({ preview2 }) {
     >
       {preview2.map((data, index) => (
         <SwiperSlide key={index}>
-          <img src={data} />
+          <button type="button" onClick={()=>deleteImg(index)} >
+            <TiDelete/>
+            <img src={data} />
+          </button>
         </SwiperSlide>
       ))}
     </Swiper>
