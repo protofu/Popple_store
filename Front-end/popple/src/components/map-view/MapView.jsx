@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import styles from "./MapView.module.css";
 
-export default function MapView() {
+export default function MapView({ latitude, longitude }) {
+
     useEffect(() => {
         // Kakao Maps API 스크립트 태그 생성
         const script = document.createElement('script');
@@ -16,11 +16,33 @@ export default function MapView() {
                     const container = document.getElementById('map');
                     // 지도 생성 기본 옵션
                     const options = {
-                        center: new window.kakao.maps.LatLng(37.569697009503514, 126.9842772261843), // 위도, 경도
+                        center: new window.kakao.maps.LatLng(longitude, latitude), // 경도, 위도
                         level: 3 // 지도의 확대 레벨
                     };
                     // 지도 생성 및 객체 리턴
-                    new window.kakao.maps.Map(container, options);
+                    const map = new window.kakao.maps.Map(container, options);
+
+                    // 마커가 표시될 위치
+                    const markerPosition = new window.kakao.maps.LatLng(longitude, latitude); 
+
+                    // 마커를 생성
+                    const marker = new window.kakao.maps.Marker({
+                        position: markerPosition
+                    });
+
+                    // 마커가 지도 위에 표시
+                    marker.setMap(map);
+
+                    var iwContent = '인포윈도우', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능
+                    iwPosition = new window.kakao.maps.LatLng(longitude, latitude); //인포윈도우 표시 위치
+
+                    // 인포윈도우를 생성
+                    var infowindow = new window.kakao.maps.InfoWindow({
+                        position : iwPosition, 
+                        content : iwContent 
+                    });
+
+                    infowindow.open(map, marker); 
                 });
             } else {
                 console.error('Kakao Maps API가 로드되지 않았습니다.');
@@ -31,7 +53,7 @@ export default function MapView() {
         };
         // 문서의 head 태그에 스크립트 태그를 추가하여 로드 시작
         document.head.appendChild(script);
-    }, []);
+    }, [longitude, latitude]);
 
     return (
         <div id="map" className="w-full h-full border border-gray-300 rounded-r-lg shadow-lg]"></div>
