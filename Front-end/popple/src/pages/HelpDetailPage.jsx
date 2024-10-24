@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { helpAPI } from "../api/services/Help"; // 수정된 helpAPI 가져오기
+import { helpAPI } from "../api/services/Help";
+import { useLocation } from "react-router-dom";
 
 export default function HelpDetailPage() {
-  const { id } = useParams(); // URL에서 id 가져오기
-  const [faq, setFaq] = useState(null); // FAQ 상태 초기화
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id'); // 쿼리 파라미터에서 id를 가져옴
+  const [faq, setFaq] = useState(null);
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
 
   useEffect(() => {
     const fetchFAQ = async () => {
+      if (!id) {
+        console.error("No ID provided");
+        return;
+      }
+      
       try {
-        const response = await helpAPI.fetchFAQById(id); // 특정 FAQ를 가져오는 API 호출
-        setFaq(response.data); // 상태 업데이트
+        const response = await helpAPI.fetchFAQById(id);
+        setFaq(response.data);
       } catch (error) {
         console.error("Failed to fetch FAQ", error);
       }
@@ -20,13 +27,19 @@ export default function HelpDetailPage() {
     fetchFAQ();
   }, [id]);
 
-  if (!faq) return <p>Loading...</p>; // FAQ가 없으면 로딩 메시지 표시
+  if (!faq) {
+    return <p>Loading...</p>;
+  }
 
   return (
-    <div>
-      <h1 className={textStyle}>{faq.title}</h1>
-      <hr className="mt-2 mb-0 border-gray-500" />
-      <p className="mt-4">{faq.description}</p> {/* FAQ 설명 표시 */}
-    </div>
+    <>
+  <h1 className={textStyle}>{faq.title}</h1>
+  <hr className="mt-2 mb-0 border-gray-500" />
+  <p className="text-[17px] ml-3 mt-5 mb-5 pt-5">{faq.description}</p>
+  <hr className="mt-2 mb-0 border-gray-500 h-full" />
+  <hr className="absolute bottom-[20%] left-1/2  w-[80%] transform -translate-x-1/2 border-gray-500" />
+  
+</>
+
   );
 }
