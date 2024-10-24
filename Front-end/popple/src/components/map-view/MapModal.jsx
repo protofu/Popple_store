@@ -18,6 +18,15 @@ export default function MapModal({ onClose }) {
     console.log(searchResults);
   };
 
+  // 해야할것
+  // 1. 검색시 뜨는 리스트 onChange 이벤트로 전환해서 검색전 리스트 먼저 보여주기
+  // 1-1. 리스트는 일반적인 div로 보여지는게아니라 검색과 동시에 자동완성 느낌으로 드롭다운되기
+  // 2. 리스트 요소 클릭시 해당 text로 바뀌고 검색을 눌렀을때 마커 이동(지도 이동)
+  // 3. 마커 색상 변경하기
+  // 4. 인포 윈도우 알맞게 꾸미기
+  // 5. 해당 마커를 중심으로 약 1Km? or 500m 반경으로 모든 전시 찾아서 리스트로 나타내기
+  // 6. 팝업/전시 리스트는 검색시 왼쪽 컨테이너에서 나오기(열고 닫기 가능)
+
   const inputStyle =
     "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
   const typeButtionStyle = "border border-2 border-popple-light text-center py-2 cursor-pointer";
@@ -52,10 +61,9 @@ export default function MapModal({ onClose }) {
             </div>
             <ul>
               {results.map((result, index) => (
-                <li key={index}>
+                <li key={index} className="border-2">
                   <p>{result.address_name}</p>
                   {result.road_address && <p>도로명 주소: {result.road_address.address_name}</p>}
-                  <p>좌표: ({result.x}, {result.y})</p>
                 </li>
               ))}
             </ul>
