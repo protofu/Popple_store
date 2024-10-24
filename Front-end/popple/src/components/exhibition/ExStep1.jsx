@@ -108,6 +108,9 @@ const ExStep1 = ({ information, changeInformation }) => {
     setDetailDescription(value);
   };
 
+  //전시기간 날짜 선택 관리
+  const today = new Date().toISOString().split("T")[0];
+
   const inputStyle =
     "w-full h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 block focus:outline-none px-2";
   const smallStyle =
@@ -171,6 +174,7 @@ const ExStep1 = ({ information, changeInformation }) => {
                   required
                   placeholder="시작일"
                   className={smallStyle}
+                  min={`${today}`}
                   value={information.startDate}
                   onChange={(e) => changeInformation(e)}
                 />
@@ -180,6 +184,7 @@ const ExStep1 = ({ information, changeInformation }) => {
                   name="endDate"
                   required
                   placeholder="종료일"
+                  min={`${today}`}
                   className={smallStyle}
                   value={information.endDate}
                   onChange={(e) => changeInformation(e)}
