@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../components/exhibition/FileCarousel";
+import { useNavigate } from "react-router-dom";
 
-export default function EventRegister() {
+export default function EventRegister({ information, changeInformation }) {
   const fileMax = 5;
+
+  const navigate = useNavigate();
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
   const [uploadPossible, setUploadPossible] = useState(true);
@@ -199,15 +202,7 @@ export default function EventRegister() {
             </div>
           </div>
         </div>
-        <hr className="w-full mt-10" />
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="border rounded-lg p-3 mt-5"
-          >
-            등록
-          </button>
-        </div>
+        
       </div>
     </>
   );

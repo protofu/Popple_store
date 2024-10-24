@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ExhibitionBodyStep2() {
+export default function ExhibitionBodyStep2({ allOfPopUpData, setAllOfPopUpData }) {
   const [title, setTitle] = useState([
     {
       id: 1,

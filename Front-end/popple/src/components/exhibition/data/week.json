@@ -1,0 +1,37 @@
+{"weekField" : [
+  {
+    "id": 1,
+    "label": "일요일",
+    "alt": "sunday.png"
+  },
+  {
+    "id": 2,
+    "label": "월요일",
+    "alt": "monday.png"
+  },
+  {
+    "id": 3,
+    "label": "화요일",
+    "alt": "tuesday.png"
+  },
+  {
+    "id": 4,
+    "label": "수요일",
+    "alt": "wednesday.png"
+  },
+  {
+    "id": 5,
+    "label": "목요일",
+    "alt": "thursday.png"
+  },
+  {
+    "id": 6,
+    "label": "금요일",
+    "alt": "friday.png"
+  },
+  {
+    "id": 7,
+    "label": "토요일",
+    "alt": "saturday.png"
+  }
+]}
