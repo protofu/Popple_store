@@ -34,6 +34,6 @@ export default function MapView() {
     }, []);
 
     return (
-        <div id="map" className={styles.mapContainer}></div>
+        <div id="map" className="w-full h-full border border-gray-300 rounded-r-lg shadow-lg]"></div>
     );
 }
