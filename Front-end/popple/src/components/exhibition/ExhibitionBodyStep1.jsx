@@ -6,64 +6,73 @@ import {
   LuCamera,
   LuCameraOff,
 } from "react-icons/lu";
-import { TiDelete } from "react-icons/ti";
 import { MdFastfood, MdNoFood } from "react-icons/md";
 import { CiWifiOn, CiWifiOff } from "react-icons/ci";
 import PostCode from "../common/PostCode";
-import { FaDog, FaUserSlash, FaUser, FaArrowDown19, FaArrowUp19 } from "react-icons/fa6";
+import {
+  FaDog,
+  FaUserSlash,
+  FaUser,
+  FaArrowDown19,
+  FaArrowUp19,
+} from "react-icons/fa6";
 
 import Markdown from "../common/Markdown";
 import FileCarousel from "./FileCarousel";
+import { weekField } from "./data/week.json";
+import { input } from "@material-tailwind/react";
+import { all } from "axios";
+import { data } from "autoprefixer";
 
-const ExhibitionBodyStep1 = () => {
+const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
   const fileMax = 10;
   //주소 상태 관리
+
   const [address, setAddress] = useState({});
-  
+
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
   const [uploadPossible, setUploadPossible] = useState(true);
-  
-  const handleDragStart = () => setIsActive(true)
 
-  const handleDragEnd = () => setIsActive(false)
+  const handleDragStart = () => setIsActive(true);
+
+  const handleDragEnd = () => setIsActive(false);
 
   const handleDrop = (e) => {
     e.preventDefault();
     setIsActive(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log("올라갈 파일:", files)
+    console.log("올라갈 파일:", files);
     onUpload2(files);
   };
   const handleDragOver = (e) => {
     if (!uploadPossible) return false;
     e.preventDefault();
     setIsActive(true);
-  };  
+  };
 
   //파일 이미지 삭제
-  function deleteImg(index){
+  function deleteImg(index) {
     const deletePreview2 = [...preview2];
-    deletePreview2.splice(index,1);
+    deletePreview2.splice(index, 1);
     setPreview2(deletePreview2);
   }
-
 
   //포스터 이미지 상태 관리
   const [preview, setPreview] = useState(null);
 
   const onUpload = (e) => {
-      const file = e.target.files[0];
-      console.log('Selected file:', file); // 파일 확인
-      if (!file) return;
+    const file = e.target.files[0];
+    console.log("Selected file:", file); // 파일 확인
+    if (!file) return;
 
-      const reader = new FileReader();
+    const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-          console.log('File content:', reader.result); // 결과 확인
-          setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
-      };
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      console.log("File content:", reader.result); // 결과 확인
+      setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
+    };
   };
   //상세 이미지 상태 관리
   const [preview2, setPreview2] = useState([]);
@@ -85,12 +94,14 @@ const ExhibitionBodyStep1 = () => {
       setPreview2((prevPreviews) => {
         const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
         if (fileCount > fileMax) {
-          newPreviews = newPreviews.splice(0, fileCount-fileMax);
+          newPreviews = newPreviews.splice(0, fileCount - fileMax);
         }
-        return [...prevPreviews, ...newPreviews]});
+        return [...prevPreviews, ...newPreviews];
+      });
     });
     console.log("업로드 완료! 파일 개수", preview2.length);
   };
+  
 
   //공지사항 마크다운
   const [notice, setNotice] = useState("");
@@ -104,115 +115,47 @@ const ExhibitionBodyStep1 = () => {
     setDetailDescription(value);
   };
 
-  //휴무 지정 체크박스
-  const [holiday, setHoliday] = useState(false);
-  const handleHoliday = () => {
-    setHoliday(!holiday);
-  };
-
-  //금지 토글 상태 관리
-  const [kids, setKids] = useState(false);
-  const handleKids = () => {
-    setKids(!kids);
-  };
-
-
-  //제한사항 토글
-  const [pet, setPet] = useState(false);
-  const handlePet = () => {
-    setPet(!pet);
-  };
-
-  const [adult, setAdult] = useState(false);
-  const handleAdult = () => {
-    setAdult(!adult);
-  };
-
-  const [fee, setFee] = useState(false);
-  const handleFee = () => {
-    setFee(!fee);
-  };
-
-  const [parking, setParking] = useState(false);
-  const handleParking = () => {
-    setParking(!parking);
-  };
-
-  const [food, setFood] = useState(false);
-  const handleFood = () => {
-    setFood(!food);
-  };
-
-  const [wifi, setWifi] = useState(false);
-  const handleWifi = () => {
-    setWifi(!wifi);
-  };
-
-  const [camera, setCamera] = useState(false);
-  const handleCamera = () => {
-    setCamera(!camera);
+  const handleConstraint = (name) => {
+    setAllOfPopUpData((prev) => {
+      return { ...prev, [name]: !prev[name] };
+    });
   };
 
   //청소년 관람 불가 누르면 어린이도 금지되는 버튼
-  const adultCheck = () => {
-    const newCheck = !adult;
-    setAdult(newCheck);
-    setKids(newCheck);
-  }
-  const [twoCheck, setTwoCheck] = useState(false);
-  const handleTwoCheck = () => {
+  // const adultCheck = () => {
+  //   const newCheck = !adult;
+  //   setAdult(newCheck);
+  //   setKids(newCheck);
+  // }
+  // const [twoCheck, setTwoCheck] = useState(false);
+  // const handleTwoCheck = () => {
 
-    const adult2 = adult && kids; 
-    setTwoCheck(adult2);
-  }
-  
-  
-
-  //요일 필드(이미지)
-  const [weekField, setWeekField] = useState([
-    {
-      d: 1,
-      label: "일요일",
-      alt: "sunday.png",
-    },
-    {
-      d: 2,
-      label: "월요일",
-      alt: "monday.png",
-    },
-    {
-      d: 3,
-      label: "화요일",
-      alt: "tuesday.png",
-    },
-    {
-      d: 4,
-      label: "수요일",
-      alt: "wednesday.png",
-    },
-    {
-      d: 5,
-      label: "목요일",
-      alt: "thursday.png",
-    },
-    {
-      d: 6,
-      label: "금요일",
-      alt: "friday.png",
-    },
-    {
-      d: 7,
-      label: "토요일",
-      alt: "saturday.png",
-    },
-  ]);
+  //   const adult2 = adult && kids;
+  //   setTwoCheck(adult2);
+  // }
 
   //달력 누르면 창에 이름 들어감
   const [week, setWeek] = useState("default");
   const handleWeek = (w) => {
     setWeek(w);
   };
+
+  const subMax = 20;
+
+  const setData = (e) => {
+    const { name, value } = e.target;
+    setAllOfPopUpData((prev) => {
+      return { ...prev, [name]: value };
+    });
+    console.log(e)
+  };
+
+  //전시기간 날짜 선택 관리
+  const today = new Date().toISOString().split("T")[0];
+ 
+  //입장료에 반점 찍기
   
+
   return (
     <>
       <div>
@@ -226,6 +169,10 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                 placeholder="팝업/전시명을 입력해주세요"
+                name="title"
+                required
+                onChange={(input) => setData(input)}
+                value={allOfPopUpData?.title}
               />
             </div>
             <div>
@@ -235,20 +182,39 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                 placeholder="부제목을 입력해주세요"
+                maxLength={20}
+                value={allOfPopUpData?.subtitle}
+                name="subtitle"
+                required
+                onChange={(input) => setData(input)}
               />
+              <div className="text-xs text-end ">
+                {allOfPopUpData?.subtitle ? allOfPopUpData?.subtitle.length : 0}
+                /{subMax}
+              </div>
             </div>
             <div>
               <div className="flex justify-between w-full">
-                <label className="text-sm w-full">입장료</label>
+                <label className="text-sm w-full" htmlFor="fee">입장료</label>
                 <div className="flex items-center w-full">
                   <input type="checkbox" className="" />
                   <span className="ml-3 text-sm">무료 입장</span>
                 </div>
               </div>
-              <input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                placeholder="입장료를 입력해주세요"
-              />
+              <div className="flex w-1/2">
+                <input
+                  id="fee"
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  placeholder="입장료를 입력해주세요"
+                  name="fee"
+                  required
+                  defaultValue={0}
+                  onChange={(input) => setData(input)}
+                  value={allOfPopUpData?.fee}
+                />
+                <span>원</span>
+              </div>
             </div>
             <div>
               <label className="text-sm">
@@ -259,14 +225,23 @@ const ExhibitionBodyStep1 = () => {
                   type="date"
                   className="bg-gray-50 border rounded-lg inline w-1/3 p-2.5 text-xs"
                   required
+                  onChange={(input) => setData(input)}
+                  name="start"
+                  value={allOfPopUpData?.start}
                   placeholder="시작일"
+                  min={`${today}`}
+                 
                 />
                 <span>~</span>
                 <input
                   type="date"
                   className="bg-gray-50 border rounded-lg inline w-1/3 p-2.5 text-xs"
                   required
+                  name="end"
+                  value={allOfPopUpData?.end}
+                  onChange={(input) => setData(input)}
                   placeholder="종료일"
+                  min={`${today}`}
                 />
               </div>
             </div>
@@ -281,7 +256,10 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-2/3 p-2.5 inline "
                 placeholder="도로명주소"
+                required
+                name="roadAddress"
                 value={address.roadAddress}
+                onChange={(input) => setData(input)}
                 readOnly
               />
               <PostCode
@@ -292,6 +270,9 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                 placeholder="상세주소"
+                name="detailAddress"
+                onChange={(input) => setData(input)}
+                value={allOfPopUpData?.detailAddress}
               />
             </div>
             <div>
@@ -299,6 +280,10 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                 placeholder="홈페이지 링크(URL)을 입력해주세요"
+                name="homepageLink"
+                defaultValue="https://"
+                onChange={(input) => setData(input)}
+                value={allOfPopUpData?.homepageLink}
               />
             </div>
             <div>
@@ -306,6 +291,10 @@ const ExhibitionBodyStep1 = () => {
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                 placeholder="인스타그램 링크(URL)을 입력해주세요"
+                name="instagramLink"
+                defaultValue="https://"
+                onChange={(input) => setData(input)}
+                value={allOfPopUpData?.instagramLink}
               />
             </div>
           </div>
@@ -347,6 +336,8 @@ const ExhibitionBodyStep1 = () => {
             <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
               <input
                 id="poster"
+                name="poster"
+                value={allOfPopUpData?.poster}
                 className="hidden w-fit h-fit"
                 type="file"
                 onChange={onUpload}
@@ -382,7 +373,7 @@ const ExhibitionBodyStep1 = () => {
                   accept="image/*"
                 />
                 {preview2.length > 0 ? (
-                    <FileCarousel preview2={preview2} deleteImg={deleteImg} />
+                  <FileCarousel preview2={preview2} deleteImg={deleteImg} />
                 ) : (
                   <div className="flex flex-col rounded-lg justify-center text-center items-center">
                     <p className="font-medium text-lg my-5 mb-2.5">
@@ -428,10 +419,10 @@ const ExhibitionBodyStep1 = () => {
               <input
                 type="checkbox"
                 id="holiday"
-                checked={holiday}
-                onChange={handleHoliday}
+                checked={allOfPopUpData?.holiday}
+                // onChange={handleHoliday}
               />
-              <label htmlFor="holiday">휴무지정</label>
+              <label htmlFor="holiday">휴무지정</label> 
             </div>
           </div>
           <div className="flex justify-between p-3 ">
@@ -467,8 +458,8 @@ const ExhibitionBodyStep1 = () => {
       <div className="mt-10">
         제한사항<span className="text-red-500">*</span>
         <div className="grid grid-cols-4 gap-1 w-3/5">
-          <div onClick={handleParking} className="mt-5">
-            {parking ? (
+          <div onClick={() => handleConstraint("parking")} className="mt-5">
+            {allOfPopUpData?.parking ? (
               <div>
                 <div className="flex justify-center">
                   <LuParkingCircleOff
@@ -493,8 +484,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handleFood} className="mt-5">
-            {food ? (
+          <div onClick={() => handleConstraint("food")} className="mt-5">
+            {allOfPopUpData?.food ? (
               <div>
                 <div className="flex justify-center">
                   <MdNoFood style={{ color: "red", fontSize: "30px" }} />
@@ -519,8 +510,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handleWifi} className="mt-5">
-            {wifi ? (
+          <div onClick={() => handleConstraint("wifi")} className="mt-5">
+            {allOfPopUpData?.wifi ? (
               <div>
                 <div className="flex justify-center">
                   <CiWifiOff style={{ color: "red", fontSize: "30px" }} />
@@ -542,8 +533,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handleCamera} className="mt-5">
-            {camera ? (
+          <div onClick={() => handleConstraint("camera")} className="mt-5">
+            {allOfPopUpData?.camera ? (
               <div>
                 <div className="flex justify-center">
                   <LuCameraOff style={{ color: "red", fontSize: "30px" }} />
@@ -565,8 +556,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handlePet} className="mt-5">
-            {pet ? (
+          <div onClick={() => handleConstraint("pet")} className="mt-5">
+            {allOfPopUpData?.pet ? (
               <div>
                 <div className="flex justify-center">
                   <FaDog style={{ color: "red", fontSize: "30px" }} />
@@ -588,8 +579,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handleKids} className="mt-5">
-            {kids ? (
+          <div onClick={() => handleConstraint("kids")} className="mt-5">
+            {allOfPopUpData?.kids ? (
               <div>
                 <div className="flex justify-center">
                   <FaUserSlash style={{ color: "red", fontSize: "30px" }} />
@@ -611,8 +602,8 @@ const ExhibitionBodyStep1 = () => {
               </div>
             )}
           </div>
-          <div onClick={handleAdult} className="mt-5">
-            {adult ? (
+          <div onClick={() => handleConstraint("adult")} className="mt-5">
+            {allOfPopUpData?.adult ? (
               <div>
                 <div className="flex justify-center">
                   <FaArrowUp19 style={{ color: "red", fontSize: "30px" }} />

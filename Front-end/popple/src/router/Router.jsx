@@ -21,8 +21,6 @@ import DetailPage from "../pages/DetailPage";
 import HelpDetailPage from "../pages/HelpDetailPage";
 import EventRegister from "../pages/EventRegister";
 
-
-
 export default function Router() {
   return (
     <div className={styles.routerContainer}>

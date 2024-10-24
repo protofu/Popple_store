@@ -1,4 +1,4 @@
-export default function ExhibitionBodyStep3(){
+export default function ExhibitionBodyStep3({ allOfPopUpData, setAllOfPopUpData }){
   return(
     <>
     </>
