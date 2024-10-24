@@ -42,16 +42,6 @@ public class AuthService {
 		User savedUser = userRepository.save(user);
 		return SignUpResponse.toDTO(savedUser);
 	}
-	
-	//로그인
-	public LoginResponse loginUser(LoginRequest loginRequest) {
-		User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 이메일입니다."));
-		boolean password = bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword());
-		if(!password) throw new RuntimeException("비밀번호 불일치");
-		String accessToken = jwtProvider.generateAccessToken(user);
-		return LoginResponse.builder().accessToken(accessToken).build();
-		
-	}
 
 	// 회원 수정
 	public SignUpResponse updateUser(User user, UserEditRequest userEditRequest) {

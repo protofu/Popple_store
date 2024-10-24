@@ -1,7 +1,35 @@
+import { useEffect, useState } from "react";
+import CustomSubmitButton from "../common/CustomSubmitButton";
 import ReviewItem from "./ReviewItem";
+import WriteReviewModal from "./WriteReview";
+import { reviewAPI } from "../../api/services/Review";
+import { useParams } from "react-router-dom";
 
 export default function ReviewInDetail() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reviews, setReviews] = useState(null);
+  const { id } = useParams("id");
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    const getReview = async () => {
+      try {
+        const res = await reviewAPI.getReviewList(id);
+        setReviews(res.data);
+        console.log(res.data);
+      } catch (error) {
+        alert("리뷰를 불러오는 중 오류가 발생했습니다.");
+        console.error("오류 발생:" + error);
+      }
+    };
+
+    getReview();
+  }, [id]);
+
   const h1Style = "font-bold text-[1.25rem]";
+
   return (
     <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12">
       <div>
@@ -12,10 +40,15 @@ export default function ReviewInDetail() {
       <div>
         <div className="grid grid-cols-[2fr_4fr_2fr] border-b-2 mb-3 p-1">
           <h1 className="font-bold">총 ?개의 리뷰가 있습니다.</h1>
-          <h5 className="text-right text-[12px] text-[#a4a4a4] leading-[2] mb-0"><span className="text-[#D36A6A] mr-1">*</span>리뷰는 방문인증이 완료되면 작성할 수 있습니다.</h5>
-          <button className="">리뷰 작성하기</button>
+          <h5 className="text-right text-[12px] text-[#a4a4a4] align-text-bottom"><span className="text-[#D36A6A] mr-1">*</span>리뷰는 방문인증이 완료되면 작성할 수 있습니다.</h5>
+          <CustomSubmitButton text={"리뷰 작성하기"} onClick={openModal} />
+          <WriteReviewModal isOpen={isModalOpen} onClose={closeModal} />
         </div>
-        <ReviewItem />
+        {reviews !== null ? (
+          reviews.map((review) => <ReviewItem key={review.id} review={review} />)
+        ) : (
+          <p>리뷰가 없습니다.</p>
+        )}
       </div>
     </div>
   );

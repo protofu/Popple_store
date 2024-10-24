@@ -20,12 +20,14 @@ import QRPage from "../pages/QRPage";
 import DetailPage from "../pages/DetailPage";
 import HelpDetailPage from "../pages/HelpDetailPage";
 import EventRegister from "../pages/EventRegister";
+import ScrollToTop from "../components/common/ScrollToTop";
 
 
 
 export default function Router() {
   return (
     <div className={styles.routerContainer}>
+      <ScrollToTop /> 
       <Routes>
         {/* 레이아웃을 적용한 페이지들 */}
         <Route element={<Layout />}>

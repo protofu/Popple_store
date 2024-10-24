@@ -19,7 +19,7 @@ export default function UseInfo({ data, chart }) {
   // 나이대별 비율도 100% 기준 10대부터 %값으로 주어짐
 
   return (
-    <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12">
+    <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12 h-full">
       {sections.map((section, index) => (
         <div key={index}>
           <h1 className={h1Style}>{section.title}</h1>

@@ -22,7 +22,6 @@ export default function ExhibitionCarousel() {
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
     <div className="flex justify-cente items-center relative overflow-hidden w-full">
-      <IoArrowBackCircleOutline className="arrow-left arrow size-[3rem] absolute left-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-zinc-400" />
       <Swiper
         loop
         slidesPerView={1}
@@ -37,7 +36,7 @@ export default function ExhibitionCarousel() {
           disableOnInteraction: false, // 마우스 제어 이후 자동 재생을 막을지 말지
         }}
         speed={500}
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[Pagination, Autoplay]}
         className="w-full h-full"
       >
         {items.map((item, index) => (
@@ -45,7 +44,6 @@ export default function ExhibitionCarousel() {
             <ExhibitionCard img={item.img} />
         </SwiperSlide>
         ))}
-        <IoArrowForwardCircleOutline className="arrow-right arrow size-[3rem] absolute right-0 top-1/2 transform -translate-y-1/2 z-10 cursor-pointer text-zinc-400" />
       </Swiper>
     </div>
   );

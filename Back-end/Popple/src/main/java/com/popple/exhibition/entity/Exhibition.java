@@ -74,10 +74,6 @@ public class Exhibition {
 	@Column(nullable = true)
 	private String terms;
 	
-	//관람등급
-	@Column(nullable = false)
-	private String grade;
-
 	//입장료
 	@Column(nullable = true)
 	private String fee;
@@ -89,6 +85,10 @@ public class Exhibition {
 	//인스타그램 링크
 	@Column(nullable = true)
 	private String instagramLink;
+	
+	//관람등급
+	@Column(nullable = false)
+	private boolean grade;
 	
 	//주차 여부
 	@Column(nullable = false)
@@ -165,8 +165,9 @@ public class Exhibition {
 	private LocalDate endAt;
 	
 	//삭제여부
-	@Column(name = "is_deleted", nullable = true)
-	private boolean isDeleted;
+	@Builder.Default
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted = false;
 	
 //	// 대표 이미지 등등..
 //    @JoinColumn(name = "exhibition_id")
