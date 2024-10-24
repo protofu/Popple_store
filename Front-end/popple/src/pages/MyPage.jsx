@@ -12,22 +12,18 @@ export default function MyPage() {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    const savedItem = localStorage.getItem('activeItem');
-    if (savedItem) {
-      setActiveItem(savedItem);
+    // 역할에 따라 초기값 설정
+    if (loginUserRole === "ROLE_COMPANY") {
+      setActiveItem("팝업/전시 목록");
     } else {
-      // 역할에 따라 초기값 설정
-      if (loginUserRole === "ROLE_COMPANY") {
-        setActiveItem("팝업/전시 목록"); // 기본값은 "팝업/전시 목록" (기업)
-      } else {
-        setActiveItem("찜"); // 기본값은 "찜" (일반 사용자)
-      }
+      setActiveItem("찜");
     }
+
     // 마이페이지를 벗어날 때 초기화
     return () => {
-      localStorage.setItem('activeItem', loginUserRole === "ROLE_COMPANY" ? "팝업/전시 목록" : "찜"); // 마이페이지를 벗어나면 역할에 따라 초기화
+      localStorage.setItem('activeItem', activeItem);
     };
-    }, [loginUserRole]); // loginUserRole이 변경될 때마다 useEffect가 실행되도록 설정);
+  }, [loginUserRole]);
 
   const handleItemSelect = (item) => {
     setActiveItem(item);
@@ -35,9 +31,8 @@ export default function MyPage() {
   };
 
   const handleConfirm = () => {
-    // 비밀번호 확인 로직 추가
     console.log("비밀번호:", password);
-    setPassword(''); // 입력 후 비밀번호 초기화
+    setPassword('');
   };
 
   const renderPasswordInput = () => (
@@ -51,9 +46,9 @@ export default function MyPage() {
         placeholder="비밀번호 입력" 
         value={password} 
         onChange={(e) => setPassword(e.target.value)} 
-        className={inputStyle} // 기존 스타일 사용
+        className={inputStyle} 
       />
-      <button onClick={handleConfirm} className="bg-[#8900E1] text-white rounded-lg p-3 mt-3"> {/* 버튼 스타일 일관성 유지 */}
+      <button onClick={handleConfirm} className="bg-[#8900E1] text-white rounded-lg p-3 mt-3">
         확인
       </button>
     </div>
@@ -75,7 +70,7 @@ export default function MyPage() {
 
   return (
     <>
-      <h1 className={textStyle}>My Page</h1>
+      <h1 className={textStyle}>{loginUserRole === "ROLE_COMPANY" ? "Company Page" : "My Page"}</h1>
       <hr className="mt-2 mb-0 border-gray-500" />
       <div className="flex mypage-container mt-2 items-start">
         <Nav initialActiveItem={activeItem} onItemSelect={handleItemSelect} />

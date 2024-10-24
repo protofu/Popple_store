@@ -19,6 +19,7 @@ import CompanySignUpPage from "../pages/CompanySignUpPage";
 import QRPage from "../pages/QRPage";
 import DetailPage from "../pages/DetailPage";
 import HelpDetailPage from "../pages/HelpDetailPage";
+import HelpCreate from "../pages/HelpCreate";
 
 
 
@@ -44,6 +45,7 @@ export default function Router() {
           <Route path="/event" element={<EventPage />} />
           <Route path="/help" element={<HelpServicePage />} />
           <Route path="/help/detail" element={<HelpDetailPage />} />
+          <Route path="/help/create" element={<HelpCreate />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}

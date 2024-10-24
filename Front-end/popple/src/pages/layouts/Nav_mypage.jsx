@@ -11,14 +11,13 @@ export default function Nav_mypage ({ onItemSelect, initialActiveItem }) {
 
   const [activeItem, setActiveItem] = useState(initialActiveItem);
 
-  // initialActiveItem이 변경될 때만 activeItem을 업데이트
   useEffect(() => {
-    setActiveItem(initialActiveItem); 
+    setActiveItem(initialActiveItem);
   }, [initialActiveItem]);
 
   const handleClick = (item) => {
     setActiveItem(item);
-    onItemSelect(item); // 부모 컴포넌트로 선택된 항목 전달
+    onItemSelect(item);
   };
 
   return (
@@ -26,12 +25,14 @@ export default function Nav_mypage ({ onItemSelect, initialActiveItem }) {
       <ul className="list-none p-0">
         {items.map((item, index) => (
           <li key={index}>
-              <a 
-                href="#" 
-                className={`flex items-center text-gray-700 hover:text-blue-500 rounded-r-3xl py-2 px-3 ${activeItem === item ? 'bg-gray-200' : ''}`}
-                onClick={(event) => handleClick(item, event)}
-              >
-
+            <a 
+              href="#" 
+              className={`flex items-center text-gray-700 rounded-r-3xl py-2 px-3 ${activeItem === item ? 'bg-gray-200' : ''}`}
+              onClick={(event) => {
+                event.preventDefault(); // 기본 링크 동작 방지
+                handleClick(item);
+              }}
+            >
               <div className="icon mr-2 text-2xl flex items-center justify-center" style={{ minWidth: '30px' }}>
                 {index === 0 && (loginUserRole === "ROLE_COMPANY" ? "📊" : "❤")}
                 {index === 1 && (loginUserRole === "ROLE_COMPANY" ? "📈" : "📋")}

@@ -43,7 +43,6 @@ public class FAQService {
 	    if (faq.isPresent()) {
 	        return faq.get();
 	    } else {
-	        log.warn("FAQ with id {} not found", id); // 로그 추가
 	        return null; // 또는 Exception 던지기
 	    }
 	}

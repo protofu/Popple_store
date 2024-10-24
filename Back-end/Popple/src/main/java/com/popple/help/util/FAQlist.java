@@ -60,7 +60,5 @@ public class FAQlist {
                 .build());
 		return faqList;
 
-        // faqList를 데이터베이스에 저장하는 코드 추가 필요
-        // 예: faqRepository.saveAll(faqList);
     }
 }
