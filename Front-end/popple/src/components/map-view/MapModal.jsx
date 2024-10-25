@@ -10,6 +10,9 @@ export default function MapModal({ onClose }) {
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
 
+  // 검색 타입
+  const [searchType, setSearchType] = useState();
+
   // 모달이 처음 열릴 때 기본 위경도로 지도가 표시되도록 useEffect 추가
   useEffect(() => {
     // 초기 지도가 제대로 뜨도록 기본 위경도를 설정
@@ -26,9 +29,12 @@ export default function MapModal({ onClose }) {
   };
 
   const [keyword, setKeyword] = useState('');
+  const [inputKeyword, setInputKeyword] = useState('');
+  console.log(locations);
   // 장소로 찾기
   const handleLocationSearch = (searchKeyword) => {
-    setKeyword(searchKeyword); // 검색어를 상태로 저장
+    // setKeyword(searchKeyword); // 검색어를 상태로 저장
+    setKeyword(inputKeyword);
   };
 
   // onClick
@@ -47,6 +53,9 @@ export default function MapModal({ onClose }) {
   // -> 새로운 API 호출 필요 (마커 좌표 기반의 반경 검색 API)
   // 6. 팝업/전시 리스트는 검색 시 왼쪽 컨테이너에서 나오기(열고 닫기 가능)
   // -> 검색 결과 리스트를 토글할 수 있는 UI 추가 (열고 닫기 가능하도록 상태 관리)
+
+  // 필수
+  // 검색은 DB내에서 검색가능(장소(시 구 동), 팝업이름) 2가지
 
   const typeButtionStyle = "border border-1 text-center py-2 cursor-pointer";
 
@@ -69,9 +78,25 @@ export default function MapModal({ onClose }) {
               <div className={`${typeButtionStyle} border-l-[1px] rounded-r-lg ${type === 2 ? "border-popple-light border-2 bg-popple-light text-white" : "border-[#b6b6b6]"}`} onClick={() => setType(2)}>전시</div>
             </div>
             {/* 주소로 찾기 */}
-            <SearchByLocation handleClick={handleClick} handleClose={onClose}/>
+            {/* <SearchByLocation handleClick={handleClick} handleClose={onClose}/> */}
             {/* 이름으로 찾기 */}
-            <LocationSearch onSearch={handleLocationSearch} locations={locations} />
+            {/* <LocationSearch onSearch={handleLocationSearch} locations={locations} /> */}
+            {/* 검색 */}
+            <div className="search-bar">
+                <input
+                    type="text"
+                    value={inputKeyword}
+                    onChange={(e) => setInputKeyword(e.target.value)}
+                    placeholder="검색할 키워드를 입력하세요"
+                    className="keyword-input"
+                />
+                <button id="searchBtn" className="search-button" onClick={() => handleLocationSearch()}>검색</button>
+            </div>
+            {
+              locations.map((location, key) => (
+                {location}
+              ))
+            }
           </div>
           {/* 오른쪽 컨테이너 */}
           <div className="flex-1"> 

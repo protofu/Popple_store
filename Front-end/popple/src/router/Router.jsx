@@ -21,6 +21,7 @@ import HelpDetailPage from "../pages/HelpDetailPage";
 import EventRegister from "../pages/EventRegister";
 import ScrollToTop from "../components/common/ScrollToTop";
 import HelpCreate from "../pages/HelpCreate";
+import CompletePage from "../pages/CompletePage";
 
 
 
@@ -50,6 +51,8 @@ export default function Router() {
           <Route path="/help" element={<HelpServicePage />} />
           <Route path="/help/detail" element={<HelpDetailPage />} />
           <Route path="/help/create" element={<HelpCreate />} />
+          {/* 완료 페이지 */}
+          <Route path="/success" element={<CompletePage />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
