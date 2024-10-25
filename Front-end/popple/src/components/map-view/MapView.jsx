@@ -14,16 +14,17 @@ export default function MapView({ latitude, longitude }) {
                 window.kakao.maps.load(() => {
                     // 지도를 담을 영역의 DOM 레퍼런스
                     const container = document.getElementById('map');
+                    console.log("지도에서 위경도", latitude, longitude);
                     // 지도 생성 기본 옵션
                     const options = {
-                        center: new window.kakao.maps.LatLng(longitude, latitude), // 경도, 위도
+                        center: new window.kakao.maps.LatLng(latitude, longitude), // 경도, 위도
                         level: 3 // 지도의 확대 레벨
                     };
                     // 지도 생성 및 객체 리턴
                     const map = new window.kakao.maps.Map(container, options);
 
                     // 마커가 표시될 위치
-                    const markerPosition = new window.kakao.maps.LatLng(longitude, latitude); 
+                    const markerPosition = new window.kakao.maps.LatLng(latitude, longitude); 
 
                     // 마커를 생성
                     const marker = new window.kakao.maps.Marker({
