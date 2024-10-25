@@ -3,17 +3,21 @@ import { MdOutlineClose } from "react-icons/md";
 import { searchAddress } from "../../api/services/KakaoAPI";
 import { FaSearchLocation } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import LocationSearch from "./LocationSearch";
+import MapComp from "./MapComp";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+import axios from "axios";
+import SearchByLocation from "./SearchByLocation";
 
 export default function MapModal({ onClose }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+
+  const [locations, setLocations] = useState([]);
   //latitude and longitude
+  const [coordinates, setCoordinates] = useState(null);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
-
-  // 전시팝업 타입 선택시 상태 설정
-  const [type, setType] = useState(0);
-
 
   // 모달이 처음 열릴 때 기본 위경도로 지도가 표시되도록 useEffect 추가
   useEffect(() => {
@@ -22,40 +26,34 @@ export default function MapModal({ onClose }) {
     setLongitude(126.984281413033);
   }, []);
 
-  // 1. 검색시 뜨는 리스트 onChange 이벤트로 전환해서 검색전 리스트 먼저 보여주기
-  const handleChange = async (e) => {
-    const newQuery = e.target.value;
-    setQuery(newQuery);
-    
-    // query가 빈 문자열일 경우 검색 요청을 보내지 않음
-    if (!newQuery.trim()) {
-      setResults([]);  // 빈 결과 리스트를 설정
-      return;
-    }
-    
-    try {
-      const searchResults = await searchAddress(newQuery);
-      setResults(searchResults);
-    } catch (error) {
-      console.error("Failed to fetch address data:", error);
-    }
-  };
-  
-  // 위경도 셋팅
-  const handleSearch = async () => {
-    if (results.length > 0) {
-      setLongitude(results[0].x) // 경도 Longitude
-      setLatitude(results[0].y) // 위도 Latitude
-    }
+  // 전시팝업 타입 선택시 상태 설정
+  const [type, setType] = useState(0);
+
+  // 키워드로 검색한 결과 가져오기
+  const handleLocationUpdate = (newLocations) => {
+    setLocations(newLocations); // Set the fetched locations
   };
 
-  console.log(type);
+  // 검색 드롭다운 상태 저장
+  const [showResults, setShowResults] = useState(false);
+
+  const [keyword, setKeyword] = useState('');
+  // 장소로 찾기
+  const handleLocationSearch = (searchKeyword) => {
+    setKeyword(searchKeyword); // 검색어를 상태로 저장
+  };
+
+  // onClick
+  const handleClick = (result) => {
+    console.log("클릭시", result);
+    setQuery(result.address_name); 
+    setLongitude(result.x); 
+    setLatitude(result.y);
+    setShowResults(false);
+  };
+
 
   // 해야할 것
-  // 1-1. 리스트는 일반적인 div로 보여지는게 아니라 검색과 동시에 자동완성 느낌으로 드롭다운되기
-  // -> results.length > 0 일 때 ul 태그를 absolute로 지정해서 input 하단에 배치. CSS로 자동완성 스타일 설정
-  // 2. 리스트 요소 클릭 시 해당 text로 바뀌고 검색을 눌렀을 때 마커 이동 (지도 이동)
-  // -> 각 리스트 항목에 onClick 이벤트 추가, 클릭된 항목의 주소를 setQuery로 설정, 좌표 업데이트 필요
   // 3. 마커 색상 변경하기
   // -> MapView 컴포넌트에 마커 색상 변경하는 props 전달
   // 4. 인포 윈도우 알맞게 꾸미기
@@ -65,8 +63,6 @@ export default function MapModal({ onClose }) {
   // 6. 팝업/전시 리스트는 검색 시 왼쪽 컨테이너에서 나오기(열고 닫기 가능)
   // -> 검색 결과 리스트를 토글할 수 있는 UI 추가 (열고 닫기 가능하도록 상태 관리)
 
-  const inputStyle =
-    "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
   const typeButtionStyle = "border border-1 text-center py-2 cursor-pointer";
 
   return (
@@ -77,8 +73,8 @@ export default function MapModal({ onClose }) {
           <MdOutlineClose className="size-8 mr-3 cursor-pointer" onClick={onClose} />
           <h2 className="text-lg font-bold text-center flex-1">지도 보기</h2> {/* 중앙 정렬을 위한 flex-1 추가 */}
         </div>
-
-        <div className="flex flex-1"> {/* 왼쪽 및 오른쪽 컨테이너가 함께 flex하여 전체 높이를 차지하도록 설정 */}
+        {/* 본문 */}
+        <div className="flex flex-1">
           {/* 왼쪽 컨테이너 */}
           <div className="w-[20%] p-2">
             {/* 종류 선택 버튼 */}
@@ -87,44 +83,18 @@ export default function MapModal({ onClose }) {
               <div className={`${typeButtionStyle} border-x-1 ${type === 1 ? "border-popple-light border-2 bg-popple-light text-white" : "border-[#b6b6b6]"}`} onClick={() => setType(1)}>팝업</div>
               <div className={`${typeButtionStyle} border-l-[1px] rounded-r-lg ${type === 2 ? "border-popple-light border-2 bg-popple-light text-white" : "border-[#b6b6b6]"}`} onClick={() => setType(2)}>전시</div>
             </div>
-            <div className="flex flex-col items-center">
-              <h1 className="m-3 ml-10 text-[1.4rem] font-bold w-full">검색</h1>
-              <div className={`${inputStyle} mx-auto flex focus-within:border-popple-light focus-within:border-2`}>
-                <input
-                  type="text"
-                  value={query}
-                  onChange={handleChange}
-                  placeholder="검색할 주소 입력"
-                  className="w-full border-none focus:outline-none"
-                />
-                <FaSearchLocation className="text-[#6b6b6b] onClick={handleSearch} m-auto cursor-pointer" onClick={handleSearch} />
-              </div>
-            </div>
-            {/* 검색결과 리스트 */}
-            <ul>
-              {results.map((result, index) => (
-                <li 
-                  key={index} 
-                  className="border-2 p-2 cursor-pointer hover:bg-gray-200"
-                  onClick={() => { 
-                    setQuery(result.address_name); 
-                    setLongitude(result.x); 
-                    setLatitude(result.y);
-                  }}
-                >
-                <p>{result.address_name}</p>
-                {result.road_address && <p>도로명 주소: {result.road_address.address_name}</p>}
-                </li>
-              ))}
-            </ul>
+            {/* 주소로 찾기 */}
+            <SearchByLocation handleClick={handleClick} handleClose={onClose}/>
+            {/* 이름으로 찾기 */}
+            <LocationSearch onSearch={handleLocationSearch} locations={locations} />
           </div>
-
           {/* 오른쪽 컨테이너 */}
           <div className="flex-1"> 
-            <MapView latitude={latitude} longitude={longitude} />
-          </div>
+            <MapView latitude={latitude} longitude={longitude} keyword={keyword} onResultsUpdate={handleLocationUpdate} />
+          </div>  
         </div>
       </div>
     </div>
+
   );
 }

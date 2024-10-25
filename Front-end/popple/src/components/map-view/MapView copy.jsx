@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function MapView({ latitude, longitude, keyword, onResultsUpdate }) {
-    // const [results, setResults] = useState([]);
+export default function MapView({ latitude, longitude, keyword }) {
 
     useEffect(() => {
         // Kakao Maps API 스크립트 태그 생성
@@ -13,7 +12,9 @@ export default function MapView({ latitude, longitude, keyword, onResultsUpdate 
             // kakao 객체가 제대로 로드되었는지 확인
             if (window.kakao && window.kakao.maps) {
                 // kakao.maps.load()를 사용하여 API가 완전히 로드된 후 콜백 함수 실행
-                window.kakao.maps.load(() => {                    
+                window.kakao.maps.load(() => {
+                    console.log('Kakao Maps:', window.kakao.maps);
+                    console.log('Kakao Maps Services:', window.kakao.maps.services);
                     // 지도를 담을 영역의 DOM 레퍼런스
                     const container = document.getElementById('map');
                     
@@ -59,9 +60,7 @@ export default function MapView({ latitude, longitude, keyword, onResultsUpdate 
                                     displayMarker(data[i]);
                                     bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
                                 }
-                                // setResults(data);
-                                onResultsUpdate(data);
-                                console.log(data);
+
                                 map.setBounds(bounds);
                             }
                         }
@@ -79,7 +78,7 @@ export default function MapView({ latitude, longitude, keyword, onResultsUpdate 
                     }
 
                     // infowindow.open(map, marker); 
-                    
+
                     
                 });
             } else {
