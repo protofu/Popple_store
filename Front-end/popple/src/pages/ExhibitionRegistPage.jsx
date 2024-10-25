@@ -10,6 +10,7 @@ import { data } from "autoprefixer";
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
   const [information, setInformation] = useState({
+      type:"",
       exhibitionName: "", // 팝업/전시명
       subTitle: "", // 부제
       free: false, // 무료 여부
@@ -99,7 +100,7 @@ export default function ExhibitionRegistPage() {
       // FormData 생성
       const formData = new FormData();
       // ExhibitionRequest 필드에 맞게 데이터 추가
-      formData.append("typeId", 2);
+      formData.append("typeId", information.type);
       formData.append("exhibitionName", information.exhibitionName);
       formData.append("subTitle", information.subTitle);
       formData.append("detailDescription", information.detailDescription);
