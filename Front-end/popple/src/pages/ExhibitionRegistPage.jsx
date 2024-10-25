@@ -177,12 +177,6 @@ export default function ExhibitionRegistPage() {
             />
           )}
           {step === 3 && <div>Step 3</div>}
-          {step === 4 && (
-            <EventRegister
-              information={information}
-              changeInformation={changeInformation}
-            />
-          )}
 
           <pre className="bg-gray-100 p-4 rounded-lg">
             {JSON.stringify(information, null, 2)}
