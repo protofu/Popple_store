@@ -4,7 +4,7 @@ import { register } from "swiper/element";
 import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
-import { CompanyAuthAPI } from "../api/services/CompanyAuth";
+import { companyAuthAPI } from "../api/services/CompanyAuth";
 import PostCode from "../components/common/PostCode";
 import Dropdown from "../components/exhibition/Dropdown";
 
@@ -140,7 +140,7 @@ export default function CompanySignUpPage() {
   const onSubmit = async (data) => {
     try {
       console.log("데이타" + data)
-      const res = await CompanyAuthAPI.create(data)
+      const res = await companyAuthAPI.create(data)
       alert("가입 성공");
       navigate('/login');
     } catch (error) {

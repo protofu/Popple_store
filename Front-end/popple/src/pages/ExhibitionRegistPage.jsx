@@ -4,7 +4,7 @@ import ExStep1 from "../components/exhibition/ExStep1";
 import ExStep2 from "../components/exhibition/ExStep2";
 import axios from "axios";
 import EventRegister from "./EventRegister";
-import { ExhibitionAPI } from "../api/services/Exhibition";
+import { exhibitionAPI } from "../api/services/Exhibition";
 import { data } from "autoprefixer";
 
 export default function ExhibitionRegistPage() {
@@ -162,47 +162,106 @@ export default function ExhibitionRegistPage() {
     <>
       <ExhibitionHeader step={step} />
       {/* 맨 위 박스  */}
-      <div className="flex flex-col mx-auto gap-5 mt-16">
-        {step === 1 && <ExStep1 information={information} changeInformation={changeInformation} />}
-        {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />}
-        {/* {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />} */}
-        {step === 3 && <div>Step 3</div>}
-        {step === 4 && <EventRegister information={information} changeInformation={changeInformation}/>}
+      <div>
+        <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
+          {step === 1 && (
+            <ExStep1
+              information={information}
+              changeInformation={changeInformation}
+            />
+          )}
+          {step === 2 && (
+            <ExStep2
+              information={information}
+              changeInformation={changeInformation}
+            />
+          )}
+          {step === 3 && <div>Step 3</div>}
+          {step === 4 && (
+            <EventRegister
+              information={information}
+              changeInformation={changeInformation}
+            />
+          )}
 
-        <div>
-          <hr className="w-full mt-10" />
-            <div className="flex justify-between items-center">
-              {step === 2 ? (
-                <>
+          <pre className="bg-gray-100 p-4 rounded-lg">
+            {JSON.stringify(information, null, 2)}
+          </pre>
+
+          {/* 하단 단계별 이전, 다음 버튼 */}
+          <div>
+            <hr className="w-full mt-10" />
+            {step === 1 ? (
+              <div className="flex justify-end">
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((prevStep) => prevStep - 1)}
+                  onClick={() => setStep((step) => step + 1)}
+                >
+                  다음
+                </button>
+              </div>
+            ) : step === 2 ? (
+              <div className="flex justify-between items-center">
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 1)}
                 >
                   이전
                 </button>
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => registerExhibition()}
+                  onClick={() => setStep((step) => step + 2)}
                 >
                   이벤트 등록
                 </button>
-                </>
-              ) : (<div></div>)}
-
-              {/* 하단 우측 버튼 */}
-              {step === 1 && (
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((prevStep) => prevStep + 1)}
+                  onClick={() => setStep((step) => step + 2)}
                 >
                   다음
                 </button>
-              )}
-            </div>
+              </div>
+            ) : step === 3 ? (
+              <div className="flex justify-between items-center">
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 1)}
+                >
+                  이전
+                </button>
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  // onClick={registerExhibition}
+                >
+                  등록
+                </button>
+              </div>
+            ) : (
+              <div className="flex justify-between items-center">
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 2)}
+                >
+                  이전
+                </button>
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 1)}
+                >
+                  등록
+                </button>
+              </div>
+            )}
           </div>
+        </div>
       </div>
     </>
   );

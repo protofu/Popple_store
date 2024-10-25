@@ -27,7 +27,7 @@ export default function LoginPage() {
     event.preventDefault(); // 기본 폼 제출 방지
     console.log(user)
     try {
-      const res = await api.post(user);
+      const res = await authAPI.login(user);
       console.log(res.status)
       console.log("로그인 성공");
       if(res.status === 200){

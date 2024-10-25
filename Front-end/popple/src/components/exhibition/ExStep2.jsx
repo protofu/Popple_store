@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { companyAuthAPI } from "../../api/services/CompanyAuth";
 
 const ExStep2 = ({information, changeInformation}) => {
     // input 태그 스타일 지정
@@ -7,15 +8,25 @@ const ExStep2 = ({information, changeInformation}) => {
     const [companyInfo, setCompanyInfo] = useState({});
 
     // 로그인한 기업 회원으로부터 정보 가져오기
-    const getCompanyInfo = () => {
-        // axios.get('/api/company')
-        //     .then((res) => {
-        //         console.log(res);
-        //         setCompanyInfo(res.data);
-        //     })
-        //     .catch((err) => {
-        //         console.error(err);
-        //     });
+    // const getCompanyInfof = () => {
+    //     // axios.get('/api/company')
+    //     //     .then((res) => {
+    //     //         console.log(res);
+    //     //         setCompanyInfo(res.data);
+    //     //     })
+    //     //     .catch((err) => {
+    //     //         console.error(err);
+    //         });
+    const getCompanyInfo = async(data) => {
+        try {
+            console.log("data",data)
+            const res = await companyAuthAPI.get(data);
+            console.log("res",res)
+            const a = res.data;
+            console.log(a);
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     useEffect(() => {
