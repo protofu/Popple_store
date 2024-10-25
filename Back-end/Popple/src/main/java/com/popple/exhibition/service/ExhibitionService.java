@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.auth.entity.User;
+import com.popple.auth.repository.UserRepository;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.entity.Exhibition;
@@ -28,19 +29,22 @@ public class ExhibitionService {
 	private final ExhiTypeRepository exhiTypeRepository;
 	private final ImageService imageService;
 	private final PosterService posterService;
-
+	private final UserRepository ur;
+	
 	// 팝업/전시 생성
 	public ExhibitionResponse createExhibition(ExhibitionRequest req, List<MultipartFile> images, List<MultipartFile> posters, User user) {
 		// 타입 가져오기
+		System.out.println(req.getTypeId());
 		ExhiType type = exhiTypeRepository.findById(req.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류가 없습니다."));
 		// 이미지 저장하기
 		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
 		// 포스터 저장하기
 		List<Poster> savePosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
 		
+		
 		// Exhibition 객체를 요청 데이터로 초기화
 	    Exhibition exhibition = Exhibition.builder()
-	            .user(user)  // 현재 사용자 설정
+	            .user(ur.findById(3L).get())  // 현재 사용자 설정
 	            .type(type)
 	            .exhibitionName(req.getExhibitionName())
 	            .subTitle(req.getSubTitle())
@@ -48,7 +52,7 @@ public class ExhibitionService {
 	            .address(req.getAddress())
 	            .notice(req.getNotice())
 	            .terms(req.getTerms())
-	            .grade(req.getGrade())
+	            .grade(req.isGrade())
 	            .fee(req.getFee())
 	            .homepageLink(req.getHomepageLink())
 	            .instagramLink(req.getInstagramLink())
@@ -68,9 +72,11 @@ public class ExhibitionService {
 	            .saturday(req.getSaturday())
 	            .startAt(req.getStartAt())
 	            .endAt(req.getEndAt())
-	            .images(savedImages)
-	            .posters(savePosters)
+//	            .images(savedImages)
+//	            .posters(savePosters)
 	            .build();
+	    
+	    
 	    
 	    // Exhibition 객체를 데이터베이스에 저장
 	    exhibitionRepository.save(exhibition);
@@ -130,7 +136,7 @@ public class ExhibitionService {
 	    exhibition.setAddress(exhibitionRequest.getAddress());
 	    exhibition.setNotice(exhibitionRequest.getNotice());
 	    exhibition.setTerms(exhibitionRequest.getTerms());
-	    exhibition.setGrade(exhibitionRequest.getGrade());
+	    exhibition.setGrade(exhibitionRequest.isGrade());
 	    exhibition.setFee(exhibitionRequest.getFee());
 	    exhibition.setHomepageLink(exhibitionRequest.getHomepageLink());
 	    exhibition.setInstagramLink(exhibitionRequest.getInstagramLink());
@@ -201,7 +207,7 @@ public class ExhibitionService {
                 .address(exhibition.getAddress())
                 .notice(exhibition.getNotice())
                 .terms(exhibition.getTerms())
-                .grade(exhibition.getGrade())
+                .grade(exhibition.isGrade())
                 .fee(exhibition.getFee())
                 .homepageLink(exhibition.getHomepageLink())
                 .instagramLink(exhibition.getInstagramLink())

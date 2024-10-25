@@ -10,10 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,10 +51,11 @@ public class ExhibitionController {
 	@Operation(summary = "팝업/전시 추가", description = "팝업/전시를 생성합니다.")
 	@PostMapping("/resist")
 	public ResponseEntity<ExhibitionResponse> createPopUp(
-			ExhibitionRequest req, 
+			@ModelAttribute ExhibitionRequest req, 
 			@RequestParam(name="image") List<MultipartFile> images, 
 			@RequestParam(name="poster") List<MultipartFile> posters,  
 			@AuthenticationPrincipal User user){
+		System.out.println(req);
 		ExhibitionResponse exhibition = exService.createExhibition(req, images, posters, user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(exhibition);
 	}

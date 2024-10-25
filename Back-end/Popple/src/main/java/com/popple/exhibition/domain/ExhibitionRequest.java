@@ -2,11 +2,15 @@ package com.popple.exhibition.domain;
 
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
-@ToString
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExhibitionRequest {
 	private Long typeId;
 	private String exhibitionName;
@@ -15,7 +19,7 @@ public class ExhibitionRequest {
 	private String address;
 	private String notice;
 	private String terms;
-	private String grade;
+	private boolean grade;
 	private String homepageLink;
 	private String instagramLink;
 	private String fee;
