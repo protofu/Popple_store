@@ -207,19 +207,12 @@ export default function ExhibitionRegistPage() {
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((step) => step + 2)}
-                >
-                  이벤트 등록
-                </button>
-                <button
-                  type="submit"
-                  className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((step) => step + 2)}
+                  onClick={() => setStep((step) => step + 1)}
                 >
                   다음
                 </button>
               </div>
-            ) : step === 3 ? (
+            ) :  (
               <div className="flex justify-between items-center">
                 <button
                   type="submit"
@@ -231,24 +224,7 @@ export default function ExhibitionRegistPage() {
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  // onClick={registerExhibition}
-                >
-                  등록
-                </button>
-              </div>
-            ) : (
-              <div className="flex justify-between items-center">
-                <button
-                  type="submit"
-                  className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((step) => step - 2)}
-                >
-                  이전
-                </button>
-                <button
-                  type="submit"
-                  className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((step) => step - 1)}
+                  onClick={registerExhibition}
                 >
                   등록
                 </button>

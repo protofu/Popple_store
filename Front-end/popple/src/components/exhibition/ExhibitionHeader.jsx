@@ -21,7 +21,7 @@ const ExhibitionHeader = ({ step }) => {
       </div>
       <p className="text-lg mb-2">팝업/전시 등록</p>
       <hr className="w-full" />
-      <div className="mt-2">{step === 1 ? "기본 정보" : step === 2 ? "판매 정보" : step === 3 ? "완료" : "이벤트 등록"}</div>
+      <div className="mt-2">{step === 1 ? "기본 정보" : step === 2 ? "판매 정보"  : "완료"}</div>
     </>
   );
 }
