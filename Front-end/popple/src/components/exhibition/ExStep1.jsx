@@ -17,6 +17,8 @@ const ExStep1 = ({information, changeInformation}) => {
     // input 태그 스타일 지정
     const inputStyle = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg inline-block p-2.5 mb-10";
 
+    //날짜 지정
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })).toISOString().split('T')[0];
     // 주소 검색 결과 state
     const [address, setAddress] = useState({});
 
@@ -54,7 +56,9 @@ const ExStep1 = ({information, changeInformation}) => {
   
         reader.readAsDataURL(file);
         reader.onload = () => {
+            console.log('File content:', reader.result); // 결과 확인
             setPosterPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
+            
         };
         changeInformation({
             target: {
@@ -62,6 +66,7 @@ const ExStep1 = ({information, changeInformation}) => {
                 value: file
             }
         });
+        console.log("정보",information)
     };
 
     // 이미지 다중 업로드 관련 상태
@@ -169,6 +174,37 @@ const ExStep1 = ({information, changeInformation}) => {
         { name: "saturday" },
         { name: "sunday" }
     ];
+    // const [allDay, setAllDay] = useState([]);
+    const handleAllDay = () => {
+        //요일 시간 가져오기
+        const ot = information.openTime[week];
+
+        //하나씩 따와서 휴무 오픈 마감 정하기
+        const newAllDay = daysOfWeek.map((day)=>({
+            day:day.name,
+            holiday:ot.holiday,
+            open:ot.open,
+            close:ot.close
+        }));
+        // //다 바꿨다
+        // setAllDay(newAllDay);
+        const updatedOpenTime = {};
+        newAllDay.forEach(day => {
+            updatedOpenTime[day.day] = {
+                holiday: day.holiday,
+                open: day.open,
+                close: day.close
+            };
+        });
+    
+        changeInformation({
+            target: {
+                name: "openTime",
+                value: updatedOpenTime
+            }
+        });
+    }
+    
 
     return (
         <>
@@ -191,9 +227,9 @@ const ExStep1 = ({information, changeInformation}) => {
 
                 <label>팝업 전시 기간</label>
                 <div className="flex justify-between">
-                    <input type="date" name="startAt" className={`${inputStyle} w-1/2`} value={information.startAt} onChange={(e) => changeInformation(e)}/>
+                    <input placeholder="시작일" type="date" name="startAt" className={`${inputStyle} w-1/2`} value={information.startAt} onChange={(e) => changeInformation(e)} min={`${today}`}/>
                     <span className="mx-5">~</span>
-                    <input type="date" name="endAt" className={`${inputStyle} w-1/2`} value={information.endAt} onChange={(e) => changeInformation(e)}/>
+                    <input placeholder="종료일" type="date" name="endAt" className={`${inputStyle} w-1/2`} value={information.endAt} onChange={(e) => changeInformation(e)} min={`${today}`}/>
                 </div>
 
                 <label>상세 설명</label>
@@ -231,10 +267,10 @@ const ExStep1 = ({information, changeInformation}) => {
                 <input name="detailAddr" className={inputStyle} value={information.detailAddr} onChange={(e) => changeInformation(e)}/>
 
                 <label>홈페이지 링크</label>
-                <input name="homepageLink" className={inputStyle} value={information.homepageLink} onChange={(e) => changeInformation(e)}/>
+                <input name="homepageLink" className={inputStyle} value={information.homepageLink || "https://"} onChange={(e) => changeInformation(e)}/>
                 
                 <label>인스타그램 링크</label>
-                <input name="instagramLink" className={inputStyle} value={information.instagramLink} onChange={(e) => changeInformation(e)}/>
+                <input name="instagramLink" className={inputStyle} value={information.instagramLink || "https://"} onChange={(e) => changeInformation(e)}/>
                 
                 <label>공지사항</label>
                 <div className={inputStyle}>
@@ -285,9 +321,12 @@ const ExStep1 = ({information, changeInformation}) => {
                     ))}
                 </div>
             </div>
-
+          
+                
+           
             {/* 관람시간 지정 인풋 */}
             <div className={`${inputStyle} my-auto p-5 gap-5 flex flex-col justify-around`}>
+            <button type="button" className="border p-2" onClick={handleAllDay}>일괄처리</button>
                 <div className="flex justify-between">
                     <span className={`${week === 'sunday' ? 'text-red-400' : week === 'saturday' ? 'text-blue-400' : 'text-black'}`}>{week.toUpperCase()}</span>
                     <div>

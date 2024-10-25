@@ -1,6 +1,6 @@
 import api from "../api";
 
 export const ExhibitionAPI = {
-  regist : (iamges, posters, token, data) => api.post("/exhibition/regist")
- 
+  regist : (data) => api.post("exhibition/resist", data),
+  update : (data) => api.patch("exhibition",data),
 }

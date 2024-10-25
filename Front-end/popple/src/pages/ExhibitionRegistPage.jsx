@@ -3,6 +3,9 @@ import ExhibitionHeader from "../components/exhibition/ExhibitionHeader";
 import ExStep1 from "../components/exhibition/ExStep1";
 import ExStep2 from "../components/exhibition/ExStep2";
 import axios from "axios";
+import EventRegister from "./EventRegister";
+import { ExhibitionAPI } from "../api/services/Exhibition";
+import { data } from "autoprefixer";
 
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
