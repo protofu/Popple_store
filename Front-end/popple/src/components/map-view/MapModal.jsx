@@ -1,21 +1,12 @@
 import MapView from "./MapView";
 import { MdOutlineClose } from "react-icons/md";
-import { searchAddress } from "../../api/services/KakaoAPI";
-import { FaSearchLocation } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import LocationSearch from "./LocationSearch";
-import MapComp from "./MapComp";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
-import axios from "axios";
 import SearchByLocation from "./SearchByLocation";
 
 export default function MapModal({ onClose }) {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
-
   const [locations, setLocations] = useState([]);
   //latitude and longitude
-  const [coordinates, setCoordinates] = useState(null);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
 
@@ -34,9 +25,6 @@ export default function MapModal({ onClose }) {
     setLocations(newLocations); // Set the fetched locations
   };
 
-  // 검색 드롭다운 상태 저장
-  const [showResults, setShowResults] = useState(false);
-
   const [keyword, setKeyword] = useState('');
   // 장소로 찾기
   const handleLocationSearch = (searchKeyword) => {
@@ -45,11 +33,8 @@ export default function MapModal({ onClose }) {
 
   // onClick
   const handleClick = (result) => {
-    console.log("클릭시", result);
-    setQuery(result.address_name); 
     setLongitude(result.x); 
     setLatitude(result.y);
-    setShowResults(false);
   };
 
 

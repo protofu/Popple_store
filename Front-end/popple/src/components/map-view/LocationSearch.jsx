@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 export default function LocationSearch({ onSearch, locations }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
 
   // Update results whenever locations change
   useEffect(() => {
-    setResults(locations);
+    if (locations) {
+      setResults(locations);
+      setShowResults(true);
+    } else {
+      setShowResults(false);
+    }
   }, [locations]);
 
   const handleChange = (e) => {
@@ -28,6 +34,7 @@ export default function LocationSearch({ onSearch, locations }) {
 
   const handleLocationClick = (placeName) => {
     onSearch(placeName); // Use the clicked place name to search
+    setShowResults(true);
   };
 
   const inputStyle =
@@ -49,7 +56,7 @@ export default function LocationSearch({ onSearch, locations }) {
         </button>
       </div>
       <ul className="relative block left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-10 w-[300px] mx-auto max-h-[200px] overflow-y-auto">
-        {results.length > 0 ? (
+        {showResults ? (
           results.map((place, index) => (
             <li 
               key={index} 
