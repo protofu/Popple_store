@@ -10,7 +10,7 @@ import { data } from "autoprefixer";
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
   const [information, setInformation] = useState({
-      type:"",
+      typeId: 1,
       exhibitionName: "", // 팝업/전시명
       subTitle: "", // 부제
       free: false, // 무료 여부
@@ -50,9 +50,6 @@ export default function ExhibitionRegistPage() {
       const { name, type } = e.target;
       let { value } = e.target;
       const keys = name.split(".");
-      if (name.includes("open") || name.includes("close")) {
-
-      }
       if (name === "fee") {
           if (isNaN(value.replaceAll(",", ""))) {
               alert("숫자만 입력 가능합니다.");
@@ -100,7 +97,7 @@ export default function ExhibitionRegistPage() {
       // FormData 생성
       const formData = new FormData();
       // ExhibitionRequest 필드에 맞게 데이터 추가
-      formData.append("typeId", information.type);
+      formData.append("typeId", information.typeId);
       formData.append("exhibitionName", information.exhibitionName);
       formData.append("subTitle", information.subTitle);
       formData.append("detailDescription", information.detailDescription);
@@ -179,9 +176,9 @@ export default function ExhibitionRegistPage() {
           )}
           {step === 3 && <div>Step 3</div>}
 
-          <pre className="bg-gray-100 p-4 rounded-lg">
+          {/* <pre className="bg-gray-100 p-4 rounded-lg">
             {JSON.stringify(information, null, 2)}
-          </pre>
+          </pre> */}
 
           {/* 하단 단계별 이전, 다음 버튼 */}
           <div>

@@ -1,8 +1,8 @@
-export default function TypeDropdown({onChange}) {
+export default function TypeDropdown({onChange, className}) {
   return(
-    <select className="border rounded-lg ml-2" onChange={onChange}>
-      <option>팝업</option>
-      <option>전시</option>
+    <select className="border rounded-lg ml-2" onChange={onChange} className={className} >
+      <option value={1}>팝업</option>
+      <option value={2}>전시</option>
     </select>
   )
 }

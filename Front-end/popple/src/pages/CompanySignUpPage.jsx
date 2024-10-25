@@ -159,7 +159,7 @@ export default function CompanySignUpPage() {
     }
   };
 
-
+  console.log(watch())
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-2xl"> 기업 정보입력</h1>
@@ -222,11 +222,10 @@ export default function CompanySignUpPage() {
                           key={a.id}
                           type={a.type}
                           id={a.name}
-                          {...register(a.name, a.condition)}
                           className={inputStyle}
                           placeholder={a.placeholder}
                           required={true}
-                          value={(e)=>handleDropdown(e.target.value)}
+                          value={drop}
                         />
                         <Dropdown onChange={handleDropdown} />
                         {errors[a.name] && (
@@ -249,7 +248,7 @@ export default function CompanySignUpPage() {
                             className={inputStyle}
                             placeholder={a.placeholder}
                             required={true}
-                            value={address} // 주소 값을 상태로 설정
+                            value={address.roadAddress} // 주소 값을 상태로 설정
                             onChange={(e) => setAddress({ ...address, name: e.target.value })} // 상태 업데이트
                           />
                           <PostCode

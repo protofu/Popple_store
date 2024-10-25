@@ -44,7 +44,7 @@ public class ExhibitionService {
 		
 		// Exhibition 객체를 요청 데이터로 초기화
 	    Exhibition exhibition = Exhibition.builder()
-	            .user(ur.findById(3L).get())  // 현재 사용자 설정
+	            .user(user)  // 현재 사용자 설정
 	            .type(type)
 	            .exhibitionName(req.getExhibitionName())
 	            .subTitle(req.getSubTitle())

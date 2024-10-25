@@ -217,13 +217,12 @@ const ExStep1 = ({ information, changeInformation }) => {
     });
   };
   //항목 상태 관리
-  const [drop, setDrop] = useState("");
   const handleDropdown = (e) => {
     const selectValue = e.target.value;
-    setDrop(selectValue);
+    console.log(selectValue)
     changeInformation({
         target:{
-            name:"type",
+            name:"typeId",
             value: selectValue,
         },
     });
@@ -233,17 +232,9 @@ const ExStep1 = ({ information, changeInformation }) => {
     <>
       <div className="grid grid-cols-2 gap-x-10 w-full h-full">
         <div className="flex flex-col justify-between">
-          <label>팝업/전시 항목</label>
-          <div>
-          <input
-            name="exhibitionName"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-48 p-2.5 mb-10"
-            value={information.type || drop}
-            readOnly
-            placeholder="팝업/전시 항목을 선택해주세요."
-          />
-          <TypeDropdown onChange={handleDropdown} />
-          </div>
+          <label>팝업, 전시 항목 선택</label>
+          <TypeDropdown className={inputStyle} onChange={handleDropdown} />
+
           <label>팝업 전시명</label>
           <input
             name="exhibitionName"

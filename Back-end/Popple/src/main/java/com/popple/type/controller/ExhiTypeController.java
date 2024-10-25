@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "팝업/전시	", description = "팝업/전시 타입 API")
-@RequestMapping("/api/exhibitiontype")
+@RequestMapping("/api/exhibition-type")
 public class ExhiTypeController {
 	
 	
