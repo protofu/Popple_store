@@ -290,6 +290,7 @@ const ExStep1 = ({information, changeInformation}) => {
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                     onDragLeave={handleDragEnd}
+                    onClick={() => document.getElementById("detailImage").click()}
                 >
                     <input type="file" id="detailImage" className="hidden" multiple onChange={onImageArrUpload} accept="image/*" />
                         {imagePreviewArr.length > 0 ? (

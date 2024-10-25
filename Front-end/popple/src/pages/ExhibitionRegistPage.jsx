@@ -167,6 +167,7 @@ export default function ExhibitionRegistPage() {
         {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />}
         {/* {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />} */}
         {step === 3 && <div>Step 3</div>}
+        {step === 4 && <EventRegister information={information} changeInformation={changeInformation}/>}
 
         <div>
           <hr className="w-full mt-10" />
