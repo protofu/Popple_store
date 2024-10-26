@@ -83,7 +83,7 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  console.log(value);
+  console.log("시간", moment(value).format('YYYY-MM-DD'));
   return (
     <div className="mt-10 h-full">
       <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
@@ -161,8 +161,8 @@ export default function DetailPage() {
           <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
             <p className="text-center text-white text-[1rem]">예약하기</p>
           </div>
-          {showReservationModal && ( 
-            <Reservation data={selectedTime}/>
+          {(showReservationModal && selectedTime !== null ) && ( 
+            <Reservation data={moment(value).format('YYYY-MM-DD')} exhi={data}/>
           )}
         </div>
       </div>
