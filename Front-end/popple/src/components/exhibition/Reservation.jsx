@@ -39,7 +39,7 @@ export default function Reservation({ reservation, exhi }) {
           </div>
         </div>
         <h1 className="font-bold">입력하신 전화번호로 예약 정보가 발송됩니다.</h1>
-        <div className="flex items-center">
+        <div className="flex">
           <input type="checkbox" className="mr-2" />
           <p className="text-center text-[0.75rem]">
             여기는 제 3자의 뭐시기 저시기 정보는 뭐시기 저시기 3년의 뭐시기 저시기 뭐라 했던거 같은데 무튼 그런 내용의 동의 받던가 말던가 하는 내용이 있는 자리
