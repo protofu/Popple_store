@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import UseInfo from "../components/exhi-details/UseInfo";
 import axios from "axios";
 import ReviewInDetail from "../components/review/ReviewInDetail";
+import Reservation from "../components/exhibition/Reservation";
 
 export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
@@ -21,6 +22,9 @@ export default function DetailPage() {
   // json데이터 담을 state
   const [data, setData] = useState(null);
   const [chartData, setChartData] = useState(null);
+
+  // 모달 상태
+  const [showReservationModal, setShowReservationModal] = useState(false);
 
   // const { id } = useParams();
   // API 호출로 정보를 받아오고
@@ -71,12 +75,15 @@ export default function DetailPage() {
     setSelectTab(tab);
   }
 
+  const openModal = () => setShowReservationModal(true);
+  const closeModal = () => setShowReservationModal(false);
+
   const timeOptions = ["14:00", "15:00", "16:00"]; // 시간 옵션 배열
 
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-
+  console.log(value);
   return (
     <div className="mt-10 h-full">
       <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
@@ -119,6 +126,7 @@ export default function DetailPage() {
         </div>
         {/* 캘린더 */}
         <div className="col-span-2 mx-auto">
+          <h1>예약하기</h1>
           <Calendar 
             onChange={handleDateChange}   // 날짜 변경시 저장
             formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
@@ -150,6 +158,12 @@ export default function DetailPage() {
               moment(value).format("YYYY년 MM월 DD일")
             )}
           </div>
+          <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
+            <p className="text-center text-white text-[1rem]">예약하기</p>
+          </div>
+          {showReservationModal && ( 
+            <Reservation data={selectedTime}/>
+          )}
         </div>
       </div>
     </div>
