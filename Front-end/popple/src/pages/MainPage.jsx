@@ -157,7 +157,7 @@ export default function MainPage() {
           {isPop ?
             <>
               {example2.map((item, index) => (
-                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
+                <PostCard key={index} id={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
               ))}
             </> :
             <>

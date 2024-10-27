@@ -44,14 +44,13 @@ export default function AgeChart({ chart }) {
   }));
   // 눈금 최대치 구하기 위해 맥스값 계산
   const maxValueItem = barChartData.reduce((max, item) => (item.value > max.value ? item : max), barChartData[0]);
-  console.log(barChartData);
+
   // key 값 : value 만 담긴 배열
   const keyValue = barChartData.reduce((acc, item) => {
     acc[item.ageGroup] = item.value; // ageGroup과 value로 구성
     return acc;
   }, {});
 
-  console.log(keyValue);
 
   const ageGroupColors = {
     "10대": "#1f77b4",

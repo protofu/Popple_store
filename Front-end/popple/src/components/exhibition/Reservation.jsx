@@ -1,8 +1,22 @@
 import moment from "moment";
+import { useEffect, useState } from "react";
 
-export default function Reservation({ reservation, exhi }) {
-  const reservationTime = moment(reservation).format('YYYY-MM-DD');
-  console.log("모달", moment(reservation).format('YYYY-MM-DD'));
+export default function Reservation({ reservation, exhi, onClose }) {
+  const [reservationTime, setReservationTime] = useState(moment(reservation).format('YYYY-MM-DD'));
+  const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    setReservationTime(moment(reservation).format('YYYY-MM-DD'));
+  }, [reservation]);
+
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const handleClick = () => {
+    // 예약 확정 로직
+    onClose();
+  };
 
   const inputStyle = "border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2 w-full h-[80%] my-auto mx-3";
   const oneLineStyle = "grid grid-cols-[1fr_2fr] h-12 flex items-center mx-5";
@@ -40,13 +54,16 @@ export default function Reservation({ reservation, exhi }) {
         </div>
         <h1 className="font-bold">입력하신 전화번호로 예약 정보가 발송됩니다.</h1>
         <div className="flex">
-          <input type="checkbox" className="mr-2" />
+          <input type="checkbox" checked={isChecked} onClick={handleChange} className="mr-2" />
           <p className="text-center text-[0.75rem]">
-            여기는 제 3자의 뭐시기 저시기 정보는 뭐시기 저시기 3년의 뭐시기 저시기 뭐라 했던거 같은데 무튼 그런 내용의 동의 받던가 말던가 하는 내용이 있는 자리
+          본 서비스 이용을 위해 제3자의 정보 수집 및 공유에 대한 동의 여부를 선택해 주시기 바랍니다.
           </p>
         </div>
-        <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px]">
-          <p className="text-center text-white text-[1rem]">예약확정</p>
+        <div 
+          className={`bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
+          onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
+        >
+          <p className="text-center text-white text-[1.2rem]">예약확정</p>
         </div>
       </div>
     </div>

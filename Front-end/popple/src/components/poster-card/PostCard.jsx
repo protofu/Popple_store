@@ -31,13 +31,3 @@ export default function PostCard({ id, img, title, addr, duration, styles }) {
     </div>
   );
 };
-
-// PropTypes 정의
-PostCard.propTypes = {
-  id: PropTypes.number.isRequired,
-  img: PropTypes.object.isRequired,      // 이미지 URL
-  title: PropTypes.object.isRequired,     // 제목
-  addr: PropTypes.object.isRequired,      // 주소
-  duration: PropTypes.object.isRequired,  // 기간
-  styles: PropTypes.object.isRequired,    // 스타일
-};
