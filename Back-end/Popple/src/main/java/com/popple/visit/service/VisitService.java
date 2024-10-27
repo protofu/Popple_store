@@ -200,5 +200,38 @@ public class VisitService {
                 .build();
 	}
 
+	// 시간대별 통계
+	public StatsResponse getTimeStatistic(Long exId) {
+		// 시간대별 통계 맵 초기화
+        Map<String, Integer> timeStats = new HashMap<>();
+        // 초기값 설정
+        timeStats.put("TenAM", 0);
+        timeStats.put("TwelvePM", 0);
+        timeStats.put("TwoPM", 0);
+        timeStats.put("FourPM", 0);
+        timeStats.put("SixPM", 0);
+        timeStats.put("EightPM", 0);
+        timeStats.put("TenPM", 0);
+        // 팝업 ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        for (Visit visit : visitors) {
+            int timeZone = visit.getTimeZone(); // 사용자의 시간대 가져오기
+            // 시간대에 따라 통계 업데이트
+            switch (timeZone) {
+                case 1: timeStats.put("TenAM", timeStats.get("TenAM") + 1); break;
+                case 2: timeStats.put("TwelvePM", timeStats.get("TwelvePM") + 1); break;
+                case 3: timeStats.put("TwoPM", timeStats.get("TwoPM") + 1); break;
+                case 4: timeStats.put("FourPM", timeStats.get("FourPM") + 1); break;
+                case 5: timeStats.put("SixPM", timeStats.get("SixPM") + 1); break;
+                case 6: timeStats.put("EightPM", timeStats.get("EightPM") + 1); break;
+                case 7: timeStats.put("TenPM", timeStats.get("TenPM") + 1); break;
+            }
+        }
+        
+        return StatsResponse.builder()
+        		.stats(timeStats)
+        		.build();
+	}
+
 
 }
