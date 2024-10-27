@@ -61,6 +61,16 @@ export default function ExhibitionRegistPage() {
             return ;
         }
     }
+    //오픈 마감 비교할 곳
+  //  if (name === "endAt" || name === "startAt") {
+  //    const startAt = new Date(information.startAt);
+  //    const endAt = new Date(name === "endAt" ? value : information.endAt);
+
+  //    if (endAt < startAt) {
+  //        alert("종료일은 시작일보다 빠를 수 없습니다.");
+  //        return ;
+  //    }
+  //}
       if (name === "fee") {
           if (isNaN(value.replaceAll(",", ""))) {
               alert("숫자만 입력 가능합니다.");

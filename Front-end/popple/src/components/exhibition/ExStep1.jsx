@@ -520,8 +520,8 @@ const ExStep1 = ({ information, changeInformation }) => {
                       </td>
                     ) : (
                       <>
-                        <td>{information.openTime[key].startAt}</td>
-                        <td>{information.openTime[key].endAt}</td>
+                        <td>{information.openTime[key].open}</td>
+                        <td>{information.openTime[key].close}</td>
                       </>
                     )}
                   </tr>
