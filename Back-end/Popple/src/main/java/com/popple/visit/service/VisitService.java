@@ -1,7 +1,9 @@
 package com.popple.visit.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ import com.popple.company.repository.CompanyRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.visit.domain.CheckResponse;
-import com.popple.visit.domain.WeekResponse;
+import com.popple.visit.domain.StatsResponse;
 import com.popple.visit.entity.Visit;
 import com.popple.visit.repository.VisitRepository;
 
@@ -102,7 +104,7 @@ public class VisitService {
     // 팝업/전시 기준
     
     // 요일 통계
-    public WeekResponse getWeekStatistic(Long exId) {
+    public StatsResponse getWeekStatistic(Long exId) {
     	// 요일별 통계 맵 초기화
         Map<String, Integer> weekStats = new HashMap<>();
         // 초기값 설정 (예: 모든 요일을 0으로 초기화)
@@ -132,11 +134,71 @@ public class VisitService {
         }
         
         // WeekResponse 객체 생성 및 반환
-        return WeekResponse.builder()
-                .exId(exId)
-                .weekStats(weekStats)
+        return StatsResponse.builder()
+                .stats(weekStats)
                 .build();
     }
+
+    // 성별 통계
+	public StatsResponse getGenderStatistic(Long exId) {
+		// 성별 통계 맵 초기화
+        Map<String, Integer> genderStats = new HashMap<>();
+        // 초기값 설정
+        genderStats.put("male", 0);
+        genderStats.put("female", 0);
+		// 팝업 ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        // visitors에서 user의 gender 가져와서 비교하여 Map에 설정
+        for (Visit visit : visitors) {
+            boolean gender = visit.getUser().isGender(); // 성별을 true false로 가져옴
+            // 성별에 따라 통계 업데이트
+            if (gender) genderStats.put("male", genderStats.get("male") + 1);
+            else genderStats.put("female", genderStats.get("female") + 1);
+        }
+        
+		return StatsResponse.builder()
+				.stats(genderStats)
+				.build();
+	}
+
+	// 나이별 통계
+	public StatsResponse getAgeStatistic(Long exId) {
+		// 성별 통계 맵 초기화
+        Map<String, Integer> ageStats = new HashMap<>();
+        // 초기값 설정
+        ageStats.put("Teens", 0);       // 10대
+        ageStats.put("Twenties", 0);    // 20대
+        ageStats.put("Thirties", 0);    // 30대
+        ageStats.put("Forties", 0);     // 40대
+        ageStats.put("Fifties_above", 0);     // 50대 이상
+        // 팝업 ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        LocalDate currentDate = LocalDate.now(); // 현재 날짜 가져오기
+        for (Visit visit : visitors) {
+            LocalDate birth = visit.getUser().getBirth(); // 사용자의 생년월일 가져오기
+            int age = Period.between(birth, currentDate).getYears(); // 나이 계산
+
+            if (age < 10) continue; // 10세 미만은 제외
+            
+            String ageGroup;
+            if (age < 20) {
+                ageGroup = "Teens";
+            } else if (age < 30) {
+                ageGroup = "Twenties";
+            } else if (age < 40) {
+                ageGroup = "Thirties";
+            } else if (age < 50) {
+                ageGroup = "Forties";
+            } else {
+                ageGroup = "Fifties_above";
+            }
+            ageStats.put(ageGroup, ageStats.get(ageGroup) + 1); // 해당 나이 그룹 카운트 증가
+        }
+        
+        return StatsResponse.builder()
+                .stats(ageStats)
+                .build();
+	}
 
 
 }
