@@ -62,7 +62,7 @@ public class VisitController {
 	}
 	
 	// 시간대별 기준 방문 통계
-	@Operation(summary = "팝업/전시 시간대별 통계", description = "팝업/전시 기준 나이별 통계를 반환합니다.")
+	@Operation(summary = "팝업/전시 시간대별 통계", description = "팝업/전시 기준 시간대별 통계를 반환합니다.")
 	@GetMapping("/time/{id}")
 	public ResponseEntity<StatsResponse> timeStatistic(@PathVariable("id") Long exId) {
 		StatsResponse tRes = visitService.getTimeStatistic(exId);
