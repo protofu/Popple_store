@@ -49,7 +49,7 @@ public class Reservation {
 	
 	// 예약 일자
 	@Column(name="reservation_date", nullable = false)
-	private LocalDateTime reservationDate;
+	private LocalDate reservationDate;
 	
 	// 예약 생성 일자
 	@CreatedDate

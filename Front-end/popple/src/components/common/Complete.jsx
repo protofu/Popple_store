@@ -1,7 +1,6 @@
-import { FiUserCheck } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-export default function CompletePage() {
+export default function Complete({ path, text, onClose }) {
   const navigate = useNavigate();
 
   const handleClick = (path) => {
@@ -22,7 +21,8 @@ export default function CompletePage() {
       </div>
       {/* 버튼 자리 */}
       <div className="mt-8">
-        <button className="px-4 py-2 bg-popple text-white text-[16px] rounded w-[150px]" onClick={() => handleClick("/")}>메인으로</button>
+        <button className="px-4 py-2 bg-popple text-white text-[16px] rounded w-[150px] mx-4" onClick={onClose ? () => onClose() : () => handleClick(path)}>{text}</button>
+        <button className="px-4 py-2 bg-popple text-white text-[16px] rounded w-[150px] mx-4" onClick={() => handleClick("/")}>메인으로</button>
       </div>
     </div>
   );

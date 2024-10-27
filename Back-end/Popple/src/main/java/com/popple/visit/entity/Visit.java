@@ -1,5 +1,7 @@
 package com.popple.visit.entity;
 
+import java.time.LocalDateTime;
+
 import com.popple.auth.entity.User;
 import com.popple.company.entity.Company;
 import com.popple.exhibition.entity.Exhibition;
@@ -30,9 +32,13 @@ public class Visit {
 	@Column(updatable = false)
 	private Long id;
 	
-	//요일
+	//요일 -> 1 월 ~~~ 7일
 	@Column(nullable = false)
 	private int weekday;
+	
+	//방문시간
+	@Column(name = "visit_time", nullable = false)
+	private LocalDateTime visitTime;
 	
 	//시간대
 	@Column(name = "time_zone", nullable = false)
