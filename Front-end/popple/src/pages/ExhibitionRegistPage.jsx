@@ -6,6 +6,7 @@ import axios from "axios";
 import EventRegister from "./EventRegister";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { data } from "autoprefixer";
+import ExStep3 from "../components/exhibition/ExStep3";
 
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
@@ -50,6 +51,16 @@ export default function ExhibitionRegistPage() {
       const { name, type } = e.target;
       let { value } = e.target;
       const keys = name.split(".");
+
+      if (name === "endAt" || name === "startAt") {
+        const startAt = new Date(information.startAt);
+        const endAt = new Date(name === "endAt" ? value : information.endAt);
+
+        if (endAt < startAt) {
+            alert("종료일은 시작일보다 빠를 수 없습니다.");
+            return ;
+        }
+    }
       if (name === "fee") {
           if (isNaN(value.replaceAll(",", ""))) {
               alert("숫자만 입력 가능합니다.");
@@ -154,7 +165,26 @@ export default function ExhibitionRegistPage() {
         console.error('Error occurred while submitting exhibition data:', error);
     }
   };
+  //const handleSubmit = async (event) => {
+  //  event.preventDefault(); // 기본 폼 제출 방지
+  //  console.log("데이터", data);
 
+  //  const formData = new FormData();
+   // formData.append("userId", data.userId);
+  //  if (data.image || data.poster) {
+  //    formData.append("image", data.image);
+  //    formData.append("poster", data.poster);
+//    }
+ //   try {
+ //     const res = await ExhibitionAPI.regist(formData);
+   //   if (res.status === 201) {
+//        alert("등록 성공");
+ //     }
+ //   } catch (error) {
+  //   alert("등록 실패");
+    // console.log(error.message);
+  //  }
+ // };
     
   return (
     <>
@@ -174,7 +204,11 @@ export default function ExhibitionRegistPage() {
               changeInformation={changeInformation}
             />
           )}
-          {step === 3 && <div>Step 3</div>}
+          {step === 3 &&
+          <ExStep3
+              information={information}
+              changeInformation={changeInformation}
+            />}
 
           {/* <pre className="bg-gray-100 p-4 rounded-lg">
             {JSON.stringify(information, null, 2)}

@@ -216,6 +216,7 @@ const ExStep1 = ({ information, changeInformation }) => {
       },
     });
   };
+
   //항목 상태 관리
   const handleDropdown = (e) => {
     const selectValue = e.target.value;
@@ -226,6 +227,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             value: selectValue,
         },
     });
+ 
   };
 
   return (
@@ -235,7 +237,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           <label>팝업, 전시 항목 선택</label>
           <TypeDropdown className={inputStyle} onChange={handleDropdown} />
 
-          <label>팝업 전시명</label>
+          <label>{information.typeId == 1 ? "팝업" : "전시"}명</label>
           <input
             name="exhibitionName"
             className={inputStyle}
