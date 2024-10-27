@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.popple.auth.entity.User;
 import com.popple.visit.domain.CheckResponse;
 import com.popple.visit.domain.StatsResponse;
-import com.popple.visit.domain.WeekResponse;
 import com.popple.visit.service.VisitService;
 
 import io.swagger.v3.oas.annotations.Operation;
