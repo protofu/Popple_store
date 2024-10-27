@@ -100,11 +100,9 @@ public class VisitService {
 
         return -1; // 시간 범위를 벗어난 경우
     }
-
-    // 팝업/전시 기준
     
     // 요일 통계
-    public StatsResponse getWeekStatistic(Long exId) {
+    public StatsResponse getWeekStatistic(Long exId, boolean isCompany) {
     	// 요일별 통계 맵 초기화
         Map<String, Integer> weekStats = new HashMap<>();
         // 초기값 설정 (예: 모든 요일을 0으로 초기화)
@@ -115,8 +113,14 @@ public class VisitService {
         weekStats.put("fri", 0);
         weekStats.put("sat", 0);
         weekStats.put("sun", 0);
-        // 팝업 ID를 통해서 모든 방문자 리스트 가져오기
-        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        // 팝업 ID 혹은 기업ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors;
+        if (isCompany) {
+        	Exhibition exhi = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
+            visitors = visitRepository.findAllByCompanyId(exhi.getUser().getCompId()); // 기업 ID로 방문자 리스트 가져오기
+        } else {
+        	visitors = visitRepository.findAllByExhibitionId(exId);
+        }
         // visitors에서 weekday 가져와서 비교하여 Map에 설정
         for (Visit visit : visitors) {
             int weekday = visit.getWeekday(); // 요일을 1~7로 가져옴
@@ -140,14 +144,20 @@ public class VisitService {
     }
 
     // 성별 통계
-	public StatsResponse getGenderStatistic(Long exId) {
+	public StatsResponse getGenderStatistic(Long exId, boolean isCompany) {
 		// 성별 통계 맵 초기화
         Map<String, Integer> genderStats = new HashMap<>();
         // 초기값 설정
         genderStats.put("male", 0);
         genderStats.put("female", 0);
-		// 팝업 ID를 통해서 모든 방문자 리스트 가져오기
-        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+     // 팝업 ID 혹은 기업ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors;
+        if (isCompany) {
+        	Exhibition exhi = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
+            visitors = visitRepository.findAllByCompanyId(exhi.getUser().getCompId()); // 기업 ID로 방문자 리스트 가져오기
+        } else {
+        	visitors = visitRepository.findAllByExhibitionId(exId);
+        }
         // visitors에서 user의 gender 가져와서 비교하여 Map에 설정
         for (Visit visit : visitors) {
             boolean gender = visit.getUser().isGender(); // 성별을 true false로 가져옴
@@ -162,7 +172,7 @@ public class VisitService {
 	}
 
 	// 나이별 통계
-	public StatsResponse getAgeStatistic(Long exId) {
+	public StatsResponse getAgeStatistic(Long exId, boolean isCompany) {
 		// 성별 통계 맵 초기화
         Map<String, Integer> ageStats = new HashMap<>();
         // 초기값 설정
@@ -171,8 +181,14 @@ public class VisitService {
         ageStats.put("Thirties", 0);    // 30대
         ageStats.put("Forties", 0);     // 40대
         ageStats.put("Fifties_above", 0);     // 50대 이상
-        // 팝업 ID를 통해서 모든 방문자 리스트 가져오기
-        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        // 팝업 ID 혹은 기업ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors;
+        if (isCompany) {
+        	Exhibition exhi = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
+            visitors = visitRepository.findAllByCompanyId(exhi.getUser().getCompId()); // 기업 ID로 방문자 리스트 가져오기
+        } else {
+        	visitors = visitRepository.findAllByExhibitionId(exId);
+        }
         LocalDate currentDate = LocalDate.now(); // 현재 날짜 가져오기
         for (Visit visit : visitors) {
             LocalDate birth = visit.getUser().getBirth(); // 사용자의 생년월일 가져오기
@@ -201,7 +217,7 @@ public class VisitService {
 	}
 
 	// 시간대별 통계
-	public StatsResponse getTimeStatistic(Long exId) {
+	public StatsResponse getTimeStatistic(Long exId, boolean isCompany) {
 		// 시간대별 통계 맵 초기화
         Map<String, Integer> timeStats = new HashMap<>();
         // 초기값 설정
@@ -212,8 +228,14 @@ public class VisitService {
         timeStats.put("SixPM", 0);
         timeStats.put("EightPM", 0);
         timeStats.put("TenPM", 0);
-        // 팝업 ID를 통해서 모든 방문자 리스트 가져오기
-        List<Visit> visitors = visitRepository.findAllByExhibitionId(exId);
+        // 팝업 ID 혹은 기업ID를 통해서 모든 방문자 리스트 가져오기
+        List<Visit> visitors;
+        if (isCompany) {
+        	Exhibition exhi = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
+            visitors = visitRepository.findAllByCompanyId(exhi.getUser().getCompId()); // 기업 ID로 방문자 리스트 가져오기
+        } else {
+        	visitors = visitRepository.findAllByExhibitionId(exId);
+        }
         for (Visit visit : visitors) {
             int timeZone = visit.getTimeZone(); // 사용자의 시간대 가져오기
             // 시간대에 따라 통계 업데이트
@@ -232,6 +254,4 @@ public class VisitService {
         		.stats(timeStats)
         		.build();
 	}
-
-
 }

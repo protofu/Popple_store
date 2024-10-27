@@ -41,7 +41,7 @@ public class VisitController {
 	@Operation(summary = "팝업/전시 요일 통계", description = "팝업/전시 기준 요일 통계를 반환합니다.")
 	@GetMapping("/week/{id}")
 	public ResponseEntity<StatsResponse> weekStatistic(@PathVariable("id") Long exId) {
-		StatsResponse wRes = visitService.getWeekStatistic(exId);
+		StatsResponse wRes = visitService.getWeekStatistic(exId, false);
 		return ResponseEntity.ok(wRes);
 	}
 	
@@ -49,7 +49,7 @@ public class VisitController {
 	@Operation(summary = "팝업/전시 성별 통계", description = "팝업/전시 기준 성별 통계를 반환합니다.")
 	@GetMapping("/gender/{id}")
 	public ResponseEntity<StatsResponse> genderStatistic(@PathVariable("id") Long exId) {
-		StatsResponse gRes = visitService.getGenderStatistic(exId);
+		StatsResponse gRes = visitService.getGenderStatistic(exId, false);
 		return ResponseEntity.ok(gRes);
 	}
 	
@@ -57,7 +57,7 @@ public class VisitController {
 	@Operation(summary = "팝업/전시 나이별 통계", description = "팝업/전시 기준 나이별 통계를 반환합니다.")
 	@GetMapping("/age/{id}")
 	public ResponseEntity<StatsResponse> ageStatistic(@PathVariable("id") Long exId) {
-		StatsResponse aRes = visitService.getAgeStatistic(exId);
+		StatsResponse aRes = visitService.getAgeStatistic(exId, false);
 		return ResponseEntity.ok(aRes);
 	}
 	
@@ -65,8 +65,42 @@ public class VisitController {
 	@Operation(summary = "팝업/전시 시간대별 통계", description = "팝업/전시 기준 시간대별 통계를 반환합니다.")
 	@GetMapping("/time/{id}")
 	public ResponseEntity<StatsResponse> timeStatistic(@PathVariable("id") Long exId) {
-		StatsResponse tRes = visitService.getTimeStatistic(exId);
+		StatsResponse tRes = visitService.getTimeStatistic(exId, false);
 		return ResponseEntity.ok(tRes);
 	}
 	
+	
+	// 기업 기준
+	
+	// [기업] 요일 기준 방문 통계
+	@Operation(summary = "기업 요일 통계", description = "기업 기준 요일 통계를 반환합니다.")
+	@GetMapping("/week-comp/{id}")
+	public ResponseEntity<StatsResponse> weekCompStatistic(@PathVariable("id") Long exId) {
+		StatsResponse wRes = visitService.getWeekStatistic(exId, true);
+		return ResponseEntity.ok(wRes);
+	}
+	
+	// [기업] 성별 기준 방문 통계
+	@Operation(summary = "기업 성별 통계", description = "기업 기준 성별 통계를 반환합니다.")
+	@GetMapping("/gender-comp/{id}")
+	public ResponseEntity<StatsResponse> genderCompStatistic(@PathVariable("id") Long exId) {
+		StatsResponse gRes = visitService.getGenderStatistic(exId, true);
+		return ResponseEntity.ok(gRes);
+	}
+	
+	// [기업] 나이별 기준 방문 통계
+	@Operation(summary = "기업 나이별 통계", description = "기업 기준 나이별 통계를 반환합니다.")
+	@GetMapping("/age-comp/{id}")
+	public ResponseEntity<StatsResponse> ageCompStatistic(@PathVariable("id") Long exId) {
+		StatsResponse aRes = visitService.getAgeStatistic(exId, true);
+		return ResponseEntity.ok(aRes);
+	}
+	
+	// [기업] 시간대별 기준 방문 통계
+	@Operation(summary = "기업 시간대별 통계", description = "기업 기준 시간대별 통계를 반환합니다.")
+	@GetMapping("/time-comp/{id}")
+	public ResponseEntity<StatsResponse> timeCompStatistic(@PathVariable("id") Long exId) {
+		StatsResponse tRes = visitService.getTimeStatistic(exId, true);
+		return ResponseEntity.ok(tRes);
+	}
 }
