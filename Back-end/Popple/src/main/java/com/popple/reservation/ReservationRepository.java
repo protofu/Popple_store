@@ -19,4 +19,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
 	Optional<Reservation> findByExhibitionAndUser(Exhibition exhibition, User user);
 
+	Optional<Reservation> findByUserIdAndExhibitionId(Long id, Long exId);
+
 }
