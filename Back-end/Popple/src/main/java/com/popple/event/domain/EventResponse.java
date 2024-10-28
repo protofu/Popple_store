@@ -16,7 +16,7 @@ public class EventResponse {
 	private LocalDate startAt;
 	private LocalDate endAt;
 	
-	public static EventResponse toEntity(Event event) {
+	public static EventResponse toDTO(Event event) {
 		return EventResponse.builder()
 				.description(event.getDescription())
 				.evnetName(event.getEventName())

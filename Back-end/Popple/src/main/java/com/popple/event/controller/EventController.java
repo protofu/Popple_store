@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,23 @@ public class EventController {
 		log.info("이벤트 추가 : {}", req);
 		EventResponse event = eventService.addEvent(req, images, poster);
 		return ResponseEntity.status(HttpStatus.CREATED).body(event);
+	}
+	
+	// 이벤트 목록 조회
+	@Operation(summary = "이벤트 목록 조회", description = "이벤트 목록을 조회합니다.")
+	@GetMapping("")
+	public ResponseEntity<List<EventResponse>> getAllEvent(){
+		List<EventResponse> eventList = eventService.getAllEvent();
+		return ResponseEntity.ok(eventList);
+	}
+		
+	// 특정 이벤트 조회
+	@Operation(summary = "이벤트 상세 조회", description = "특정 이벤트를 조회합니다.")
+	@GetMapping("/{id}")
+	public ResponseEntity<EventResponse> getEvent(Long id){
+		EventResponse event = eventService.getEvent(id);
+		return ResponseEntity.ok(event);				
+		
 	}
 
 	

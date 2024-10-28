@@ -1,5 +1,7 @@
 package com.popple.event.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,7 +54,28 @@ public class EventService {
 		// 포스터 저장
 		EventPoster savedPoster = eventPosterService.savePoster(poster, event);
 		
-		EventResponse res = EventResponse.toEntity(event);
+		EventResponse res = EventResponse.toDTO(event);
+		return res;
+	}
+	//이벤트 전체 조회
+	public List<EventResponse> getAllEvent() {
+		List<Event> eventList = eventRepo.findAll();//모든 이벤트
+		List<Event> pList = new ArrayList<Event>();//새롤운 이벤트 배열
+		for(Event e : eventList) {
+			//이벤트 종료일이 오늘보다 뒤면
+			if(!e.getEndAt().isBefore(LocalDate.now())) {
+				//pList에 추가
+				pList.add(e);
+			}
+		}
+		//pList 반환
+		return pList.stream().map(EventResponse::toDTO).toList();
+	}
+	
+	//이벤트 상세 조회
+	public EventResponse getEvent(Long id) {
+		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
+		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
 }
