@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.popple.auth.entity.User;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.review.domain.ReviewRequest;
 import com.popple.review.domain.ReviewResponse;
 import com.popple.review.entity.Review;
 import com.popple.review.entity.ReviewImage;
@@ -66,7 +67,6 @@ public class ReviewService {
 		return reviewRes;
 	}
 
-	
 	private ReviewResponse entityToResponse(Review review) {
 		return ReviewResponse.builder()
 				.id(review.getId())
@@ -84,7 +84,8 @@ public class ReviewService {
 		List<Review> reviews = reviewRepository.findAllByUserId(id);
 		return reviews.stream().map(this::entityToResponse).collect(Collectors.toList());
 	}
-
+	
+	// 리뷰 삭제
 	public ReviewResponse deleteReview(Long id, User user) {
 		Review review = reviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("찾는 리뷰가 존재하지 않습니다."));
 		if (review.getUser().getId().equals(user.getId())) {
@@ -92,5 +93,22 @@ public class ReviewService {
 			return entityToResponse(review);
 		}
 		return null;
+	}
+
+	// 리뷰 수정
+	public ReviewResponse modifyReview(Long id, ReviewRequest req, MultipartFile file, User user) {
+		Review review = reviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+		
+		if (!user.getId().equals(review.getUser().getId())) {
+			throw new IllegalArgumentException("본인이 작성한 글만 수정할 수 있습니다.");
+		}
+		
+		ReviewImage savedImage = imageService.saveImage(file);
+		if (savedImage != null) review.setReviewImage(savedImage);
+		if (req.getContent() != null) review.setContent(req.getContent());
+		
+		Review updatedReview = reviewRepository.save(review);
+		
+		return entityToResponse(updatedReview);
 	}
 }

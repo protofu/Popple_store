@@ -51,6 +51,10 @@ public class Help {
 	@Column(nullable = true)
 	private String answer;
 	
+	//답변
+	@Column(nullable = true)
+	private String adminName;
+	
 	//문의 일자
 	@CreatedDate
 	@Column(name = "created_at", nullable = false)

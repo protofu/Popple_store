@@ -4,26 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 export default function HelpCreate() {
   const navigate = useNavigate();
-  const textStyle = "text-[28px] ml-3 font-bold mt-5";
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [postHelp, setPostHelp] = useState({
+    title: "",
+    description: "",
+  })
   const [error, setError] = useState("");
-
+  
   const handleCreateClick = async () => {
-    if (!title || !description) {
+    if (!postHelp.title || !postHelp.description) {
       setError("제목과 내용을 입력해 주세요.");
       return;
     }
-
-    const userId = localStorage.getItem("userId");
-
+    console.log("postHelp : ", postHelp);
     try {
-      await helpAPI.createHelp({ title, description, userId });
+      await helpAPI.createHelp(postHelp);
+      alert("문의가 등록되었습니다.")
       navigate("/help");
     } catch (err) {
-      setError("문의 생성 오류 발생");
+      console.error(err);
+      setError(err);
     }
   };
+
+  const textStyle = "text-[28px] ml-3 font-bold mt-5";
 
   return (
     <div>
@@ -42,8 +45,7 @@ export default function HelpCreate() {
           type="text"
           id="title"
           name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setPostHelp({ ...postHelp, title: e.target.value })}
           className=" w-[80%] h-[50px] border border-[#ccc] rounded-[8px] 
                                 focus:border-[#8900E1] focus:border-2 focus:outline-none px-2"
           placeholder="제목을 입력하세요."
@@ -60,8 +62,7 @@ export default function HelpCreate() {
 				<textarea
 					id="description"
 					name="description"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
+					onChange={(e) => setPostHelp({ ...postHelp, description: e.target.value })}
 					className="w-[80%] h-[300px] border border-[#ccc] rounded-[8px] 
 																	focus:border-[#8900E1] focus:border-2 focus:outline-none px-2 py-3 mb-4"
 					placeholder="내용을 입력하세요."

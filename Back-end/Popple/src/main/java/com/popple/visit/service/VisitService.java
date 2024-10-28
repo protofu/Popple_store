@@ -7,6 +7,7 @@ import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import com.popple.company.entity.Company;
 import com.popple.company.repository.CompanyRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.reservation.entity.Reservation;
+import com.popple.reservation.repository.ReservationRepository;
 import com.popple.visit.domain.CheckResponse;
 import com.popple.visit.domain.StatsResponse;
 import com.popple.visit.entity.Visit;
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VisitService {
 	private final VisitRepository visitRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final ReservationRepository reservationRepository;
 	private final CompanyRepository companyRepository;
 	private final UserRepository userRepository;
 	
@@ -44,7 +48,16 @@ public class VisitService {
         LocalTime.of(22, 0)
     };
 	
+    // 방문 체크
 	public CheckResponse insert(Long exId, User user) {
+		// 예약 목록을 불러오고
+		Optional<Reservation> optReservation = reservationRepository.findByUserIdAndExhibitionId(user.getId(), exId);
+		// 예약이 존재한다면 참석여부를 true로 초기화 후 저장
+		if (optReservation.isPresent()) {
+			Reservation reservation = optReservation.get();
+			reservation.setAttend(true);
+			reservationRepository.save(reservation);
+		}
 		// 전시 불러오기
 		Exhibition exhi = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시가 존재하지 않습니다."));
 		// 기업회원 불러오기

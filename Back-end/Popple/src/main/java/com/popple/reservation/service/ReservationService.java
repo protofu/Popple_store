@@ -10,11 +10,11 @@ import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
-import com.popple.reservation.ReservationRepository;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
 import com.popple.reservation.domain.ReserverResponse;
 import com.popple.reservation.entity.Reservation;
+import com.popple.reservation.repository.ReservationRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

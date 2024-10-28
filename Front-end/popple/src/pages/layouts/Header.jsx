@@ -38,8 +38,8 @@ export default function Header() {
     setLoginUser(null);
     removeCookie("accessToken");
     window.location.href='/';
+    console.log("로그아웃");
   }
-  console.log(loginUserRole);
 
   return (
     <header className="fixed h-16 top-0 w-screen bg-white border-b border-gray-300 z-50 pb-1">

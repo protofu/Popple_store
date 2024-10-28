@@ -1,4 +1,4 @@
-package com.popple.reservation;
+package com.popple.reservation.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 	List<Reservation> findByExhibition(Exhibition exhibition);
 
 	Optional<Reservation> findByExhibitionAndUser(Exhibition exhibition, User user);
+
+	Optional<Reservation> findByUserIdAndExhibitionId(Long id, Long exId);
 
 }
