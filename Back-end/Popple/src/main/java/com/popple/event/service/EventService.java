@@ -14,8 +14,6 @@ import com.popple.event.entity.EventImage;
 import com.popple.event.entity.EventPoster;
 import com.popple.event.respository.EventRepository;
 import com.popple.exhibition.entity.Exhibition;
-import com.popple.exhibition.entity.Image;
-import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -31,8 +29,9 @@ public class EventService {
 	private final EventPosterService eventPosterService;
 
 	public EventResponse addEvent(EventRequest req, List<MultipartFile> images, MultipartFile poster) {
+		System.out.println(req.getExId());
 		// 해당 전시/팝업 조회
-		Optional<Exhibition> optExhitibition = exhibitionRepository.findById(req.getExhitbitionId());
+		Optional<Exhibition> optExhitibition = exhibitionRepository.findById(req.getExId());
 		Exhibition exhibition = optExhitibition.orElseThrow(() -> new IllegalArgumentException("해당되는 전시 또는 팝업이 없습니다."));
 				
 		// 이벤트 객체 생성

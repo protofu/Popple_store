@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventRequest {
+	private Long exId; 
 	private String eventName;
 	private String summary;
 	private String description;
 	private LocalDate startAt;
 	private LocalDate endAt;
-	private Long exhitbitionId;
 }
