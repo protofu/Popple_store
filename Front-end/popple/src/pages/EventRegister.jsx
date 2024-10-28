@@ -179,10 +179,10 @@ export default function EventRegister() {
             value={info.description}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           /> */}
-          <div className={inputStyle}>
+          <div>
             <Markdown
-              content={information.detailDescription}
-              contentChange={(e) => handleMarkDown("detailDescription", e)}
+              content={info.description}
+              contentChange={(e) => handleMarkDown("description", e)}
             />
           </div>
           <div className="flex ">
