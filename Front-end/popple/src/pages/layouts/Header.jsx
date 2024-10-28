@@ -8,9 +8,8 @@ import { jwtDecode } from "jwt-decode";
 
 export default function Header() {
   const { isLoggedIn, setIsLoggedIn } = useLoginStore(state => state);
-  const { loginUserName, loginUserNickname, loginUserRole, setLoginUser } = useLoginUserStore(state => state);
-  
-  // 로그인 상태 관리 메서드
+  const { loginUserNickname, loginUserRole, setLoginUser } = useLoginUserStore(state => state);
+
   const checkLoggedIn = () => {
     const token = getCookie("accessToken");
     if (token) {
@@ -25,14 +24,12 @@ export default function Header() {
     checkLoggedIn();
   }, []);
   
-  // 화면 이동 메서드
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
     navigate(path);
   }
 
-  // 로그아웃 메서드
   const handleLogout = () => {
     setIsLoggedIn(false);
     setLoginUser(null);
@@ -43,14 +40,13 @@ export default function Header() {
 
   return (
     <header className="fixed h-16 top-0 w-screen bg-white border-b border-gray-300 z-50 pb-1">
-      <div className="grid grid-cols-[1fr_2fr_1fr] lg:max-w-[calc(100%-530px)] mx-auto">
+      <div className="grid grid-cols-3 lg:grid-cols-[1fr_2fr_1fr] lg:max-w-[calc(100%-530px)] mx-auto">
         {/* 헤더 로고 */}
         <div className="p-2.5">
           <img src="/popple_logo(2).png" alt="메인 로고" onClick={() => handleNavigation("/")} className="list-none cursor-pointer w-[90px] h-auto"/>
         </div>
         {/* 헤더 메뉴 */}
-        {/* 헤더 네브 메뉴 */}
-        <div className="flex items-center text-xl ml-auto gap-8">
+        <div className="flex items-center text-xl ml-auto gap-8 overflow-x-auto whitespace-nowrap">
           { loginUserRole === "ROLE_ADMIN" || loginUserRole === "ROLE_COMPANY" ? 
             <>
               <li onClick={() => handleNavigation("/pop-up")} className="list-none cursor-pointer">
