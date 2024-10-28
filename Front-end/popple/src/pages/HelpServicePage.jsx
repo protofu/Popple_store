@@ -14,8 +14,9 @@ export default function HelpServicePage() {
       try {
         const faqDatas = await axios.get("/jsons/faqs.json");
         setFaqs(faqDatas.data);
-        const response = await helpAPI.gethelp();
-        setHelps(response.data.helps);
+        const response = await helpAPI.gethelplist();
+        setHelps(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Failed", error);
       }
@@ -23,7 +24,6 @@ export default function HelpServicePage() {
     
     gethelp();
   }, []);
-  console.log(faqs);
 
   const handleRowClick = (faqId) => {
     navigate(`/help/detail?type=faq&id=${faqId}`);  // 자주 묻는 질문 상세 페이지로 이동

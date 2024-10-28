@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,8 +45,9 @@ public class HelpController {
 
     // 문의 생성
     @Operation(summary = "1:1 문의", description = "1:1 문의를 생성합니다.")
-    @PostMapping("/create")
-    public ResponseEntity<HelpResponse> createHelp(HelpRequest req, @AuthenticationPrincipal User user) {
+    @PostMapping("")
+    public ResponseEntity<HelpResponse> createHelp(@RequestBody HelpRequest req, @AuthenticationPrincipal User user) {
+    	log.info("문의 생성 : {}", req);
     	HelpResponse hRes = helpService.insert(req, user);
         return ResponseEntity.ok(hRes);
     }
@@ -61,9 +63,18 @@ public class HelpController {
     }
     
 	@Operation(summary = "1:1 문의 답글", description = "1:1 문의의 답글을 작성합니다.")
-	@PatchMapping("/")
-	public ResponseEntity<AnswerResponse> answerHelp(@RequestParam AnswerRequest req, @AuthenticationPrincipal User user ){
+	@PatchMapping("")
+	public ResponseEntity<AnswerResponse> answerHelp(@RequestBody AnswerRequest req, @AuthenticationPrincipal User user ){
+		log.info("답변 : {}", req);
 		AnswerResponse res = helpService.reply(req, user);
+	    return ResponseEntity.ok().body(res);
+	}
+	
+	@Operation(summary = "1:1 문의 상세조회", description = "1:1 문의를 상세 조회 합니다.")
+	@GetMapping("/{id}")
+	public ResponseEntity<HelpResponse> detailHelp(@PathVariable("id") Long id, @AuthenticationPrincipal User user ){
+		log.info("문의 상세조회 : {}", id);
+		HelpResponse res = helpService.getHelp(id, user);
 	    return ResponseEntity.ok().body(res);
 	}
     

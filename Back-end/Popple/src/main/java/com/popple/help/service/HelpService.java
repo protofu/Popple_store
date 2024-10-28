@@ -57,11 +57,20 @@ public class HelpService {
 			throw new IllegalArgumentException("관리자만 작성할 수 있습니다.");
 		}
 		help.setAdminName(user.getNickname());
-		help.setDescription(req.getAnswer());
+		help.setAnswer(req.getAnswer());
 		Help savedHelp = helpRepository.save(help);
 		return AnswerResponse.builder()
 				.id(savedHelp.getId())
 				.build();
+	}
+
+	public HelpResponse getHelp(Long id, User user) {
+		Help help = helpRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+		if (!help.getUser().getId().equals(user.getId())) {
+			throw new IllegalArgumentException("본인의 문의만 확인할 수 있습니다.");
+		}
+		log.info(help.toString());
+		return HelpResponse.toDTO(help);
 	}
     
 

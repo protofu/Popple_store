@@ -2,9 +2,11 @@ import api from "../api"; // api 인스턴스 가져오기
 
 export const helpAPI = {
    
-    gethelp: () => api.get("/help"),
-    gethelplist: (id) => api.get(`/help/detail?id=${id}`),
-    createHelp: (data) => api.post("/help/create", data),
-    delete:(id) =>api.delete(`/help/delete?id=${id}`)
+    gethelplist: () => api.get("/help"),
+    gethelp: (id) => api.get(`/help/${id}`),
+    createHelp: (data) => api.post("/help", data),
+    delete:(id) => api.delete(`/help/${id}`),
+    answer:(data) => api.patch(`/help`, data),
+    
   };
   
