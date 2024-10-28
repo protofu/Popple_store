@@ -14,7 +14,7 @@ export default function Footer() {
   };
 
   return (
-    <div className="w-full border-t border-gray-400 min-h-[100px]">
+    <div className="w-full border-t bg-gray-200 min-h-[100px]">
       <div 
         style={{ maxWidth: "calc(100% - 530px)" }}
         className="mx-auto pt-4 pb-5 flex flex-col md:flex-row gap-8 items-center md:items-start md:justify-between"
