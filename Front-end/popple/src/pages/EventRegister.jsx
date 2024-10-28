@@ -144,6 +144,9 @@ export default function EventRegister() {
     });
   };
 
+   //날짜 지정 (오늘날짜)
+   const today = new Date().toISOString().split("T")[0];
+
   return (
     <>
       <p className="text-lg mb-2 mt-10 ">팝업/전시 등록</p>
@@ -198,6 +201,7 @@ export default function EventRegister() {
                 className="bg-gray-50 border rounded-lg p-2.5 text-xs"
                 required
                 placeholder="시작일"
+                min={`${today}`}
               />
             </div>
             <span className="ml-7 mr-7 mt-7">~</span>
@@ -213,6 +217,7 @@ export default function EventRegister() {
                 className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
                 required
                 placeholder="종료일"
+                min={`${today}`}
               />
             </div>
           </div>
