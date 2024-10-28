@@ -23,7 +23,6 @@ export default function HelpServicePage() {
           response = await helpAPI.getMyHelpList();
         }
         setHelps(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Failed", error);
       }
