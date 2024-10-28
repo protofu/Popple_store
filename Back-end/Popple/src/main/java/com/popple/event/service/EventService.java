@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.popple.auth.entity.User;
 import com.popple.event.domain.EventRequest;
 import com.popple.event.domain.EventResponse;
 import com.popple.event.entity.Event;
@@ -77,5 +78,14 @@ public class EventService {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
+	}
+	
+	//이벤트 삭제
+	public EventResponse deleteEvent(Long id, User user) {
+		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
+		if(event.getExhibition().getUser().getId() == user.getId()) {
+			eventRepo.deleteById(event.getId());
+		}
+		return null;
 	}
 }
