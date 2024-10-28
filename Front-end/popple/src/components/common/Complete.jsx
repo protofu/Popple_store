@@ -4,7 +4,6 @@ export default function Complete({ path, text, onClose }) {
   const navigate = useNavigate();
 
   const handleClick = (path) => {
-   
     navigate(path);
   };
 

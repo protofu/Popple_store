@@ -36,8 +36,8 @@ public class EventController {
 			@ModelAttribute EventRequest req,
 			@RequestParam(name = "eventImage") List<MultipartFile> images,
 			@RequestParam(name = "eventPoster") MultipartFile poster) {
-		
-		EventResponse event = eventService.addEvent( req, images, poster);
+		log.info("이벤트 추가 : {}", req);
+		EventResponse event = eventService.addEvent(req, images, poster);
 		return ResponseEntity.status(HttpStatus.CREATED).body(event);
 	}
 

@@ -45,7 +45,7 @@ export default function ExhibitionRegistPage() {
       }
   });
   // 생성된 전시/팝업의 아이디 값
-  const [exhibitionId, setExhibitionId] = useState(null);
+  const [exhiId, setExhiId] = useState(null);
   const changeInformation = (e) => {
       const { name, type } = e.target;
       let { value } = e.target;
@@ -165,7 +165,7 @@ export default function ExhibitionRegistPage() {
           
       if (res.status === 201) {
         console.log('생성 성공');
-        setExhibitionId(res.data.id);
+        setExhiId(res.data.id);
         setInformation({});
         setStep(prev => prev + 1);
       } else {
@@ -200,7 +200,7 @@ export default function ExhibitionRegistPage() {
             />
           )}
           {step === 4 && (
-            <ExStepComplete exhibitionId={exhibitionId} />
+            <ExStepComplete exhiId={exhiId} />
           )}
 
           {/* <pre className="bg-gray-100 p-4 rounded-lg">
