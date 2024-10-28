@@ -24,12 +24,21 @@ public class EventPoster {
 	@Column(updatable = false)
 	private Long id;
 		
-	//이벤트 id
-	@JoinColumn(name = "event_id", nullable = false)
+	//이벤트 id// 포스터
+	@Column(nullable = false)
+	private String posterName;
+	
+	// 저장된 포스터 이름
+	@Column(nullable = false, name = "saved_name")
+	private String savedName;
+	
+	// 파일 사이즈
+	@Column(nullable = false, name = "file_size")
+	private Long fileSize;
+
+	// 이벤트와의 다대일 관계 설정
+	@JoinColumn(name = "event_id")
 	@ManyToOne
 	private Event event;
-		
-	//이벤트 포스터
-	@Column(nullable = true)
-	private String poster;
+
 }
