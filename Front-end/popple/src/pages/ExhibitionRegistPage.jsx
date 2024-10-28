@@ -4,12 +4,14 @@ import ExStep1 from "../components/exhibition/ExStep1";
 import ExStep2 from "../components/exhibition/ExStep2";
 import axios from "axios";
 import EventRegister from "./EventRegister";
-import { ExhibitionAPI } from "../api/services/Exhibition";
+import { exhibitionAPI } from "../api/services/Exhibition";
 import { data } from "autoprefixer";
+import ExStep3 from "../components/exhibition/ExStep3";
 
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
   const [information, setInformation] = useState({
+      typeId: 1,
       exhibitionName: "", // 팝업/전시명
       subTitle: "", // 부제
       free: false, // 무료 여부
@@ -49,9 +51,26 @@ export default function ExhibitionRegistPage() {
       const { name, type } = e.target;
       let { value } = e.target;
       const keys = name.split(".");
-      if (name.includes("open") || name.includes("close")) {
 
-      }
+      if (name === "endAt" || name === "startAt") {
+        const startAt = new Date(information.startAt);
+        const endAt = new Date(name === "endAt" ? value : information.endAt);
+
+        if (endAt < startAt) {
+            alert("종료일은 시작일보다 빠를 수 없습니다.");
+            return ;
+        }
+    }
+    //오픈 마감 비교할 곳
+  //  if (name === "endAt" || name === "startAt") {
+  //    const startAt = new Date(information.startAt);
+  //    const endAt = new Date(name === "endAt" ? value : information.endAt);
+
+  //    if (endAt < startAt) {
+  //        alert("종료일은 시작일보다 빠를 수 없습니다.");
+  //        return ;
+  //    }
+  //}
       if (name === "fee") {
           if (isNaN(value.replaceAll(",", ""))) {
               alert("숫자만 입력 가능합니다.");
@@ -99,7 +118,7 @@ export default function ExhibitionRegistPage() {
       // FormData 생성
       const formData = new FormData();
       // ExhibitionRequest 필드에 맞게 데이터 추가
-      formData.append("typeId", 2);
+      formData.append("typeId", information.typeId);
       formData.append("exhibitionName", information.exhibitionName);
       formData.append("subTitle", information.subTitle);
       formData.append("detailDescription", information.detailDescription);
@@ -156,52 +175,105 @@ export default function ExhibitionRegistPage() {
         console.error('Error occurred while submitting exhibition data:', error);
     }
   };
+  //const handleSubmit = async (event) => {
+  //  event.preventDefault(); // 기본 폼 제출 방지
+  //  console.log("데이터", data);
 
+  //  const formData = new FormData();
+   // formData.append("userId", data.userId);
+  //  if (data.image || data.poster) {
+  //    formData.append("image", data.image);
+  //    formData.append("poster", data.poster);
+//    }
+ //   try {
+ //     const res = await ExhibitionAPI.regist(formData);
+   //   if (res.status === 201) {
+//        alert("등록 성공");
+ //     }
+ //   } catch (error) {
+  //   alert("등록 실패");
+    // console.log(error.message);
+  //  }
+ // };
     
   return (
     <>
       <ExhibitionHeader step={step} />
       {/* 맨 위 박스  */}
-      <div className="flex flex-col mx-auto gap-5 mt-16">
-        {step === 1 && <ExStep1 information={information} changeInformation={changeInformation} />}
-        {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />}
-        {/* {step === 2 && <ExStep2 information={information} changeInformation={changeInformation} />} */}
-        {step === 3 && <div>Step 3</div>}
+      <div>
+        <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
+          {step === 1 && (
+            <ExStep1
+              information={information}
+              changeInformation={changeInformation}
+            />
+          )}
+          {step === 2 && (
+            <ExStep2
+              information={information}
+              changeInformation={changeInformation}
+            />
+          )}
+          {step === 3 &&
+          <ExStep3
+              information={information}
+              changeInformation={changeInformation}
+            />}
 
-        <div>
-          <hr className="w-full mt-10" />
-            <div className="flex justify-between items-center">
-              {step === 2 ? (
-                <>
+          {/* <pre className="bg-gray-100 p-4 rounded-lg">
+            {JSON.stringify(information, null, 2)}
+          </pre> */}
+
+          {/* 하단 단계별 이전, 다음 버튼 */}
+          <div>
+            <hr className="w-full mt-10" />
+            {step === 1 ? (
+              <div className="flex justify-end">
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((prevStep) => prevStep - 1)}
+                  onClick={() => setStep((step) => step + 1)}
+                >
+                  다음
+                </button>
+              </div>
+            ) : step === 2 ? (
+              <div className="flex justify-between items-center">
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 1)}
                 >
                   이전
                 </button>
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => registerExhibition()}
-                >
-                  이벤트 등록
-                </button>
-                </>
-              ) : (<div></div>)}
-
-              {/* 하단 우측 버튼 */}
-              {step === 1 && (
-                <button
-                  type="submit"
-                  className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((prevStep) => prevStep + 1)}
+                  onClick={() => setStep((step) => step + 1)}
                 >
                   다음
                 </button>
-              )}
-            </div>
+              </div>
+            ) :  (
+              <div className="flex justify-between items-center">
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={() => setStep((step) => step - 1)}
+                >
+                  이전
+                </button>
+                <button
+                  type="submit"
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={registerExhibition}
+                >
+                  등록
+                </button>
+              </div>
+            )}
           </div>
+        </div>
       </div>
     </>
   );

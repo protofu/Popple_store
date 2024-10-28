@@ -59,6 +59,11 @@ public class CompanyController {
 		return ResponseEntity.ok(com);
 	}
 
-	
+	@Operation(summary = "기업 정보 조회", description = "로그인한 기업 회원의 기업 정보 반환")
+	@GetMapping("")
+	public ResponseEntity<CompanyResponse> getCompanyInfoByLoginUser(@AuthenticationPrincipal User user){
+		CompanyResponse com = companyService.getCompany(user.getCompId());
+		return ResponseEntity.ok(com);
+	}
 
 }
