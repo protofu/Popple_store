@@ -41,16 +41,14 @@ export default function Router() {
           <Route path="/pop-up/detail/:id" element={<DetailPage />} />
           {/* 팝업/전시 등록 페이지 */}
           <Route path="/regist" element={<ExhibitionRegistPage />} />
-          {/* 이벤트 등록 페이지 */}
-          <Route path="/event-regist" element={<EventRegister/>}/>
           {/* 마이 페이지 */}
           <Route path="/my-page" element={<MyPage />} />
           {/* 고객센터, 이벤트 페이지 */}
           <Route path="/event" element={<EventPage />} />
+          <Route path="/event-regist" element={<EventRegister/>}/>
           <Route path="/help" element={<HelpServicePage />} />
           <Route path="/help/detail" element={<HelpDetailPage />} />
           <Route path="/help/create" element={<HelpCreate />} />
-          {/* 완료 페이지 */}
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
