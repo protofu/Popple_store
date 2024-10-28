@@ -19,7 +19,7 @@ public class EventPosterUtils {
 	@Value("${spring.upload.event_image_location}")
 	private String uploadPath;
 
-	private EventPoster eventImageUpload(MultipartFile eventPoster) {
+	public EventPoster eventPosterUpload(MultipartFile eventPoster) {
 		try {
 			
 			//multipartfile 을 file 로 변환

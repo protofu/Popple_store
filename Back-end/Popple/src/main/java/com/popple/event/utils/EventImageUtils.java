@@ -18,7 +18,7 @@ public class EventImageUtils {
 	@Value("${spring.upload.event_image_location}")
 	private String uploadPath;
 
-	private EventImage eventImageUpload(MultipartFile eventImage) {
+	public EventImage eventImageUpload(MultipartFile eventImage) {
 		try {
 			// 원본 이미지명 가져오기
 			String originalImageName = eventImage.getOriginalFilename();
