@@ -1,4 +1,4 @@
-package com.popple.like;
+package com.popple.like.entity;
 
 import com.popple.auth.entity.User;
 import com.popple.exhibition.entity.Exhibition;
