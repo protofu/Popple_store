@@ -25,11 +25,9 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
-    console.log(user)
+
     try {
       const res = await authAPI.login(user);
-      console.log(res.status)
-      console.log("로그인 성공");
       if(res.status === 200){
         setCookie("accessToken", res.data.accessToken, { path: "/"});
         navigate("/")
