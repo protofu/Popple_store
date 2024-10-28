@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.auth.entity.User;
-import com.popple.exhibition.service.ExhibitionService;
 import com.popple.review.domain.ReviewRequest;
 import com.popple.review.domain.ReviewResponse;
-import com.popple.review.service.ReviewImageService;
 import com.popple.review.service.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,8 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/review")
 public class ReviewController {
 	private final ReviewService reviewService;
-	private final ExhibitionService exhibitionService;
-	private final ReviewImageService imageService;
 	
 	// location 정보 가져오기
 	@Value("${spring.upload.review_location}")
@@ -84,4 +81,20 @@ public class ReviewController {
 	}
 	
 	// 리뷰 수정
+	@Operation(summary = "리뷰 수정", description = "리뷰를 수정합니다.")
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> modifyReview(
+			@PathVariable("id") Long id, 
+			@ModelAttribute ReviewRequest req, 
+			@RequestParam(name="image", required = false) MultipartFile file, 
+			@AuthenticationPrincipal User user) {
+		log.info("[Review] 리뷰 수정 : {}", id);
+		ReviewResponse res = reviewService.modifyReview(id, req, file, user);
+		if (res == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자신의 리뷰만 삭제 가능 합니다.");
+		}
+		return ResponseEntity.ok().body(res);
+	}
+	
+	
 }
