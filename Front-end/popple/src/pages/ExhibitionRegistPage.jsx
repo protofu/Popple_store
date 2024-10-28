@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import ExhibitionHeader from "../components/exhibition/ExhibitionHeader";
 import ExStep1 from "../components/exhibition/ExStep1";
 import ExStep2 from "../components/exhibition/ExStep2";
-import axios from "axios";
-import EventRegister from "./EventRegister";
 import { exhibitionAPI } from "../api/services/Exhibition";
-import { data } from "autoprefixer";
 import ExStep3 from "../components/exhibition/ExStep3";
+import ExStepComplete from "../components/exhibition/ExStepComplete";
 
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
@@ -46,7 +44,8 @@ export default function ExhibitionRegistPage() {
           food: false, // 음식물 반입 가능 여부
       }
   });
-  
+  // 생성된 전시/팝업의 아이디 값
+  const [exhibitionId, setExhibitionId] = useState(null);
   const changeInformation = (e) => {
       const { name, type } = e.target;
       let { value } = e.target;
@@ -108,10 +107,14 @@ export default function ExhibitionRegistPage() {
       }
   }
 
-  useEffect(() => {
-      console.log(information);
-  }, [information]);
+  // 팝업/전시 등록 완료 -> 메인으로 갈꺼냐, 이벤트 등록을 할거냐?
 
+  // information 값 확인용도
+  // useEffect(() => {
+  //     console.log(information);
+  // }, [information]);
+
+  // 팝업/전시 등록 버튼 클릭 시 동작
   const registerExhibition = async () => {
     try {
       console.log(information);
@@ -158,16 +161,13 @@ export default function ExhibitionRegistPage() {
       formData.append("poster", information.poster);
 
       // 서버로 전송
-      const res = await axios.post('http://localhost:8080/api/exhibition/resist', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const res = await exhibitionAPI.regist(formData);
           
       if (res.status === 201) {
         console.log('생성 성공');
+        setExhibitionId(res.data.id);
         setInformation({});
-        setStep((prevStep) => prevStep + 1);
+        setStep(prev => prev + 1);
       } else {
           console.error('실패');
       }
@@ -175,27 +175,7 @@ export default function ExhibitionRegistPage() {
         console.error('Error occurred while submitting exhibition data:', error);
     }
   };
-  //const handleSubmit = async (event) => {
-  //  event.preventDefault(); // 기본 폼 제출 방지
-  //  console.log("데이터", data);
 
-  //  const formData = new FormData();
-   // formData.append("userId", data.userId);
-  //  if (data.image || data.poster) {
-  //    formData.append("image", data.image);
-  //    formData.append("poster", data.poster);
-//    }
- //   try {
- //     const res = await ExhibitionAPI.regist(formData);
-   //   if (res.status === 201) {
-//        alert("등록 성공");
- //     }
- //   } catch (error) {
-  //   alert("등록 실패");
-    // console.log(error.message);
-  //  }
- // };
-    
   return (
     <>
       <ExhibitionHeader step={step} />
@@ -214,11 +194,14 @@ export default function ExhibitionRegistPage() {
               changeInformation={changeInformation}
             />
           )}
-          {step === 3 &&
-          <ExStep3
-              information={information}
-              changeInformation={changeInformation}
-            />}
+          {step === 3 && (
+            <ExStep3
+                information={information}
+            />
+          )}
+          {step === 4 && (
+            <ExStepComplete exhibitionId={exhibitionId} />
+          )}
 
           {/* <pre className="bg-gray-100 p-4 rounded-lg">
             {JSON.stringify(information, null, 2)}
@@ -228,6 +211,7 @@ export default function ExhibitionRegistPage() {
           <div>
             <hr className="w-full mt-10" />
             {step === 1 ? (
+              // 1단계 하단
               <div className="flex justify-end">
                 <button
                   type="submit"
@@ -236,8 +220,15 @@ export default function ExhibitionRegistPage() {
                 >
                   다음
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setStep(4)}
+                >
+                  임시 지름길
+                </button>
               </div>
             ) : step === 2 ? (
+              // 2단계 하단
               <div className="flex justify-between items-center">
                 <button
                   type="submit"
@@ -266,7 +257,7 @@ export default function ExhibitionRegistPage() {
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={registerExhibition}
+                  onClick={registerExhibition }
                 >
                   등록
                 </button>

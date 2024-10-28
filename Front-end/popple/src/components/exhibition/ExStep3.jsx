@@ -24,7 +24,7 @@ import {
     LuCamera,
     LuCameraOff,
 } from "react-icons/lu";
-export default function ExStep3({ information, changeInformation }) {
+export default function ExStep3({ information }) {
 
     const [selectTab, setSelectTab] = useState("이용정보");
 

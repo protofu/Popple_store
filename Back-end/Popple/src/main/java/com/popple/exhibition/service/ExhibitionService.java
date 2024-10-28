@@ -2,7 +2,8 @@ package com.popple.exhibition.service;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.List;import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,11 +37,6 @@ public class ExhibitionService {
 		// 타입 가져오기
 		System.out.println(req.getTypeId());
 		ExhiType type = exhiTypeRepository.findById(req.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류가 없습니다."));
-		// 이미지 저장하기
-		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
-		// 포스터 저장하기
-		List<Poster> savePosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
-		
 		
 		// Exhibition 객체를 요청 데이터로 초기화
 	    Exhibition exhibition = Exhibition.builder()
@@ -77,9 +73,13 @@ public class ExhibitionService {
 	            .build();
 	    
 	    
-	    
 	    // Exhibition 객체를 데이터베이스에 저장
 	    exhibitionRepository.save(exhibition);
+	    
+	    // 이미지 저장하기
+	    List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image, exhibition)).collect(Collectors.toList());
+	    // 포스터 저장하기
+	    List<Poster> savePosters = posters.stream().map(poster -> posterService.savePoster(poster, exhibition)).collect(Collectors.toList());
 
 	    // ExhibitionResponse 생성
 	    ExhibitionResponse response = convertToExhibitionResponse(exhibition);
@@ -103,66 +103,66 @@ public class ExhibitionService {
 	}
 
 	// 팝업/전시 수정
-	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, List<MultipartFile> images, List<MultipartFile> posters, User user) throws IOException {
-		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
-		
-		// 현재 사용자가 작성자가 맞는지 확인
-		if (!exhibition.getUser().getId().equals(user.getId())) {
-			throw new AccessDeniedException("본인이 만든 팝업/전시만 수정할 수 있습니다.");
-		}
-		
-		// 이미지들을 삭제
-		List<Image> prevImages = exhibition.getImages();
-		prevImages.forEach(image -> imageService.deleteImage(image.getId()));
-		
-		// 새로운 이미지들을 저장
-		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
-		
-		// 포스터들을 삭제
-		List<Poster> prevPosters = exhibition.getPosters();
-		prevPosters.forEach(poster -> posterService.deletePoster(poster.getId()));
-		
-		// 새로운 포스터들을 저장
-		List<Poster> savedPosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
-		
-		// 바뀐 타입 불러오기
-		ExhiType changeType = exhiTypeRepository.findById(exhibitionRequest.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류를 찾을 수 없습니다."));
-		
-		// Exhibition 객체를 요청 데이터로 업데이트
-	    exhibition.setType(changeType);
-	    exhibition.setExhibitionName(exhibitionRequest.getExhibitionName());
-	    exhibition.setSubTitle(exhibitionRequest.getSubTitle());
-	    exhibition.setDetailDescription(exhibitionRequest.getDetailDescription());
-	    exhibition.setAddress(exhibitionRequest.getAddress());
-	    exhibition.setNotice(exhibitionRequest.getNotice());
-	    exhibition.setTerms(exhibitionRequest.getTerms());
-	    exhibition.setGrade(exhibitionRequest.isGrade());
-	    exhibition.setFee(exhibitionRequest.getFee());
-	    exhibition.setHomepageLink(exhibitionRequest.getHomepageLink());
-	    exhibition.setInstagramLink(exhibitionRequest.getInstagramLink());
-	    exhibition.setPark(exhibitionRequest.isPark());
-	    exhibition.setFree(exhibitionRequest.isFree());
-	    exhibition.setPet(exhibitionRequest.isPet());
-	    exhibition.setFood(exhibitionRequest.isFood());
-	    exhibition.setWifi(exhibitionRequest.isWifi());
-	    exhibition.setCamera(exhibitionRequest.isCamera());
-	    exhibition.setKids(exhibitionRequest.isKids());
-	    exhibition.setSunday(exhibitionRequest.getSunday());
-	    exhibition.setMonday(exhibitionRequest.getMonday());
-	    exhibition.setTuesday(exhibitionRequest.getTuesday());
-	    exhibition.setWednesday(exhibitionRequest.getWednesday());
-	    exhibition.setThursday(exhibitionRequest.getThursday());
-	    exhibition.setFriday(exhibitionRequest.getFriday());
-	    exhibition.setSaturday(exhibitionRequest.getSaturday());
-	    exhibition.setStartAt(exhibitionRequest.getStartAt());
-	    exhibition.setEndAt(exhibitionRequest.getEndAt());
-	    exhibition.setImages(savedImages);
-	    exhibition.setPosters(savedPosters);
-		
-		exhibitionRepository.save(exhibition);
-	    
-		return convertToExhibitionResponse(exhibition);
-	}
+//	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, List<MultipartFile> images, List<MultipartFile> posters, User user) throws IOException {
+//		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
+//		
+//		// 현재 사용자가 작성자가 맞는지 확인
+//		if (!exhibition.getUser().getId().equals(user.getId())) {
+//			throw new AccessDeniedException("본인이 만든 팝업/전시만 수정할 수 있습니다.");
+//		}
+//		
+//		// 이미지들을 삭제
+//		List<Image> prevImages = exhibition.getImages();
+//		prevImages.forEach(image -> imageService.deleteImage(image.getId()));
+//		
+//		// 새로운 이미지들을 저장
+//		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
+//		
+//		// 포스터들을 삭제
+//		List<Poster> prevPosters = exhibition.getPosters();
+//		prevPosters.forEach(poster -> posterService.deletePoster(poster.getId()));
+//		
+//		// 새로운 포스터들을 저장
+//		List<Poster> savedPosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
+//		
+//		// 바뀐 타입 불러오기
+//		ExhiType changeType = exhiTypeRepository.findById(exhibitionRequest.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류를 찾을 수 없습니다."));
+//		
+//		// Exhibition 객체를 요청 데이터로 업데이트
+//	    exhibition.setType(changeType);
+//	    exhibition.setExhibitionName(exhibitionRequest.getExhibitionName());
+//	    exhibition.setSubTitle(exhibitionRequest.getSubTitle());
+//	    exhibition.setDetailDescription(exhibitionRequest.getDetailDescription());
+//	    exhibition.setAddress(exhibitionRequest.getAddress());
+//	    exhibition.setNotice(exhibitionRequest.getNotice());
+//	    exhibition.setTerms(exhibitionRequest.getTerms());
+//	    exhibition.setGrade(exhibitionRequest.isGrade());
+//	    exhibition.setFee(exhibitionRequest.getFee());
+//	    exhibition.setHomepageLink(exhibitionRequest.getHomepageLink());
+//	    exhibition.setInstagramLink(exhibitionRequest.getInstagramLink());
+//	    exhibition.setPark(exhibitionRequest.isPark());
+//	    exhibition.setFree(exhibitionRequest.isFree());
+//	    exhibition.setPet(exhibitionRequest.isPet());
+//	    exhibition.setFood(exhibitionRequest.isFood());
+//	    exhibition.setWifi(exhibitionRequest.isWifi());
+//	    exhibition.setCamera(exhibitionRequest.isCamera());
+//	    exhibition.setKids(exhibitionRequest.isKids());
+//	    exhibition.setSunday(exhibitionRequest.getSunday());
+//	    exhibition.setMonday(exhibitionRequest.getMonday());
+//	    exhibition.setTuesday(exhibitionRequest.getTuesday());
+//	    exhibition.setWednesday(exhibitionRequest.getWednesday());
+//	    exhibition.setThursday(exhibitionRequest.getThursday());
+//	    exhibition.setFriday(exhibitionRequest.getFriday());
+//	    exhibition.setSaturday(exhibitionRequest.getSaturday());
+//	    exhibition.setStartAt(exhibitionRequest.getStartAt());
+//	    exhibition.setEndAt(exhibitionRequest.getEndAt());
+////	    exhibition.setImages(savedImages);
+////	    exhibition.setPosters(savedPosters);
+//		
+//		exhibitionRepository.save(exhibition);
+//	    
+//		return convertToExhibitionResponse(exhibition);
+//	}
 	
 	// 팝업/전시 전체 조회
 	public List<ExhibitionResponse> getAllExhibition() {

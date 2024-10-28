@@ -68,7 +68,7 @@ public class ExhibitionController {
 		
 		return ResponseEntity.ok(result);
 	}
-	
+
 	// 등록
 	@Operation(summary = "팝업/전시 추가", description = "팝업/전시를 생성합니다.")
 	@PostMapping("/resist")

@@ -16,22 +16,33 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor		
+@NoArgsConstructor
 public class EventImage {
-	//id
+	// id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
 	private Long id;
-		
-	//이벤트 id
-	@JoinColumn(name = "event_id", nullable = false)
-	@ManyToOne
-	private Event event;
-		
-	//이벤트 이미지
+
+	// 이벤트 이미지
 	@Column(nullable = true)
-	private String iamge;
-		
-	
+	private String image;
+
+	// 파일 사이즈
+	@Column(nullable = false, name = "file_size")
+	private Long fileSize;
+
+	// 저장된 이미지 이름
+	@Column(nullable = false, name = "saved_name")
+	private String savedName;
+
+	// 대표이미지 여부
+	@Column(name = "is_main")
+	private boolean isMain;
+
+	// 이벤트와의 다대일 관계 설정
+	@ManyToOne
+	@JoinColumn(name = "event_id")
+	private Event event;
+
 }

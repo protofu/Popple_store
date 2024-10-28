@@ -149,7 +149,8 @@ export default function CompanySignUpPage() {
 
   const onSubmit = async (data) => {
     try {
-      console.log("데이타" + data);
+      data.sector = drop;
+      console.log("데이타", data);
       const res = await companyAuthAPI.create(data);
       alert("가입 성공");
       navigate("/login");
@@ -219,6 +220,7 @@ export default function CompanySignUpPage() {
                     {a.id === 3 ? (
                       <div className="flex flex-col items-start">
                         <input
+                          name="sector"
                           key={a.id}
                           type={a.type}
                           id={a.name}

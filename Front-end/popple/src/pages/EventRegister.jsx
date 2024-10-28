@@ -2,10 +2,11 @@ import { useState } from "react";
 import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../components/exhibition/FileCarousel";
 import { useNavigate } from "react-router-dom";
+import { eventAPI } from "../api/services/Event";
 
-export default function EventRegister({ information, changeInformation }) {
+export default function EventRegister({exhibitionId}) {
   const fileMax = 5;
-
+  console.log(exhibitionId)
   const navigate = useNavigate();
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
@@ -86,13 +87,19 @@ export default function EventRegister({ information, changeInformation }) {
     },
     {
       id: 2,
-      name: "요약설명",
-    },
-    {
-      id: 3,
-      name: "상세설명",
+      name: "요약 설명",
     },
   ]);
+
+  //등록 핸들러
+
+  const handleRegist = async (data) => {
+    try {
+      const res = await eventAPI.regist(data);
+    } catch (error) {
+      console.error(error)
+    }
+  };
 
   return (
     <>
@@ -110,7 +117,10 @@ export default function EventRegister({ information, changeInformation }) {
                     {t.name}
                     <span className="text-red-500">*</span>
                   </label>
-                  <input className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5" />
+                  <input
+                    id="eventName"
+                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
+                  />
                 </div>
               </>
             );
@@ -121,7 +131,7 @@ export default function EventRegister({ information, changeInformation }) {
                 이벤트 시작일<span className="text-red-500">*</span>
               </label>
               <input
-                id="start"
+                id="startAt"
                 type="date"
                 className="bg-gray-50 border rounded-lg p-2.5 text-xs"
                 required
@@ -134,7 +144,7 @@ export default function EventRegister({ information, changeInformation }) {
                 이벤트 종료일<span className="text-red-500">*</span>
               </label>
               <input
-                id="end"
+                id="endAt"
                 type="date"
                 className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
                 required
@@ -201,8 +211,10 @@ export default function EventRegister({ information, changeInformation }) {
               </div>
             </div>
           </div>
+          <button type="submit" className="border p-3" onClick={handleRegist}>
+            등록
+          </button>
         </div>
-        
       </div>
     </>
   );
