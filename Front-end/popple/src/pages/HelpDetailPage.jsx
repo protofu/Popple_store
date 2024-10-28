@@ -1,62 +1,48 @@
 import { useEffect, useState } from "react";
 import { helpAPI } from "../api/services/Help";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function HelpDetailPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
+  const type = queryParams.get('type');
   const [item, setItem] = useState(null); // 초기값을 null로 변경
   const [author, setAuthor] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [currentUserId, setCurrentUserId] = useState(null);
   const navigate = useNavigate();
 
+  console.log(type);
+  console.log("id", id);
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    console.log("Fetched userId: ", userId);
-    setCurrentUserId(userId);
-  }, []);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!id) {
-        console.error("No ID provided");
-        return;
-      }
-
-      try {
-        const response = await helpAPI.gethelplist(id);
-        const data = response.data;
-
-        console.log("API Response:", data);
-
-        if (data) {
-          if (data.helps && data.helps.length > 0) {
-            const helpItem = data.helps[0];
-            setItem(helpItem);
-            setAuthor(data.nickname || 'ADMIN');
-            setCreatedAt(helpItem.createdAt);
-          } else if (data.faqs && data.faqs.length > 0) {
-            const faqItem = data.faqs[0];
-            setItem(faqItem);
-            setAuthor('ADMIN'); // FAQ의 경우
-          }
+    if (type === "faq"){
+      const getFaq = async () => {
+        try {
+          const faqDatas = await axios.get("/jsons/faqs.json");
+          setItem(faqDatas.data[id]);
+          console.log(faqDatas.data[id]);
+        } catch (error) {
+          console.log("error", error);
         }
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-      }
-    };
+      };
+      getFaq();
+    } else if (type === "help") {
+      // const getHelp = async () => {
+      //   try {
+      //     const faqDatas = await ;
+      //     setItem(faqDatas[id]);
+      //   } catch (error) {
+      //     console.log("error", error);
+      //   }
+      // };
+      // getHelp();
+    }
 
-    fetchData();
-  }, [id]);
+  }, []);
 
-  useEffect(() => {
-    console.log("item:", item);
-    console.log("item.id:",item.id);
-    console.log("item.userId:",item.userId);
-    console.log("currentUserId:", currentUserId);
-  }, [item, currentUserId]);
+  console.log(item);
 
   if (!item) {
     return <p>Loading...</p>;
@@ -91,7 +77,7 @@ export default function HelpDetailPage() {
       <div className="flex justify-between items-center">
         <h1 className={textStyle}>{title}</h1>
         <div className="text-[17px] ml-3 mt-8">
-          <span>작성자: {author}</span>
+          <span>작성자: {author ? author : "ADMIN"}</span>
           {createdAt && (
             <span className="ml-4">작성일: {new Date(createdAt).toLocaleDateString()}</span>
           )}
