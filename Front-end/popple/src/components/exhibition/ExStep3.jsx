@@ -46,6 +46,8 @@ export default function ExStep3({ information }) {
     //이미지가 잘 불러와지나
     console.log(information.poster)
 
+   
+
     return (
         <div className="mt-10 h-full">
             <h1 className="text-2xl m-10">{information.exhibitionName}</h1>
@@ -56,7 +58,7 @@ export default function ExStep3({ information }) {
                     <div className="grid grid-cols-2">
                         {/* 포스터 */}
                         <div className="">
-                            
+
                             <img src={URL.createObjectURL(information.poster)} alt="포스터 이미지" className="w-[70%] mx-auto" />
                         </div>
 
@@ -90,7 +92,7 @@ export default function ExStep3({ information }) {
                         </nav>
                     </div>
                     <div className="mt-4">
-                        {selectTab === "이용정보" && <ExStep3Info information={information}/>}
+                        {selectTab === "이용정보" && <ExStep3Info information={information} />}
                         {selectTab === "리뷰" && <ReviewInDetail />}
                         {selectTab === "EVENT" && <span>3</span>}
                     </div>

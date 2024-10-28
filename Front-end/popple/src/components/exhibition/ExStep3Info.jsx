@@ -1,4 +1,4 @@
-import ExStep1 from "./ExStep1"
+
 export default function ExStep3Info({information}) {
 
 
@@ -10,18 +10,17 @@ export default function ExStep3Info({information}) {
         { title: "관람정보", content: information.notice },
         { title: "공지사항", content: information.notice },
         { title: "상세정보", content: information.detailDescription },
+        { title: "상세이미지", content: information.image}
     ];
-    // 방문 통계
-    // 남여 비율은 백엔드에서 계산하여 % 값만 front로 던져줌
 
-    // 나이대별 비율도 100% 기준 10대부터 %값으로 주어짐
 
     return (
         <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12 h-full">
             {sections.map((section, index) => (
                 <div key={index}>
                     <h1 className={h1Style}>{section.title}</h1>
-                    <div className={innerInfo}>{section.content}</div>
+                    <div className={innerInfo}>
+                        {section.title === "상세이미지" ? (<img src={URL.createObjectURL(information.poster)}/>): (section.content)}</div>
                 </div>
             ))}
         </div>

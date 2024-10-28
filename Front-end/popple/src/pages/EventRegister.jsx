@@ -3,6 +3,7 @@ import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../components/exhibition/FileCarousel";
 import { eventAPI } from "../api/services/Event";
 import { useNavigate } from "react-router-dom";
+import Markdown from "../components/common/Markdown";
 
 export default function EventRegister() {
   const fileMax = 5;
@@ -10,9 +11,9 @@ export default function EventRegister() {
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const exhibitionId = queryParams.get("id");
-  console.log("가져온 팝업 id",exhibitionId)
+  console.log("가져온 팝업 id", exhibitionId)
 
-  
+
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
   const [uploadPossible, setUploadPossible] = useState(true);
@@ -37,7 +38,7 @@ export default function EventRegister() {
     if (preview2.length >= fileMax) {
       console.log("나 업로드 안할래");
       setUploadPossible(false);
-      return ;
+      return;
     }
     const preview = files.map((f) => {
       const reader = new FileReader();
@@ -55,7 +56,7 @@ export default function EventRegister() {
         return [...prevPreviews, ...newPreviews];
       });
     });
-    setInfo(prev => ({...prev, eventImage: files}))
+    setInfo(prev => ({ ...prev, eventImage: files }))
   };
 
   //파일 이미지 삭제
@@ -78,9 +79,9 @@ export default function EventRegister() {
     reader.onload = () => {
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
     };
-    setInfo(prev => ({...prev, eventPoster: file}))
+    setInfo(prev => ({ ...prev, eventPoster: file }))
   };
-  
+
 
   //입력 정보
   const [info, setInfo] = useState({
@@ -111,12 +112,12 @@ export default function EventRegister() {
       }
       // 이미지 파일 추가
       if (info.eventImage) {
-          info.eventImage.forEach((img, index) => {
+        info.eventImage.forEach((img, index) => {
           formData.append(`eventImage`, img);
-      });
+        });
       }
       formData.append("startAt", info.startAt);
-      formData.append("endAt",info.endAt);
+      formData.append("endAt", info.endAt);
       formData.append("description", info.description);
       formData.append("summary", info.summary);
       formData.append("eventName", info.eventName);
@@ -131,6 +132,16 @@ export default function EventRegister() {
       alert("이벤트 등록에 실패하였습니다.");
       console.error("오류 발생:" + error);
     }
+  };
+
+  // 마크다운 입력 핸들러
+  const handleMarkDown = (name, value) => {
+    changeInformation({
+      target: {
+        name,
+        value,
+      },
+    });
   };
 
   return (
@@ -153,7 +164,7 @@ export default function EventRegister() {
           <label className="text-sm" htmlFor="1">
             요약설명 <span className="text-red-500">*</span>
           </label>
-          <input
+          <textarea
             id="summary"
             onChange={(e) => setInfo({ ...info, summary: e.target.value })}
             value={info.summary}
@@ -162,12 +173,18 @@ export default function EventRegister() {
           <label className="text-sm" htmlFor="1">
             상세설명 <span className="text-red-500">*</span>
           </label>
-          <input
+          {/* <input
             id="description"
             onChange={(e) => setInfo({ ...info, description: e.target.value })}
             value={info.description}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
+          /> */}
+          <div className={inputStyle}>
+            <Markdown
+              content={information.detailDescription}
+              contentChange={(e) => handleMarkDown("detailDescription", e)}
+            />
+          </div>
           <div className="flex ">
             <div className="flex flex-col mt-1">
               <label className="text-sm" htmlFor="start">
@@ -226,12 +243,11 @@ export default function EventRegister() {
             </label>
             <div className="h-full">
               <label
-                className={`preview ${
-                  isActive ? "active" : " "
-                } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
+                className={`preview ${isActive ? "active" : " "
+                  } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
                 onDragEnter={handleDragStart}
                 onDragOver={handleDragOver}
-                onDrop={handleDrop  }
+                onDrop={handleDrop}
                 onDragLeave={handleDragEnd}
               >
                 <input
