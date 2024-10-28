@@ -67,8 +67,6 @@ public class ReviewService {
 	}
 
 	
-	
-	
 	private ReviewResponse entityToResponse(Review review) {
 		return ReviewResponse.builder()
 				.id(review.getId())
@@ -79,5 +77,20 @@ public class ReviewService {
 				.image(review.getReviewImage())
 				.build();
 				
+	}
+
+	// 내 리뷰 목록 조회
+	public List<ReviewResponse> getMyReviewList(Long id) {
+		List<Review> reviews = reviewRepository.findAllByUserId(id);
+		return reviews.stream().map(this::entityToResponse).collect(Collectors.toList());
+	}
+
+	public ReviewResponse deleteReview(Long id, User user) {
+		Review review = reviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("찾는 리뷰가 존재하지 않습니다."));
+		if (review.getUser().getId().equals(user.getId())) {
+			reviewRepository.deleteById(review.getId());
+			return entityToResponse(review);
+		}
+		return null;
 	}
 }
