@@ -158,11 +158,7 @@ export default function ExhibitionRegistPage() {
       formData.append("poster", information.poster);
 
       // 서버로 전송
-      const res = await axios.post('http://localhost:8080/api/exhibition/resist', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const res = await exhibitionAPI.regist(formData);
           
       if (res.status === 201) {
         console.log('생성 성공');
@@ -175,27 +171,7 @@ export default function ExhibitionRegistPage() {
         console.error('Error occurred while submitting exhibition data:', error);
     }
   };
-  //const handleSubmit = async (event) => {
-  //  event.preventDefault(); // 기본 폼 제출 방지
-  //  console.log("데이터", data);
 
-  //  const formData = new FormData();
-   // formData.append("userId", data.userId);
-  //  if (data.image || data.poster) {
-  //    formData.append("image", data.image);
-  //    formData.append("poster", data.poster);
-//    }
- //   try {
- //     const res = await ExhibitionAPI.regist(formData);
-   //   if (res.status === 201) {
-//        alert("등록 성공");
- //     }
- //   } catch (error) {
-  //   alert("등록 실패");
-    // console.log(error.message);
-  //  }
- // };
-    
   return (
     <>
       <ExhibitionHeader step={step} />

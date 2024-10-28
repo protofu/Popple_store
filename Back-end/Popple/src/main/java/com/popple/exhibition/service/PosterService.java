@@ -3,13 +3,10 @@ package com.popple.exhibition.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.popple.exhibition.domain.ImageDTO;
 import com.popple.exhibition.domain.PosterDTO;
-import com.popple.exhibition.entity.Image;
+import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.entity.Poster;
-import com.popple.exhibition.repository.ImageRepository;
 import com.popple.exhibition.repository.PosterRepository;
-import com.popple.exhibition.utils.ImageUtils;
 import com.popple.exhibition.utils.PosterUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -22,10 +19,11 @@ public class PosterService {
 	private final PosterRepository posterRepository;
 	private final PosterUtils posterUtils;
 	
-	public Poster savePoster(MultipartFile poster) {
+	public Poster savePoster(MultipartFile poster, Exhibition exhibition) {
 		if (poster != null) {
 			Poster posterFile = posterUtils.posterUpload(poster);
 			if (posterFile != null) {
+				posterFile.setExhibition(exhibition);
 				Poster savedPosterFile = posterRepository.save(posterFile);
 				return savedPosterFile;
 			}

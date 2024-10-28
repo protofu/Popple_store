@@ -1,6 +1,5 @@
 package com.popple.event.utils;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,33 +13,32 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.event.entity.EventPoster;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class EventPosterUtils {
-	@Value("${spring.upload.event_image_location}")
+	@Value("${spring.upload.event_poster_location}")
 	private String uploadPath;
 
 	public EventPoster eventPosterUpload(MultipartFile eventPoster) {
 		try {
 			
-			//multipartfile 을 file 로 변환
-			File file = new File(eventPoster.getOriginalFilename());
-			eventPoster.transferTo(file);
-
 			// 원본 이미지명 가져오기
-			String originalImageName = eventPoster.getOriginalFilename();
+			String originalPosterName = eventPoster.getOriginalFilename();
 			// 이미지 크기 가져오기
 			Long mageSize = eventPoster.getSize();
 			// 새로운 이미지명 만들어주기
-			String savedImageName = UUID.randomUUID() + "_" + originalImageName;
+			String savedPosterName = UUID.randomUUID() + "_" + originalPosterName;
 
 			// 경로에 이미지 업로드
 			InputStream inputStream = eventPoster.getInputStream();
-			Path path = Paths.get(uploadPath).resolve(savedImageName);
+			Path path = Paths.get(uploadPath).resolve(savedPosterName);
 			Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
 			
 			return EventPoster.builder()
-					.posterName(savedImageName)
-					.savedName(savedImageName)
+					.posterName(originalPosterName)
+					.savedName(savedPosterName)
 					.fileSize(mageSize)
 					.build();
 

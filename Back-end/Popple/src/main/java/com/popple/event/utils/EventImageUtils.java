@@ -15,6 +15,7 @@ import com.popple.event.entity.EventImage;
 
 @Component
 public class EventImageUtils {
+	
 	@Value("${spring.upload.event_image_location}")
 	private String uploadPath;
 
@@ -39,6 +40,7 @@ public class EventImageUtils {
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 			return null;
 		}
 	}

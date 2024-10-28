@@ -14,4 +14,5 @@ public class EventRequest {
 	private String description;
 	private LocalDate startAt;
 	private LocalDate endAt;
+	private Long exhitbitionId;
 }

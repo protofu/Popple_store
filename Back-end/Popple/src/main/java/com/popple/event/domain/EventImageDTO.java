@@ -19,7 +19,7 @@ public class EventImageDTO {
 		if (eventImage == null) return null;
 		return EventImageDTO.builder()
 				.id(eventImage.getId())
-				.name(eventImage.getIamge())
+				.name(eventImage.getImage())
 				.savedName(eventImage.getSavedName())
 				.kbSize(((Double)(eventImage.getFileSize() / 1024.0)).toString())
 				.isMain(eventImage.isMain())
