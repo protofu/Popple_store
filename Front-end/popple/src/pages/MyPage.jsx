@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Nav from '../pages/layouts/Nav_mypage';
 import { useLoginUserStore } from '../stores/LoginUserState';
+import LikeList from '../components/my-page/LikeList';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -55,7 +56,7 @@ export default function MyPage() {
   );
 
   const contentMap = {
-    "찜": '찜 관련 내용 (일반 사용자)',
+    "찜": <LikeList />,
     "예약 목록": '예약 목록 관련 내용 (일반 사용자)',
     "방문 리뷰": '방문 리뷰 관련 내용',
     "정보 수정": renderPasswordInput(),
