@@ -53,7 +53,7 @@ export default function HelpDetailPage() {
       console.log("디테일 : ", item);
     }
 
-  }, [item]);
+  }, []);
 
   if (!item) {
     return <p>Loading...</p>;
@@ -84,6 +84,7 @@ export default function HelpDetailPage() {
       await helpAPI.answer(answerData);
       alert("답변이 작성되었습니다.")
       setAnswer(false);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }

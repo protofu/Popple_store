@@ -72,6 +72,12 @@ public class HelpService {
 		log.info(help.toString());
 		return HelpResponse.toDTO(help);
 	}
+
+	public List<HelpResponse> getAllMyHelp(User user) {
+		List<Help> myHelps = helpRepository.findAllByUserId(user.getId());
+		List<HelpResponse> res = myHelps.stream().map(HelpResponse::toDTO).collect(Collectors.toList());
+		return res;
+	}
     
 
 }

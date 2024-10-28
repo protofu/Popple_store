@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { helpAPI } from "../api/services/Help";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useLoginUserStore } from "../stores/LoginUserState";
 
 export default function HelpServicePage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   const [faqs, setFaqs] = useState([]);
   const [helps, setHelps] = useState([]);
+  const { loginUserRole } = useLoginUserStore(state => state);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +16,12 @@ export default function HelpServicePage() {
       try {
         const faqDatas = await axios.get("/jsons/faqs.json");
         setFaqs(faqDatas.data);
-        const response = await helpAPI.gethelplist();
+        let response = null;
+        if (loginUserRole === "ROLE_ADMIN") {
+          response = await helpAPI.gethelplist();
+        } else {
+          response = await helpAPI.getMyHelpList();
+        }
         setHelps(response.data);
         console.log(response.data);
       } catch (error) {

@@ -38,8 +38,16 @@ public class HelpController {
     // HELP 목록 조회
     @Operation(summary = "HELP 목록 조회", description = "HELP 목록 조회합니다.")
     @GetMapping("")
-    public ResponseEntity<List<HelpResponse>> getAllFAQs() {
+    public ResponseEntity<List<HelpResponse>> getAllHelp() {
         List<HelpResponse> helps = helpService.getAllHelps();
+        return ResponseEntity.ok(helps);
+    }
+    
+    // 내 1:1 문의 조회
+    @Operation(summary = "나의 HELP 목록 조회", description = "나의 HELP 목록 조회합니다.")
+    @GetMapping("/my")
+    public ResponseEntity<List<HelpResponse>> getAllMyHelp(@AuthenticationPrincipal User user) {
+        List<HelpResponse> helps = helpService.getAllMyHelp(user);
         return ResponseEntity.ok(helps);
     }
 
@@ -54,7 +62,8 @@ public class HelpController {
 
     @Operation(summary = "1:1 문의 삭제", description = "1:1 문의를 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteHelp(@PathVariable Long id, @AuthenticationPrincipal User user ){
+    public ResponseEntity<String> deleteHelp(@PathVariable("id") Long id, @AuthenticationPrincipal User user ){
+    	log.info("문의 삭제 : {}", id);
     	boolean isDelete = helpService.delete(id, user);
     	if (isDelete) {
     		return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");    		

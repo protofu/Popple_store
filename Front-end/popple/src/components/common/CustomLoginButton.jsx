@@ -36,7 +36,15 @@ export default function CustomLoginButton({img, text, path}) {
   };
 
   const condiStyle = `border-2 rounded-[6px] flex items-center w-[300px] h-[45px] px-2 cursor-pointer ${text === "로그인" ? 'bg-[#8900E1] border-[#8900E1] text-[#fff]' : 'bg-transparent border-[#ccc]'}`; 
-  
+  if (path === undefined) {
+    return (
+      <div className={condiStyle}>
+        <div className="w-full text-center text-[16px] font-semibold">
+          {text}
+        </div>
+      </div>
+    );
+  }
   if (img === undefined) {
     return (
       <div className={condiStyle} onClick={() => handleNavigate(`${path}/1`)}>
