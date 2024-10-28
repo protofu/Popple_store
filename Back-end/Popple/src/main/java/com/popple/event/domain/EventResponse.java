@@ -2,6 +2,8 @@ package com.popple.event.domain;
 
 import java.time.LocalDate;
 
+import com.popple.event.entity.Event;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,4 +15,14 @@ public class EventResponse {
 	private String description;
 	private LocalDate startAt;
 	private LocalDate endAt;
+	
+	public static EventResponse toEntity(Event event) {
+		return EventResponse.builder()
+				.description(event.getDescription())
+				.evnetName(event.getEventName())
+				.summary(event.getSummary())
+				.startAt(event.getStartAt())
+				.endAt(event.getEndAt())
+				.build();
+	}
 }

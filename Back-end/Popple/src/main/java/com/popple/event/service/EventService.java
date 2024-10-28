@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.event.domain.EventRequest;
 import com.popple.event.domain.EventResponse;
+import com.popple.event.entity.Event;
 import com.popple.event.entity.EventImage;
 import com.popple.event.entity.EventPoster;
 import com.popple.event.respository.EventRepository;
@@ -29,6 +30,18 @@ public class EventService {
 			Exhibition exhibition) {
 		List<EventImage> savedImage = images.stream().map(image -> eventImageService.saveImage(image)).collect(Collectors.toList());
 		EventPoster savedPoster = eventPosterService.savePoster(poster);
-		return null;
+		
+		Event event = Event.builder()
+				.eventName(req.getEventName())
+				.description(req.getDescription())
+				.summary(req.getSummary())
+				.startAt(req.getStartAt())
+				.endAt(req.getEndAt())
+				.exhibition(exhibition)
+				.build();
+		
+		Event saveEvent = eventRepo.save(event);
+		EventResponse res = EventResponse.toEntity(saveEvent);
+		return res;
 	}
 }
