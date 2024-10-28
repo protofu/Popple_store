@@ -6,7 +6,6 @@ import { authAPI } from "../api/services/Auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../utils/CookieUtils";
-import api from "../api/api";
 
 export default function LoginPage() {
   const navigate = useNavigate();
