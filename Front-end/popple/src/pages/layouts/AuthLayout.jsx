@@ -17,17 +17,12 @@ export default function AuthLayout({ children }) {
       border border-[#8900E1]
     ">
       <img src="/popple_logo(2).png" alt="로고이미지" onClick={() => handleNavigate("/")} className="
-        w-[180px]
+        w-[120px]
         bg-white
-        block absolute left-[calc(50%-70px)] top-[calc(7.5%-40px)]
+        block absolute left-[calc(50%-58px)] top-[calc(7.5%-30px)]
         cursor-pointer
       "/>
       {children ? children : <Outlet />}
     </div>
   );
-};
-
-// PropTypes 설정
-AuthLayout.propTypes = {
-  children: PropTypes.object,
 };
