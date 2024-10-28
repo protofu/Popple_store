@@ -94,7 +94,7 @@ public class ReviewController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자신의 리뷰만 삭제 가능 합니다.");
 		}
 		return ResponseEntity.ok().body(res);
-	}
+	}	
 	
 	
 }
