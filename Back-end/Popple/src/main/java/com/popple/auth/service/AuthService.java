@@ -135,4 +135,10 @@ public class AuthService {
 		return tokenMap;
 	}
 
+	public SignUpResponse getUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다"));
+		SignUpResponse res = SignUpResponse.toDTO(user);
+		return res;
+	}
+
 }

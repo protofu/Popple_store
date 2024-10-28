@@ -57,7 +57,15 @@ public class AuthController {
 		return ResponseEntity.ok(isNotDuplicate);
 		
 	}
+	//특정 회원 조회
+	@Operation(summary = "특정 회원 조회", description = "특정 회원 정보를 반환합니다.")
+	@GetMapping("/{id}")
+	public ResponseEntity<SignUpResponse> getUser(Long id){
+		SignUpResponse res = authService.getUser(id);
+		return ResponseEntity.ok(res);
+	}
 	
+
 	//닉네임 중복 확인
 	@Operation(summary = "닉네임 중복 확인", description = "중복이 아니면 true 중복이면 false 반환.")
 	@GetMapping("/nickname")
