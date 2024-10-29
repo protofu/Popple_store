@@ -100,6 +100,7 @@ public class EventService {
 		List<EventImage> prevImage = eventImageService.findAll();
 		EventPoster prevPoster = eventPosterService.findPoster(id);
 		if (event.getExhibition().getUser().getId() == user.getId()) {
+			eventRepo.save(event);
 			if (images != null) {
 				prevImage.forEach(i -> eventImageService.deleteImage(i.getId()));
 				List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event))
@@ -110,6 +111,7 @@ public class EventService {
 				EventPoster savedPoster = eventPosterService.savePoster(poster, event);
 			}
 		}
+		
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}

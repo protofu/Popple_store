@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class EventResponse {
+	private Long id;
 	private String eventName; //타이틀
 	private String summary; // 슬로건
 	private String description; // ?
@@ -19,6 +20,7 @@ public class EventResponse {
 	
 	public static EventResponse toDTO(Event event) {
 		return EventResponse.builder()
+				.id(event.getId())
 				.description(event.getDescription())
 				.eventName(event.getEventName())
 				.summary(event.getSummary())
@@ -29,6 +31,7 @@ public class EventResponse {
 	
 	public static EventResponse toDTO(Event event, String image) {
 		return EventResponse.builder()
+				.id(event.getId())
 				.description(event.getDescription())
 				.eventName(event.getEventName())
 				.summary(event.getSummary())

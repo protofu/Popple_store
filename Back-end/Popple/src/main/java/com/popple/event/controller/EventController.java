@@ -66,14 +66,14 @@ public class EventController {
 
 	// 이벤트 삭제
 	@Operation(summary = "이벤트 삭제", description = "이벤트를 삭제합니다.")
-	@DeleteMapping("/delete")
+	@DeleteMapping("/delete/{id}")
 	public void deleteEvent(@PathVariable("id") Long id, @AuthenticationPrincipal User user ) {
 		eventService.deleteEvent(id, user);
 		return;
 	}
 	
 	//이벤트 수정
-	@Operation(summary = "이벤트 수정", description = "이벤트를 삭제합니다.")
+	@Operation(summary = "이벤트 수정", description = "이벤트를 수정합니다.")
 	@PatchMapping("/update")
 	public ResponseEntity<EventResponse> updateEvent(
 			Long id, @AuthenticationPrincipal User user, List<MultipartFile> images, MultipartFile poster){
