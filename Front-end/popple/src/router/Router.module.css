@@ -3,4 +3,6 @@
   align-items: center;
   background-color: #fff;
   min-height: 100vh;
+  min-width: 480px;
+  max-width: calc(100vw - 15px);
 }

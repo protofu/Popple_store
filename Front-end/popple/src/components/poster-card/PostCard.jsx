@@ -21,7 +21,7 @@ export default function PostCard({ id, img, title, addr, duration, styles }) {
 
   return (
     <div className={`${styles} cursor-pointer`} onClick={() => handleNavigate(id)}>
-      <img src={img} alt="포스터이미지" />
+      <img src={img} className="min-h-[275px] max-w-[180px]" alt="포스터이미지" />
       <div className="mt-2">
         <CateButton text={"HOT"} />
         <p className="font-bold text-[1.25rem] my-1">{title}</p>
