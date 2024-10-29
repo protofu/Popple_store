@@ -3,6 +3,7 @@ import { helpAPI } from "../api/services/Help";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useLoginUserStore } from "../stores/LoginUserState";
+import { VscFoldDown, VscFoldUp  } from "react-icons/vsc";
 
 export default function HelpServicePage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -31,10 +32,6 @@ export default function HelpServicePage() {
     gethelp();
   }, []);
 
-  const handleRowClick = (faqId) => {
-    navigate(`/help/detail?type=faq&id=${faqId}`);  // 자주 묻는 질문 상세 페이지로 이동
-  };
-
   const handleHelpRowClick = (helpId) => {
     navigate(`/help/detail?type=help&id=${helpId}`); // 1:1문의 상세 페이지로 이동
   };
@@ -51,16 +48,7 @@ export default function HelpServicePage() {
         <table className="mt-0 pb-8 border-separate border-spacing-0 w-full">
           <tbody>
             {faqs.map((faq, index) => (
-              <tr
-                key={index}
-                onClick={() => handleRowClick(index)}
-                className="cursor-pointer hover:bg-gray-100"
-              >
-                <td className="border-b border-gray-300 px-4 py-3 flex justify-between items-center">
-                  <span>Q .&nbsp; {faq.title}</span>
-                  <span className="text-[21px]">&gt; </span>
-                </td>
-              </tr>
+              <Question faq={faq} index={index} />
             ))}
           </tbody>
         </table>
@@ -94,7 +82,6 @@ export default function HelpServicePage() {
                       <span className="text-blue-500 ml-5 text-[12px]">답변완료</span> // 답변이 있는 경우
                     )}
                   </div>
-                  
                   <span className="text-[21px]">&gt; </span>
                 </td>
               </tr>
@@ -106,4 +93,26 @@ export default function HelpServicePage() {
       )}
     </>
   );
+}
+
+const Question = ({ faq, index }) => {
+  const handleRowClick = () => {
+    setOpen(prev => !prev)
+  };
+  const [open, setOpen] = useState(false);
+  return (
+    <tr key={index}>
+      <td
+        onClick={() => handleRowClick(index)}
+        className="border-b border-gray-300 px-4 py-3 flex justify-between items-center cursor-pointer hover:bg-gray-100"
+      >
+        <span>Q .&nbsp; {faq.title}</span>
+        {open ? <VscFoldUp /> : <VscFoldDown /> }
+        
+      </td>
+      <td className={`${open ? 'flex' : 'hidden'} border-b border-gray-300 px-4 py-3 flex justify-between items-center bg-gray-100`}>
+        <span>A .&nbsp; {faq.description}</span>
+      </td>
+    </tr>
+  )
 }
