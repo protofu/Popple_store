@@ -16,10 +16,17 @@ import ExhibitionCarousel from "../components/poster-card/ExhibitionCarousel";
 import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
+import MapModal from "../components/map-view/MapModal";
 
 
 
 export default function ExhibitionPage() {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleModalToggle = () => {
+    setModalOpen((prev) => !prev);
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   // 팝업 더미 데이터
@@ -182,7 +189,9 @@ export default function ExhibitionPage() {
       <div className={titleStyle}>
         <img src={exhiIcon} alt="전시회 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>전시회 둘러보기</h1>
+        <span className="w-[80%] text-right text-[#5464f1]" onClick={handleModalToggle}>지도로 보기</span>
       </div>
+      {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>
         <div className="
         flex flex-wrap justify-center gap-6 

@@ -3,7 +3,6 @@ import MainPage from "../pages/MainPage";
 import Layout from "../pages/layouts/Layout";
 import LoginPage from "../pages/LoginPage";
 import styles from './Router.module.css';
-import MapViewPage from "../pages/MapViewPage";
 import SignUpPage from "../pages/SignUpPage";
 import AuthLayout from "../pages/layouts/AuthLayout";
 import OAuthLoginPage from "../pages/OAuthLoginPage";
@@ -42,19 +41,17 @@ export default function Router() {
           <Route path="/pop-up/detail/:id" element={<DetailPage />} />
           {/* 팝업/전시 등록 페이지 */}
           <Route path="/regist" element={<ExhibitionRegistPage />} />
-          {/* 이벤트 등록 페이지 */}
-          <Route path="/event-regist" element={<EventRegister/>}/>
           {/* 마이 페이지 */}
           <Route path="/my-page" element={<MyPage />} />
           {/* 고객센터, 이벤트 페이지 */}
           <Route path="/event" element={<EventPage />} />
+          <Route path="/event-regist" element={<EventRegister/>}/>
           <Route path="/help" element={<HelpServicePage />} />
           <Route path="/help/detail" element={<HelpDetailPage />} />
           <Route path="/help/create" element={<HelpCreate />} />
         </Route>
 
         {/* 레이아웃을 적용하지 않은 페이지들 */}
-        <Route path="/map-view" element={<MapViewPage />} />
         <Route path="/oauth/:provider" element={<OAuthLoginPage />} />
 
         {/* Auth 폼을 적용할 페이지들 */}

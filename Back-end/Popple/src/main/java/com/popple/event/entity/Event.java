@@ -3,7 +3,9 @@ package com.popple.event.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.popple.exhibition.entity.Exhibition;
@@ -64,5 +66,10 @@ public class Event {
 	@CreatedDate
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
+	
+	//수정일자
+	@LastModifiedDate
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 	
 }

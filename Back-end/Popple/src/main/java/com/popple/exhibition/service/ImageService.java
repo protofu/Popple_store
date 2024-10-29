@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.exhibition.domain.ImageDTO;
+import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.entity.Image;
 import com.popple.exhibition.repository.ImageRepository;
 import com.popple.exhibition.utils.ImageUtils;
@@ -18,10 +19,11 @@ public class ImageService {
 	private final ImageRepository imageRepository;
 	private final ImageUtils imageUtils;
 	
-	public Image saveImage(MultipartFile image) {
+	public Image saveImage(MultipartFile image, Exhibition exhibition) {
 		if (image != null) {
 			Image imageFile = imageUtils.imageUpload(image);
-			if (imageFile != null) {
+			if (imageFile != null) {				
+				imageFile.setExhibition(exhibition);
 				Image savedImageFile = imageRepository.save(imageFile);
 				return savedImageFile;
 			}

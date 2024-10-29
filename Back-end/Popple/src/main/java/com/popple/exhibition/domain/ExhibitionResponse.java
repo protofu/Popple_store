@@ -17,7 +17,7 @@ public class ExhibitionResponse {
     private String address;
     private String notice;
     private String terms;
-    private String grade;
+    private boolean grade;
     private String fee;
     private String homepageLink;
     private String instagramLink;

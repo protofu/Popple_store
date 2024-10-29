@@ -1,9 +1,6 @@
 import MiniStatistics from "../charts/MiniStatistics";
 
 export default function UseInfo({ data, chart }) {
-
-  console.log("데이터", data);
-  console.log("차트", chart);
   const h1Style = "font-bold text-[1.25rem]";
   const innerInfo = "m-6";
 

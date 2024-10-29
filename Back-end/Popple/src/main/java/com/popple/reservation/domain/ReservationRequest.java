@@ -1,6 +1,6 @@
 package com.popple.reservation.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ReservationRequest {
 	private Long exhibitionId;
-	private LocalDateTime reservationDate;
+	private LocalDate reservationDate;
 	
 	
 }

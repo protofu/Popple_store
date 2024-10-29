@@ -1,33 +1,42 @@
 import { useEffect, useState } from "react";
 import { helpAPI } from "../api/services/Help";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useLoginUserStore } from "../stores/LoginUserState";
 
 export default function HelpServicePage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   const [faqs, setFaqs] = useState([]);
   const [helps, setHelps] = useState([]);
+  const { loginUserRole } = useLoginUserStore(state => state);
   const navigate = useNavigate();
 
   useEffect(() => {
     const gethelp = async () => {
       try {
-        const response = await helpAPI.gethelp();
-        setFaqs(response.data.faqs);
-        setHelps(response.data.helps);
+        const faqDatas = await axios.get("/jsons/faqs.json");
+        setFaqs(faqDatas.data);
+        let response = null;
+        if (loginUserRole === "ROLE_ADMIN") {
+          response = await helpAPI.gethelplist();
+        } else {
+          response = await helpAPI.getMyHelpList();
+        }
+        setHelps(response.data);
       } catch (error) {
         console.error("Failed", error);
       }
     };
-
+    
     gethelp();
   }, []);
 
   const handleRowClick = (faqId) => {
-    navigate(`/help/detail?id=${faqId}`);  // 자주 묻는 질문 상세 페이지로 이동
+    navigate(`/help/detail?type=faq&id=${faqId}`);  // 자주 묻는 질문 상세 페이지로 이동
   };
 
   const handleHelpRowClick = (helpId) => {
-    navigate(`/help/detail?id=${helpId}`); // 1:1문의 상세 페이지로 이동
+    navigate(`/help/detail?type=help&id=${helpId}`); // 1:1문의 상세 페이지로 이동
   };
 
   const handleCreateClick = () => {
@@ -41,10 +50,10 @@ export default function HelpServicePage() {
       {faqs.length > 0 ? (
         <table className="mt-0 pb-8 border-separate border-spacing-0 w-full">
           <tbody>
-            {faqs.map((faq) => (
+            {faqs.map((faq, index) => (
               <tr
-                key={faq.id}
-                onClick={() => handleRowClick(faq.id)}
+                key={index}
+                onClick={() => handleRowClick(index)}
                 className="cursor-pointer hover:bg-gray-100"
               >
                 <td className="border-b border-gray-300 px-4 py-3 flex justify-between items-center">
@@ -62,7 +71,7 @@ export default function HelpServicePage() {
         <h1 className={textStyle}>1:1 문의</h1>
         <button 
           onClick={handleCreateClick} 
-          className="ml-4 text-white px-4 py-2 bg-[#8900E1] text-white rounded-lg p-3 mt-5"
+          className="ml-4 text-white px-4 py-2 bg-[#8900E1] rounded-lg p-3 mt-5"
         >
           문의하기
         </button>

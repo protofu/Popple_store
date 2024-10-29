@@ -4,7 +4,7 @@ import { register } from "swiper/element";
 import { authAPI } from "../api/services/Auth";
 import { data } from "autoprefixer";
 import { useNavigate } from "react-router-dom";
-import { CompanyAuthAPI } from "../api/services/CompanyAuth";
+import { companyAuthAPI } from "../api/services/CompanyAuth";
 import PostCode from "../components/common/PostCode";
 import Dropdown from "../components/exhibition/Dropdown";
 
@@ -16,17 +16,29 @@ export default function CompanySignUpPage() {
     register,
     formState: { errors },
     handleSubmit,
-    setValue,
     watch,
   } = useForm();
   //주소 상태 관리
-  const [address, setAddress] = useState({});
+  const [address, setAddress] = useState({
+    address:"",
+    value:""
+  });
+
+  useEffect(() => {
+    console.log("s",address);
+    // 주소 선택 시 정보 변경
+    if (address.roadAddress) {
+      setAddress(address.roadAddress)
+        
+    }
+  }, [address]);
+
 
   //드롭다운 값 관리
-  const [drop, setDrop] = useState('');
+  const [drop, setDrop] = useState("");
   const handleDropdown = (e) => {
     setDrop(e.target.value);
-  }
+  };
 
   //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
@@ -84,8 +96,6 @@ export default function CompanySignUpPage() {
       type: "text",
       placeholder: "선택 또는 작성.", //드롭다운임
       condition: { required: "기업업종은 필수값입니다.", maxLength: 255 },
-      array: [{ label: "증권" }, { label: "의료" }],
-      condition: { required: true },
     },
   ]);
 
@@ -135,24 +145,22 @@ export default function CompanySignUpPage() {
       },
     },
   ]);
-  console.log(watch())
+  
 
   const onSubmit = async (data) => {
     try {
-      console.log("데이타" + data)
-      const res = await CompanyAuthAPI.create(data)
+      data.sector = drop;
+      console.log("데이타", data);
+      const res = await companyAuthAPI.create(data);
       alert("가입 성공");
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error("가입 실패" + error)
-      alert("가입 실패" + error.data || error.message)
+      console.error("가입 실패" + error);
+      alert("가입 실패" + error.data || error.message);
     }
-  }
+  };
 
-  //드롭다운 상태 관리
-  const [dropdown, setDropdown] = useState(false);
-
-
+  console.log(watch())
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-2xl"> 기업 정보입력</h1>
@@ -209,44 +217,48 @@ export default function CompanySignUpPage() {
                       {a.label}
                       <span className="text-red-500">*</span>
                     </label>
-                    {a.id === 3 ? (<div className="flex flex-col items-start">
-                      <input
-                        key={a.id}
-                        type={a.type}
-                        id={a.name}
-                        {...register(a.name, a.condition)}
-                        className={inputStyle}
-                        placeholder={a.placeholder}
-                        required={true}
-                        value={drop}
-                      />
-                      <Dropdown onChange={handleDropdown}/>
-                      {errors[a.name] && (
-                        <div>
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors[a.name].message}
-                          </p>
-                        </div>
-                      )}
-                    </div>) : a.id === 2 ? (
+                    {a.id === 3 ? (
+                      <div className="flex flex-col items-start">
+                        <input
+                          name="sector"
+                          key={a.id}
+                          type={a.type}
+                          id={a.name}
+                          className={inputStyle}
+                          placeholder={a.placeholder}
+                          required={true}
+                          value={drop}
+                        />
+                        <Dropdown onChange={handleDropdown} />
+                        {errors[a.name] && (
+                          <div>
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors[a.name].message}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : a.id === 2 ? (
                       <div className="flex flex-col items-start">
                         <div className="flex w-280">
                           <input
                             key={a.id}
+                            name="address"
                             type={a.type}
                             id={a.name}
                             {...register(a.name, a.condition)}
-                            className="w-240 h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2" 
+                            className={inputStyle}
                             placeholder={a.placeholder}
                             required={true}
+                            value={address.roadAddress} // 주소 값을 상태로 설정
+                            onChange={(e) => setAddress({ ...address, name: e.target.value })} // 상태 업데이트
                           />
                           <PostCode
-                          className="border p-2 rounded-lg"
-                          value="검색"
-                          setAddress={setAddress}
+                            className="border p-2 rounded-lg"
+                            value="검색"
+                            setAddress={setAddress}
                           />
                         </div>
-
 
                         {errors[a.name] && (
                           <div>

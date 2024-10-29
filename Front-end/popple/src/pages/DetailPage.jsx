@@ -9,18 +9,19 @@ import { useEffect, useState } from "react";
 import UseInfo from "../components/exhi-details/UseInfo";
 import axios from "axios";
 import ReviewInDetail from "../components/review/ReviewInDetail";
+import Reservation from "../components/exhibition/Reservation";
 
 export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
-  const [value, onChange] = useState(curDate); // 클릭한 날짜 (초기값으로 현재 날짜 넣어줌)
-  // const activeDate = moment(value).format('YYYY-MM-DD'); // 클릭한 날짜 (년-월-일))
-  const [selectedTime, setSelectedTime] = useState(""); // 선택된 시간 상태
-  const [showTimePicker, setShowTimePicker] = useState(false); // 시간 선택 UI 가시성
+  const [value, onChange] = useState(moment(curDate).format('YYYY-MM-DD'));
   const [selectTab, setSelectTab] = useState("이용정보");
   
   // json데이터 담을 state
   const [data, setData] = useState(null);
   const [chartData, setChartData] = useState(null);
+
+  // 모달 상태
+  const [showReservationModal, setShowReservationModal] = useState(false);
 
   // const { id } = useParams();
   // API 호출로 정보를 받아오고
@@ -36,7 +37,6 @@ export default function DetailPage() {
         resDetail.data.poster = detailExam;
         setData(resDetail.data); // 불러온 데이터를 상태에 저장
         setChartData(resChartData.data);
-        console.log("리스폰", data);
       } catch (error) {
         console.error('Error fetching JSON data:', error);
       }
@@ -53,30 +53,21 @@ export default function DetailPage() {
     return <div>Loading...</div>; // 데이터 로딩 중 표시
   }
 
-
-  // const combinedDateTime = selectedTime ? `${activeDate}T${selectedTime}:00.000Z` : null;
-  // const momentDateTime = combinedDateTime ? momentTZ(combinedDateTime).tz('Asia/Seoul') : null;
-  // "2024-10-22T14:30:00.000Z"
-
   const handleDateChange = (date) => {
     onChange(date);
-    setShowTimePicker(true); // 날짜 선택 시 시간 선택 UI 보이기
-  };
-
-  const handleTimeSelect = (time) => {
-    setSelectedTime(time); // 선택된 시간 업데이트
   };
 
   const handleTab = (tab) => {
     setSelectTab(tab);
   }
 
-  const timeOptions = ["14:00", "15:00", "16:00"]; // 시간 옵션 배열
+  const openModal = () => setShowReservationModal(true);
+  const closeModal = () => setShowReservationModal(false);
 
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-
+  
   return (
     <div className="mt-10 h-full">
       <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
@@ -119,37 +110,25 @@ export default function DetailPage() {
         </div>
         {/* 캘린더 */}
         <div className="col-span-2 mx-auto">
+          <h1>예약하기</h1>
           <Calendar 
-            onChange={handleDateChange}   // 날짜 변경시 저장
+            onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
             formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
             calendarType="gregory"  // 그레고리를 통한 토요일 시작
             value={value} // 선택된 value값 (default 오늘)
             showNeighboringMonth={true} // 다음달 날짜도 보이게
           /> 
-          {showTimePicker && (
-            <div className="mt-4 flex space-x-4">
-              {timeOptions.map((time) => (
-                <button
-                  key={time}
-                  className={`px-4 py-2 rounded-lg 
-                    ${selectedTime === time ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black'}
-                    hover:bg-blue-500 hover:text-white transition`}
-                  onClick={() => handleTimeSelect(time)}
-                >
-                  {time}
-                </button>
-              ))}
-            </div>
-          )}
           <div className="text-gray-500 mt-4">
-            {showTimePicker ? (
-              // 시간이 선택되었을 경우
-              `${moment(value).format("YYYY년 MM월 DD일")} ${selectedTime} 선택됨`
-            ) : (
-              // 시간이 선택되지 않았을 경우
+            { value &&
               moment(value).format("YYYY년 MM월 DD일")
-            )}
+            }
           </div>
+          <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
+            <p className="text-center text-white text-[1rem]">예약하기</p>
+          </div>
+          {showReservationModal && ( 
+            <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={data} onClose={closeModal}/>
+          )}
         </div>
       </div>
     </div>

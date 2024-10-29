@@ -24,11 +24,9 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
-    console.log(user)
+
     try {
       const res = await authAPI.login(user);
-      console.log(res.status)
-      console.log("로그인 성공");
       if(res.status === 200){
         setCookie("accessToken", res.data.accessToken, { path: "/"});
         navigate("/")
@@ -46,7 +44,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-full">
       <div className="flex flex-col items-center justify-center mx-auto gap-2.5">
         <h1 className="mb-10 text-[36px] text-gray-900 font-semibold">LOGIN</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center mx-auto gap-2.5">
+        <div className="flex flex-col items-center justify-center mx-auto gap-2.5">
           <input
             type="email"
             id="email"
@@ -63,10 +61,10 @@ export default function LoginPage() {
             value={user.password} // 상태에서 값 설정
             onChange={handleChange} // 값 변경 핸들러 추가
           />
-          <button type="submit">
-            <CustomLoginButton text={"로그인"} type="submit"/>
+          <button type="button" onClick={handleSubmit}>
+            <CustomLoginButton text={"로그인"} />
           </button>
-        </form>
+        </div>
         <CustomLoginButton text={"회원가입"} path="/policy" />
         <div className="flex items-center my-4 w-[300px]">
           <hr className="flex-grow border-t border-[#ccc]" />
