@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class EventResponse {
-	private String evnetName; //타이틀
+	private String eventName; //타이틀
 	private String summary; // 슬로건
 	private String description; // ?
 	private LocalDate startAt; // 시작일
@@ -20,7 +20,7 @@ public class EventResponse {
 	public static EventResponse toDTO(Event event) {
 		return EventResponse.builder()
 				.description(event.getDescription())
-				.evnetName(event.getEventName())
+				.eventName(event.getEventName())
 				.summary(event.getSummary())
 				.startAt(event.getStartAt())
 				.endAt(event.getEndAt())
@@ -30,7 +30,7 @@ public class EventResponse {
 	public static EventResponse toDTO(Event event, String image) {
 		return EventResponse.builder()
 				.description(event.getDescription())
-				.evnetName(event.getEventName())
+				.eventName(event.getEventName())
 				.summary(event.getSummary())
 				.startAt(event.getStartAt())
 				.endAt(event.getEndAt())
