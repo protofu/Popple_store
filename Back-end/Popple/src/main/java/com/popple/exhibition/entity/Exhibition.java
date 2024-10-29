@@ -167,16 +167,6 @@ public class Exhibition {
 	//삭제여부
 	@Builder.Default
 	@Column(name = "is_deleted", nullable = false)
-	private boolean isDeleted = false;
-	
-//	// 대표 이미지 등등..
-//    @JoinColumn(name = "exhibition_id")
-//	private List<Image> images;
-//	
-//	// 상세설명 포스터
-//    @JoinColumn(name = "exhibition_id")
-//	private List<Poster> posters;
-	
-	
+	private boolean isDeleted = false;	
 	
 }
