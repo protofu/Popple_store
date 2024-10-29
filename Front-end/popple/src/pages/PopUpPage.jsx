@@ -143,26 +143,21 @@ export default function PopUpPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, []);
-  const titleStyle = "flex items-center w-full m-10 ml-0";
-  const textStyle = "text-2xl ml-2 font-bold";
+  const titleStyle = "flex items-center w-full mt-10 mb-5 ml-0";
+  const textStyle = "text-2xl ml-2 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
 
   return (
-    <div className="
-    w-full mx-auto 
-    xl: max-w-full
-    mt-4 
-    "
-    >
+    <div className="w-full mx-auto mt-4">
       <PostCarousel />
+
       {/* 인기있는 POP-UP */}
       <div className={titleStyle}> 
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>인기있는 POP-UP</h1>
       </div>
-      <div className="flex justify-center mx-auto">
-        <PosterSlide items={popUp}/>
-      </div>
+      <PosterSlide items={popUp}/>
+
       {/* EVENT */}
       <div className={titleStyle}>
         <img src={eventIcon} alt="이벤트 아이콘" className={titleImgStyle} />
@@ -181,11 +176,7 @@ export default function PopUpPage() {
         <h1 className={textStyle}>POP-UP 둘러보기</h1>
       </div>
       <div>
-        <div className="
-        flex flex-wrap justify-center gap-6 
-        lg:grid lg:grid-cols-4 
-        xl:grid xl:grid-cols-5
-        ">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
           {currentItems.map((item, index) => (
             <PostCard
               key={index}

@@ -158,7 +158,7 @@ export default function ExhibitionPage() {
   }, []);
 
   const titleStyle = "flex items-center w-full m-10 ml-0";
-  const textStyle = "text-[28px] ml-3 font-bold";
+  const textStyle = "text-[28px] ml-3 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
 
   return (
@@ -193,11 +193,7 @@ export default function ExhibitionPage() {
       </div>
       {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>
-        <div className="
-        flex flex-wrap justify-center gap-6 
-        lg:grid lg:grid-cols-4 
-        xl:grid xl:grid-cols-5
-        ">
+      <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
           {currentItems.map((item, index) => (
             <PostCard
               key={index}
