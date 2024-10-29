@@ -19,11 +19,27 @@ export default function EventCard({ slogun, title, duration, img }) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`; // R, G, B 값을 결합
   }
 
+  function hexToRgb(hex) {
+    // HEX 색상에서 RGB로 변환
+    let r = 0, g = 0, b = 0;
+
+    // 3자리 HEX 또는 6자리 HEX 확인
+    if (hex.length === 4) {
+        r = parseInt(hex[1] + hex[1], 16);
+        g = parseInt(hex[2] + hex[2], 16);
+        b = parseInt(hex[3] + hex[3], 16);
+    } else if (hex.length === 7) {
+        r = parseInt(hex[1] + hex[2], 16);
+        g = parseInt(hex[3] + hex[4], 16);
+        b = parseInt(hex[5] + hex[6], 16);
+    }
+
+    return [r, g, b];
+}
   // 특정 색상에 대한 어울리는 텍스트 색상을 반환하는 함수
   function getTextColor(backgroundColor) {
-    // 배경색을 RGB로 분해
-    const rgb = backgroundColor.match(/\d+/g).map(Number);
-    const [r, g, b] = rgb;
+    // HEX 배경색을 RGB로 분해
+    const [r, g, b] = hexToRgb(backgroundColor);    
 
     // 밝기 계산
     const brightness = (r * 0.299 + g * 0.587 + b * 0.114);

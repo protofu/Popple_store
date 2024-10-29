@@ -15,6 +15,8 @@ import com.popple.event.domain.EventResponse;
 import com.popple.event.entity.Event;
 import com.popple.event.entity.EventImage;
 import com.popple.event.entity.EventPoster;
+import com.popple.event.respository.EventImageRepository;
+import com.popple.event.respository.EventPosterRepository;
 import com.popple.event.respository.EventRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EventService {
 	private final EventRepository eventRepo;
 	private final ExhibitionRepository exhibitionRepository;
+	private final EventPosterRepository eventPosterRepo;
 	private final EventImageService eventImageService;
 	private final EventPosterService eventPosterService;
 
@@ -61,16 +64,14 @@ public class EventService {
 	//이벤트 전체 조회
 	public List<EventResponse> getAllEvent() {
 		List<Event> eventList = eventRepo.findAll();//모든 이벤트
-		List<Event> pList = new ArrayList<Event>();//새롤운 이벤트 배열
-		for(Event e : eventList) {
-			//이벤트 종료일이 오늘보다 뒤면
-			if(!e.getEndAt().isBefore(LocalDate.now())) {
-				//pList에 추가
-				pList.add(e);
-			}
-		}
 		//pList 반환
-		return pList.stream().map(EventResponse::toDTO).toList();
+//		return pList.stream().map(EventResponse::toDTO).toList();
+		return eventList.stream()
+		.filter(e -> !e.getEndAt().isBefore(LocalDate.now()))
+		.map(e -> {
+			EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
+			return EventResponse.toDTO(e, eventPoster.getSavedName());
+		}).toList();  
 	}
 	
 	//이벤트 상세 조회

@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,7 +73,7 @@ public class EventController {
 	
 	//이벤트 수정
 	@Operation(summary = "이벤트 수정", description = "이벤트를 삭제합니다.")
-	@DeleteMapping("/update")
+	@PatchMapping("/update")
 	public ResponseEntity<EventResponse> updateEvent(
 			Long id, @AuthenticationPrincipal User user, List<MultipartFile> images, MultipartFile poster){
 		EventResponse event = eventService.updateEvent(id, user, images, poster);

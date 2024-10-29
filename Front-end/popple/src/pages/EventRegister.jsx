@@ -4,6 +4,8 @@ import FileCarousel from "../components/exhibition/FileCarousel";
 import { eventAPI } from "../api/services/Event";
 import { useNavigate } from "react-router-dom";
 import Markdown from "../components/common/Markdown";
+import { data } from "autoprefixer";
+
 
 export default function EventRegister() {
   const fileMax = 5;
@@ -101,11 +103,11 @@ export default function EventRegister() {
     try {
 
       event.preventDefault(); // 기본 폼 제출 방지
-      console.log(info);
+      console.log("인포",info);
+      console.log("팝업아이디",info.exId)
 
       const formData = new FormData();
 
-      formData.append("exId", info.exId);
       // 포스터 파일 추가
       if (info.eventPoster) {
         formData.append("eventPoster", info.eventPoster);
@@ -116,6 +118,7 @@ export default function EventRegister() {
           formData.append(`eventImage`, img);
         });
       }
+      formData.append("exId", info.exId);
       formData.append("startAt", info.startAt);
       formData.append("endAt", info.endAt);
       formData.append("description", info.description);
@@ -136,12 +139,7 @@ export default function EventRegister() {
 
   // 마크다운 입력 핸들러
   const handleMarkDown = (name, value) => {
-    changeInformation({
-      target: {
-        name,
-        value,
-      },
-    });
+    setInfo(prev => ({ ...prev, [name]: value }));
   };
 
    //날짜 지정 (오늘날짜)
@@ -176,18 +174,18 @@ export default function EventRegister() {
           <label className="text-sm" htmlFor="1">
             상세설명 <span className="text-red-500">*</span>
           </label>
-          {/* <input
+          <input
             id="description"
             onChange={(e) => setInfo({ ...info, description: e.target.value })}
             value={info.description}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          /> */}
-          <div>
+          />
+          {/* <div>
             <Markdown
               content={info.description}
               contentChange={(e) => handleMarkDown("description", e)}
             />
-          </div>
+          </div> */}
           <div className="flex ">
             <div className="flex flex-col mt-1">
               <label className="text-sm" htmlFor="start">

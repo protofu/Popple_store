@@ -13,6 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	// 후에 file을 받아오기 위해 일단 생성해둔 class
 	@Value("${spring.upload.review_location}")
 	private String uploadPath;
+	@Value("${spring.upload.event_poster_location}")
+	private String eventPosterPath;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -29,9 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry
 		.addResourceHandler("/review_image/**")
 		.addResourceLocations("file:"+uploadPath + "/");
+		registry
+		.addResourceHandler("/event_poster_image/**")
+		.addResourceLocations("file:"+eventPosterPath + "/");
 	}
-	
-	
-	
-	
 }
