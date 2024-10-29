@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,redis
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,redis
-
+.gradle
+.settings
+.vscode
+.classpath
+.project
 ### Java ###
 # Compiled class file
 *.class
@@ -37,5 +41,6 @@ application.yml
 
 ### Ignore bin directory ###
 bin/
-
+build/
+gradle/
 # End of https://www.toptal.com/developers/gitignore/api/java,redis

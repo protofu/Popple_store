@@ -130,7 +130,7 @@ export default function MainPage() {
       </div>
       {/* 이벤트 섹션 */}
       <div className="mt-10">
-        <h1 className="text-center text-2xl mb-5">EVNET</h1>
+        <h1 className="text-center text-2xl mb-5">EVENT</h1>
         <div className="flex flex-wrap justify-center gap-4">
           {example.map((item, index) => (
               <EventCard key={index} slogun={item.slogun} title={item.title} duration={item.duration} img={item.img}/>
@@ -153,16 +153,16 @@ export default function MainPage() {
         )}
         </div>
         {/* 전시 팝업에 따른 변화 */}
-        <div className="flex flex-wrap justify-center gap-6 lg:grid lg:grid-cols-5 ">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {isPop ?
             <>
               {example2.map((item, index) => (
-                <PostCard key={index} id={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
+                <PostCard key={index} id={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-full h-auto"}/>
               ))}
             </> :
             <>
               {example3.map((item, index) => (
-                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-[15rem] h-auto"}/>
+                <PostCard key={index} img={item.img} title={item.title} addr={item.addr} duration={item.duration} styles={"w-full h-auto"}/>
               ))}
             </>
           }

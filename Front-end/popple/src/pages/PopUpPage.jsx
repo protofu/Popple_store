@@ -149,7 +149,7 @@ export default function PopUpPage() {
 
   return (
     <div className="
-    w-screen mx-auto 
+    w-full mx-auto 
     xl: max-w-full
     mt-4 
     "
