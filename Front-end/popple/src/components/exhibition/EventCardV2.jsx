@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import Vibrant from "node-vibrant";
 import PropTypes from "prop-types";
 import EventCard from "../EventCard";
+import { eventAPI } from "../../api/services/Event";
+import { data } from "autoprefixer";
+import { useNavigate } from "react-router-dom";
 
 export default function EventCardV2({ slogun, title, duration, img }) {
   const [palette, setPalette] = useState([]);
   const [textColor, setTextColor] = useState();
-
+  const navigate = useNavigate();
   function corsProxy(url) {
     return `${url}`;
   }
@@ -108,38 +111,45 @@ export default function EventCardV2({ slogun, title, duration, img }) {
     submit(img);
   }, [img]);
 
-  return (
-    // <div
-    //   className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-full max-w-[345px] h-auto bg-black`}
-    //   style={{ backgroundColor: palette }}
-    // >
-    //   <img
-    //     src={img}
-    //     alt="이벤트 이미지"
-    //     className="w-full h-full rounded-[12px]"
-    //     style={{
-    //       WebkitMaskImage: "linear-gradient(to left, black, transparent)", // Webkit 호환
-    //       backgroundColor: "black", // 투명한 부분을 검정색으로 채움
-    //     }}
-    //   />
-    //   <div className="absolute inset-0 flex flex-col justify-center items-start px-2" style={{ color: textColor }}>
-    //     <p className="text-sm">{slogun}</p>
-    //     <h2 className="text-lg font-bold">{title}</h2>
-    //     <p className="text-sm">{duration}</p>
-    //   </div>
-    // </div>
+  const handleDelete = async (d) => {
+    try {
+      const res = await eventAPI.delete(d);
+      console.log("res.data", d);
+      alert("삭제 완료");
+    } catch (error) {
+      console.error(error);
+      alert("삭제 불가");
+    }
+  };
 
-    <div className="flex flex-col relative">
+  return (
+    <button
+      className={`relative flex rounded-[12px] overflow-hidden aspect-[320/100] w-full max-w-[345px] h-auto bg-black`}
+      style={{ backgroundColor: palette }}
+    >
       <img
         src={img}
         alt="이벤트 이미지"
-        className="rounded-[12px] w-4/5 h-2/5"
-       
+        className="w-2/5 h-full object-cover rounded-[12px] ml-auto"
+        style={{
+          maskImage: "linear-gradient(to left, black, transparent)", // 오른쪽부터 이미지가 선명해짐
+          WebkitMaskImage: "linear-gradient(to left, black, transparent)", // Webkit 호환
+          backgroundColor: "black", // 투명한 부분을 검정색으로 채움
+        }}
       />
-      <p className="text-sm mt-2 absolute inset-0 ">{slogun}</p>
-      <h2 className="text-lg font-bold mt-2">{title}</h2>
-      <p className="text-sm opacity-50">{duration}</p>
-    </div>
+
+      <div
+        className="absolute inset-0 flex flex-col justify-center items-start px-2"
+        style={{ color: textColor }}
+      >
+        <p className="text-sm">{slogun}</p>
+        <button className="border p-1" type="button" onClick={handleDelete}>
+          지우기
+        </button>
+        <h2 className="text-lg font-bold">{title}</h2>
+        <p className="text-sm">{duration}</p>
+      </div>
+    </button>
   );
 }
 

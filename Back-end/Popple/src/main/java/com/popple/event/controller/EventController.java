@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,7 +67,7 @@ public class EventController {
 	// 이벤트 삭제
 	@Operation(summary = "이벤트 삭제", description = "이벤트를 삭제합니다.")
 	@DeleteMapping("/delete")
-	public void deleteEvent(Long id, @AuthenticationPrincipal User user ) {
+	public void deleteEvent(@PathVariable("id") Long id, @AuthenticationPrincipal User user ) {
 		eventService.deleteEvent(id, user);
 		return;
 	}

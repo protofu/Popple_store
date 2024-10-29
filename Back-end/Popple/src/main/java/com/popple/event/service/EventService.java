@@ -39,74 +39,79 @@ public class EventService {
 		// 해당 전시/팝업 조회
 		Optional<Exhibition> optExhitibition = exhibitionRepository.findById(req.getExId());
 		Exhibition exhibition = optExhitibition.orElseThrow(() -> new IllegalArgumentException("해당되는 전시 또는 팝업이 없습니다."));
-				
+
 		// 이벤트 객체 생성
-		Event event = Event.builder()
-				.eventName(req.getEventName())
-				.description(req.getDescription())
-				.summary(req.getSummary())
-				.startAt(req.getStartAt())
-				.endAt(req.getEndAt())
-				.exhibition(exhibition)
+		Event event = Event.builder().eventName(req.getEventName()).description(req.getDescription())
+				.summary(req.getSummary()).startAt(req.getStartAt()).endAt(req.getEndAt()).exhibition(exhibition)
 				.build();
-		
-		//이미지 객체를 DB에 저장
+
+		// 이미지 객체를 DB에 저장
 		eventRepo.save(event);
-		
+
 		// 이미지 저장
-		List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event)).collect(Collectors.toList());
+		List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event))
+				.collect(Collectors.toList());
 		// 포스터 저장
 		EventPoster savedPoster = eventPosterService.savePoster(poster, event);
-		
+
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
-	//이벤트 전체 조회
+
+	// 이벤트 전체 조회
 	public List<EventResponse> getAllEvent() {
-		List<Event> eventList = eventRepo.findAll();//모든 이벤트
-		//pList 반환
+		List<Event> eventList = eventRepo.findAll();// 모든 이벤트
+		// pList 반환
 //		return pList.stream().map(EventResponse::toDTO).toList();
-		return eventList.stream()
-		.filter(e -> !e.getEndAt().isBefore(LocalDate.now()))
-		.map(e -> {
+		return eventList.stream().filter(e -> !e.getEndAt().isBefore(LocalDate.now())).map(e -> {
 			EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
 			return EventResponse.toDTO(e, eventPoster.getSavedName());
-		}).toList();  
+		}).toList();
 	}
-	
-	//이벤트 상세 조회
+
+	// 이벤트 상세 조회
 	public EventResponse getEvent(Long id) {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
-	
-	//이벤트 삭제
+
+	// 이벤트 삭제
 	public void deleteEvent(Long id, User user) {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
-		if(event.getExhibition().getUser().getId() == user.getId()) {
-			eventRepo.deleteById(event.getId());
-		}
-		return ;
+		List<EventImage> prevImage = eventImageService.findAll();
+		EventPoster prevPoster = eventPosterService.findPoster(id);
+		if (event.getExhibition().getUser().getId() == user.getId()) {
+			if (prevImage != null) {
+				prevImage.forEach(i -> eventImageService.deleteImage(i.getId()));
+			}
+			if (prevPoster != null) {
+				eventPosterService.deletePoster(prevPoster.getId());
+
+				eventRepo.deleteById(event.getId());
+			}
+			
+		}return;
 	}
-	
-	//이벤트 수정
+
+	// 이벤트 수정
 	public EventResponse updateEvent(Long id, User user, List<MultipartFile> images, MultipartFile poster) {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		List<EventImage> prevImage = eventImageService.findAll();
 		EventPoster prevPoster = eventPosterService.findPoster(id);
-		if(event.getExhibition().getUser().getId() == user.getId()) {
-			if(images != null) {		
+		if (event.getExhibition().getUser().getId() == user.getId()) {
+			if (images != null) {
 				prevImage.forEach(i -> eventImageService.deleteImage(i.getId()));
-				List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event)).collect(Collectors.toList());
+				List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event))
+						.collect(Collectors.toList());
 			}
-			if(poster != null) {
+			if (poster != null) {
 				eventPosterService.deletePoster(prevPoster.getId());
-				EventPoster savedPoster = eventPosterService.savePoster(poster, event);		
+				EventPoster savedPoster = eventPosterService.savePoster(poster, event);
 			}
 		}
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
-	
+
 }

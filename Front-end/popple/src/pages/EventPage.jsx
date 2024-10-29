@@ -36,7 +36,7 @@ export default function EventPage() {
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
         <ExStepComplete exhiId={exhiId}/>
         
-        <div className="grid grid-cols-3 justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-10">
           {eventList.map((item, index) => (
               <EventCardV2 key={index} slogun={item.summary} title={item.eventName} duration={item.startAt + " ~ "+ item.endAt} img={`http://localhost:8080/event_poster_image/${item.image}`}/>
           ))}
