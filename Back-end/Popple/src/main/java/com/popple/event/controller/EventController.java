@@ -65,9 +65,17 @@ public class EventController {
 	// 이벤트 삭제
 	@Operation(summary = "이벤트 삭제", description = "이벤트를 삭제합니다.")
 	@DeleteMapping("/delete")
-	public ResponseEntity<EventResponse> deleteEvnet(Long id, @AuthenticationPrincipal User user ) {
-		EventResponse event = eventService.deleteEvent(id, user);
-		return null;
+	public void deleteEvent(Long id, @AuthenticationPrincipal User user ) {
+		eventService.deleteEvent(id, user);
+		return;
 	}
-
+	
+	//이벤트 수정
+	@Operation(summary = "이벤트 수정", description = "이벤트를 삭제합니다.")
+	@DeleteMapping("/update")
+	public ResponseEntity<EventResponse> updateEvent(
+			Long id, @AuthenticationPrincipal User user, List<MultipartFile> images, MultipartFile poster){
+		EventResponse event = eventService.updateEvent(id, user, images, poster);
+		return ResponseEntity.ok(event);
+	}
 }

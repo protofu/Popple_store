@@ -1,5 +1,7 @@
 package com.popple.event.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class EventImageService {
 	private final EventImageRepository eventImageRepository;
-	private final EventImageUtils evnetImageUtils;
+	private final EventImageUtils eventImageUtils;
 
 	public EventImage saveImage(MultipartFile image, Event event) {
 		if (image != null) {
-			EventImage imageFile = evnetImageUtils.eventImageUpload(image);
+			EventImage imageFile = eventImageUtils.eventImageUpload(image);
 			if (imageFile != null) {
 				imageFile.setEvent(event);
 				EventImage savedImageFile = eventImageRepository.save(imageFile);
@@ -28,6 +30,13 @@ public class EventImageService {
 			}
 		}
 		return null;
+	}
+	public void deleteImage(Long id) {
+		eventImageRepository.deleteById(id);
+	}
+	public List<EventImage> findAll() {
+		List<EventImage> imageList = eventImageRepository.findAll();
+		return imageList;
 	}
 	
 }
