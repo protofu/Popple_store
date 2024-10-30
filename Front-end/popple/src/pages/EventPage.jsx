@@ -5,6 +5,7 @@ import { data } from "autoprefixer";
 import ExStepComplete from "../components/exhibition/ExStepComplete";
 import EventCardV2 from "../components/exhibition/EventCardV2";
 import { authAPI } from "../api/services/Auth";
+import { useNavigate } from "react-router-dom";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -41,12 +42,16 @@ export default function EventPage() {
     getEvent();
   }, []);
 
+
+  //임시 네비
+  const navigate = useNavigate();
   return (
     <>
       <h1 className={textStyle}>Event</h1>
       <hr className="mt-2 mb-0 border-gray-500" />
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
+        <button className="p-5 border" onClick={()=>navigate('/event-regist')}>이벤트 등록 지름길</button>
         {/* <ExStepComplete exhiId={exhiId}/> */}
         <div className="flex flex-wrap justify-center gap-10">
           {state.map((item, index) => (

@@ -6,14 +6,12 @@ import { useNavigate } from "react-router-dom";
 import Markdown from "../components/common/Markdown";
 import { data } from "autoprefixer";
 
-
 export default function EventRegister() {
   const fileMax = 5;
   // param으로 넘겨서
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const exhibitionId = queryParams.get("id");
-
 
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
@@ -56,7 +54,7 @@ export default function EventRegister() {
         return [...prevPreviews, ...newPreviews];
       });
     });
-    setInfo(prev => ({ ...prev, eventImage: files }))
+    setInfo((prev) => ({ ...prev, eventImage: files }));
   };
 
   //파일 이미지 삭제
@@ -79,9 +77,8 @@ export default function EventRegister() {
     reader.onload = () => {
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
     };
-    setInfo(prev => ({ ...prev, eventPoster: file }))
+    setInfo((prev) => ({ ...prev, eventPoster: file }));
   };
-
 
   //입력 정보
   const [info, setInfo] = useState({
@@ -97,7 +94,6 @@ export default function EventRegister() {
   const navigate = useNavigate();
   //등록 핸들러
   const handleSubmit = async (event) => {
-
     try {
       event.preventDefault(); // 기본 폼 제출 방지
       const formData = new FormData();
@@ -122,7 +118,7 @@ export default function EventRegister() {
       const res = await eventAPI.regist(formData);
       if (res.status === 201) {
         alert("이벤트가 등록되었습니다.");
-        navigate('/')
+        navigate("/");
       }
     } catch (error) {
       alert("이벤트 등록에 실패하였습니다.");
@@ -131,11 +127,11 @@ export default function EventRegister() {
 
   // 마크다운 입력 핸들러
   const handleMarkDown = (name, value) => {
-    setInfo(prev => ({ ...prev, [name]: value }));
+    setInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-   //날짜 지정 (오늘날짜)
-   const today = new Date().toISOString().split("T")[0];
+  //날짜 지정 (오늘날짜)
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <>
@@ -166,18 +162,12 @@ export default function EventRegister() {
           <label className="text-sm" htmlFor="1">
             상세설명 <span className="text-red-500">*</span>
           </label>
-          <input
-            id="description"
-            onChange={(e) => setInfo({ ...info, description: e.target.value })}
-            value={info.description}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          {/* <div>
+          <div>
             <Markdown
               content={info.description}
               contentChange={(e) => handleMarkDown("description", e)}
             />
-          </div> */}
+          </div>
           <div className="flex ">
             <div className="flex flex-col mt-1">
               <label className="text-sm" htmlFor="start">
@@ -238,8 +228,9 @@ export default function EventRegister() {
             </label>
             <div className="h-full">
               <label
-                className={`preview ${isActive ? "active" : " "
-                  } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
+                className={`preview ${
+                  isActive ? "active" : " "
+                } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
                 onDragEnter={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}

@@ -5,6 +5,7 @@ import EventCard from "../EventCard";
 import { eventAPI } from "../../api/services/Event";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserStore } from "../../stores/LoginUserState";
+import { MdOutlineCancel } from "react-icons/md";
 
 export default function EventCardV2({
   dispatch,
@@ -98,7 +99,7 @@ export default function EventCardV2({
     duration,
     img,
     usernickname,
-    description    
+    description,
   };
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -139,6 +140,7 @@ export default function EventCardV2({
           onClose={handleModalClose}
           eventDetail={eventDetail}
           dispatch={dispatch}
+          open={handleModalOpen}
         />
       )}
     </div>
@@ -153,8 +155,8 @@ EventCardV2.propTypes = {
   img: PropTypes.string.isRequired, // 이미지 URL
 };
 
-function EventDetailModal({ onClose, eventDetail, dispatch}) {
-  console.log(eventDetail)
+function EventDetailModal({ onClose, eventDetail, dispatch, open }) {
+  console.log(eventDetail);
   const { loginUserNickname } = useLoginUserStore();
   const navigate = useNavigate();
 
@@ -174,31 +176,40 @@ function EventDetailModal({ onClose, eventDetail, dispatch}) {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="flex flex-col items-center bg-white rounded-lg p-5 w-[70%] h-[80%]">
-        <div className="grid grid-cols-3 w-full text-2xl font-bold border-b-2 pb-2 mb-2">
-          <div className="inline" onClick={onClose}>
-            닫기
-          </div>
+    <div
+      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-auto "
+      onClick={onClose}
+    >
+      <div className="flex flex-col justify-evenly items-center bg-white rounded-lg p-5 w-[40%] h-auto ">
+        <div className="grid grid-cols-3 w-full text-2xl font-bold border-b-2 pb-2 mb-2 ">
+          <div className="inline"></div>
           <span className="text-center">{eventDetail.title}</span>
           <span className="mt-auto text-right text-sm">
             {eventDetail.duration}
           </span>
         </div>
-        <div className="relative flex rounded-[12px] overflow-hidden aspect-[1300/1500] w-5/6 h-auto max-w-[345px] bg-black">
+
+        <div className="relative flex rounded-[12px] overflow-hidden aspect-auto w-full h-[90%] max-w-[345px] bg-black">
           <img src={eventDetail.img} className="object-cover" />
         </div>
+        <div className="mt-8">
         {eventDetail.description}
-        <div>
+        </div>
+
+        <div className="w-full mt-20">
           {loginUserNickname === eventDetail.usernickname && (
-            <>
-              <button className="inline border" onClick={() => handleDelete()}>
+            <div className="flex justify-around">
+              <button
+                className="border rounded-lg p-2"
+                onClick={() => handleDelete()}
+              >
                 삭제
               </button>
-              <button className="border" onClick={handleNavi}>
+              <span></span>
+              <button className="border rounded-lg p-2" onClick={handleNavi}>
                 수정
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
