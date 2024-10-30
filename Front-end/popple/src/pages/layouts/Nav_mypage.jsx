@@ -21,7 +21,7 @@ export default function Nav_mypage ({ onItemSelect, initialActiveItem }) {
   };
 
   return (
-    <nav className="w-1/6 mt-12 ml-0">
+    <nav className="w-[200px] mt-12 ml-0 flex-shrink-0">
       <ul className="list-none p-0">
         {items.map((item, index) => (
           <li key={index}>
