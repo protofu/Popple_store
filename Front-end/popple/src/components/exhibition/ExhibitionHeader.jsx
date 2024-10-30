@@ -18,7 +18,7 @@ const ExhibitionHeader = ({ step }) => {
         { step === 1 ? <hr className="flex-grow border border-[#ccc] w-auto"/> : step === 2 ? <hr className="flex-grow border border-[#ccc] w-auto"/> : <hr className="flex-grow border border-popple w-auto"/> }
         <div>
           { step === 3 ? <PiNumberCircleThree className="text-8xl inline-block text-popple"/> : step === 4 ? <PiCheckCircleFill className="text-8xl inline-block fill-popple"/> :<PiNumberCircleThree className="text-8xl inline-block  w-auto opacity-20"/>}
-          { step ===3 ? <p className="font-bold  text-center">완료</p> : <p className="font-bold text-center opacity-20">완료</p> }
+          { step ===3 ? <p className="font-bold  text-center">완료</p> : step === 4 ? <p className="font-bold  text-center">완료</p> : <p className="font-bold text-center opacity-20">완료</p> }
         </div>
       </div>
       <p className="text-lg mb-2">팝업/전시 등록</p>

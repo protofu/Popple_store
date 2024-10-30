@@ -211,12 +211,6 @@ export default function ExhibitionRegistPage() {
                 >
                   다음
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setStep(4)}
-                >
-                  임시 지름길
-                </button>
               </div>
             ) : step === 2 ? (
               // 2단계 하단
@@ -236,7 +230,7 @@ export default function ExhibitionRegistPage() {
                   다음
                 </button>
               </div>
-            ) :  (
+            ) : step === 3 ? (
               <div className="flex justify-between items-center">
                 <button
                   type="submit"
@@ -253,6 +247,8 @@ export default function ExhibitionRegistPage() {
                   등록
                 </button>
               </div>
+            ):(
+              <></>
             )}
           </div>
         </div>
