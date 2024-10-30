@@ -28,18 +28,21 @@ export default function EventPage() {
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
   const exhiId= 1;
+
   //추가될 때마다 
   useEffect(() => {
     //저장된 이벤트 가져오기
     const getEvent = async() => {
       try {
         const res = await eventAPI.getAll();
-        dispatch({ type: "getList", value: res.data})
+        dispatch({ type: "getList", value: res.data});
+        console.log(res.data)
       } catch (error) {
       }
     }
     getEvent();
   }, []);
+  
   
 
   return (
