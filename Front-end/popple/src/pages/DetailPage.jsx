@@ -9,6 +9,7 @@ import ReviewInDetail from "../components/review/ReviewInDetail";
 import Reservation from "../components/exhibition/Reservation";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { useParams } from "react-router-dom";
+import { TbCurrencyDollarOff } from "react-icons/tb";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -73,10 +74,15 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  
+
+  const spanStyle = "w-[95px]";
+  const iconStyle = "w-fit flex items-center gap-4 font-bold";
+  const innerIconStyle = "size-[36px] mb-2 mx-auto";
+  const innerTextStyle = "text-[12px] text-center";
+
   return (
     <div className="mt-10 h-full">
-      <h1 className="text-2xl m-10">{exhi.exhibitionName}</h1>
+      <h1 className="text-2xl m-10 font-bold">{exhi.exhibitionName}</h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
         <div className="col-span-5">
@@ -94,10 +100,15 @@ export default function DetailPage() {
               <label htmlFor="location" className={infoGridStyle}>기간</label>
               <h1 id="location" className={infoH1GridStyle}>{startAt + " - " + endAt}</h1>
               <label htmlFor="location" className={infoGridStyle}>관람연령</label>
-              <h1 id="location" className={infoH1GridStyle}>{exhi.grade}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.grade ? "전연령" : "청소년 관람 불가"}</h1>
               <label htmlFor="location" className={infoGridStyle}>입장료</label>
-              <h1 id="location" className={infoH1GridStyle}>{exhi.fee} 원</h1>
-              <label htmlFor="location" className={infoGridStyle}>주의사항</label>
+              <h1 id="location" className={infoH1GridStyle}>
+                {exhi.fee !== "0" ? (
+                  <span>{exhi.fee} 원</span>
+                ) : (
+                  <span className="font-bold">입장료 무료</span>
+                )}
+              </h1>
             </div>
           </div>
           <div className="mt-8 border-b-2 border-[#868686]">
