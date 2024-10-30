@@ -228,7 +228,7 @@ const ExStep1 = ({ information, changeInformation }) => {
     <>
       <div className="grid grid-cols-2 gap-x-10 w-full h-full">
         <div className="flex flex-col justify-between">
-          <label>팝업, 전시 항목 선택</label>
+          <label>팝업, 전시 항목 선택 <span className="text-red-500">*</span></label>
           <TypeDropdown className={inputStyle} onChange={handleDropdown} />
 
           <label>{information.typeId == 1 ? "팝업" : "전시"}명</label>
@@ -239,7 +239,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
           />
 
-          <label>부제</label>
+          <label>부제 <span className="text-red-500">*</span></label>
           <input
             name="subTitle"
             className={inputStyle}
@@ -248,7 +248,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           />
 
           <label>
-            입장료
+            입장료 <span className="text-red-500">*</span>
             <span className="float-right">
               <input
                 type="checkbox"
@@ -267,7 +267,55 @@ const ExStep1 = ({ information, changeInformation }) => {
             disabled={information.free}
           />
 
-          <label>팝업 전시 기간</label>
+          <label>상세 설명 <span className="text-red-500">*</span></label>
+          <div className={inputStyle}>
+            <Markdown
+              content={information.detailDescription}
+              contentChange={(e) => handleMarkDown("detailDescription", e)}
+            />
+          </div>
+
+          <label>상세설명 포스터 <span className="text-red-500">*</span></label>
+          <label
+            className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
+          >
+            <input
+              className="hidden"
+              name="poster"
+              type="file"
+              onChange={onPosterUpload}
+              accept="image/*"
+            />
+            {posterPreview ? (
+              <img className="w-5/6 h-5/6" src={posterPreview} alt="포스터" />
+            ) : (
+              <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl inline-block" />
+            )}
+          </label>
+        </div>
+
+        <div className="flex flex-col justify-between">
+          <label>장소 <span className="text-red-500">*</span></label>
+          <div className="flex">
+            <input
+              name="address"
+              className={`${inputStyle} w-full !mb-0`}
+              value={information.address}
+              readOnly
+            />
+            <PostCode
+              className="border p-2 rounded-lg inline-block w-1/6 ml-2"
+              value="검색"
+              setAddress={setAddress}
+            />
+          </div>
+          <input
+            name="detailAddr"
+            className={inputStyle}
+            value={information.detailAddr}
+            onChange={(e) => changeInformation(e)}
+          />
+          <label>{information.typeId == 1 ? "팝업" : "전시"} 기간 <span className="text-red-500">*</span></label>
           <div className="flex justify-between">
             <input
               placeholder="시작일"
@@ -290,55 +338,6 @@ const ExStep1 = ({ information, changeInformation }) => {
             />
           </div>
 
-          <label>상세 설명</label>
-          <div className={inputStyle}>
-            <Markdown
-              content={information.detailDescription}
-              contentChange={(e) => handleMarkDown("detailDescription", e)}
-            />
-          </div>
-
-          <label>상세설명 포스터</label>
-          <label
-            className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
-          >
-            <input
-              className="hidden"
-              name="poster"
-              type="file"
-              onChange={onPosterUpload}
-              accept="image/*"
-            />
-            {posterPreview ? (
-              <img className="w-5/6 h-5/6" src={posterPreview} alt="포스터" />
-            ) : (
-              <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl inline-block" />
-            )}
-          </label>
-        </div>
-
-        <div className="flex flex-col justify-between">
-          <label>장소</label>
-          <div className="flex">
-            <input
-              name="address"
-              className={`${inputStyle} w-full !mb-0`}
-              value={information.address}
-              readOnly
-            />
-            <PostCode
-              className="border p-2 rounded-lg inline-block w-1/6 ml-2"
-              value="검색"
-              setAddress={setAddress}
-            />
-          </div>
-          <input
-            name="detailAddr"
-            className={inputStyle}
-            value={information.detailAddr}
-            onChange={(e) => changeInformation(e)}
-          />
-
           <label>홈페이지 링크</label>
           <input
             name="homepageLink"
@@ -355,7 +354,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
           />
 
-          <label>공지사항</label>
+          <label>공지사항 <span className="text-red-500">*</span></label>
           <div className={inputStyle}>
             <Markdown
               content={information.notice}
@@ -364,7 +363,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           </div>
 
           <label>
-            이미지
+            이미지 <span className="text-red-500">*</span>
             <span className="text-xs float-right">
               {imagePreviewArr.length}/{fileMax}
             </span>
@@ -403,7 +402,7 @@ const ExStep1 = ({ information, changeInformation }) => {
 
         {/* 관람시간 요일 선택 */}
         <div className={`col-span-2`}>
-          <label>관람시간 정보</label>
+          <label>관람시간 정보 <span className="text-red-500">*</span></label>
           <div className={`${inputStyle} flex justify-between`}>
             {daysOfWeek.map((day) => (
               <div

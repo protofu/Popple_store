@@ -83,6 +83,7 @@ public class EventController {
 			@RequestParam(name = "eventImage") List<MultipartFile> images, 
 			@RequestParam(name = "eventPoster") MultipartFile poster) {
 		if (eventService.isMine(req.getExId(), user)) {
+			log.info("어 나야 수정하러 왔어:{}",req);
 			EventResponse event = eventService.updateEvent(user, images, poster, req);			
 			return ResponseEntity.ok(event);
 		} return ResponseEntity.ok(null);
