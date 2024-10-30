@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.popple.auth.domain.request.LoginRequest;
 import com.popple.auth.domain.request.SignUpRequest;
 import com.popple.auth.domain.request.UserDeleteRequest;
 import com.popple.auth.domain.request.UserEditRequest;
