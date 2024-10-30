@@ -6,6 +6,7 @@ import { eventAPI } from "../../api/services/Event";
 import {useNavigate } from "react-router-dom";
 
 export default function EventCardV2({
+  admin,
   dispatch,
   evId,
   slogun,
@@ -90,6 +91,7 @@ export default function EventCardV2({
   const [isModalOpen, setModalOpen] = useState(false);
 
   const eventDetail = {
+    admin,
     evId,
     slogun,
     title,
@@ -175,8 +177,8 @@ function EventDetailModal({ onClose, eventDetail, dispatch }) {
             {eventDetail.duration}
           </span>
         </div>
-        <div>
-          <img src={eventDetail.img} />
+        <div className="relative flex rounded-[12px] overflow-hidden aspect-[700/900] w-5/6 h-auto max-w-[345px] bg-black">
+          <img src={eventDetail.img} className="object-cover"/>
         </div>
         {eventDetail.description}
         <div className="">

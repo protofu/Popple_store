@@ -52,7 +52,6 @@ export default function EventPage() {
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
         <ExStepComplete exhiId={exhiId}/>
-        {/* <Button exhiId={exhiId} type="button" className="border" onClick={()=>navigate("/event-regist")}></Button> */}
         <div className="flex flex-wrap justify-center gap-10">
           {state.map((item, index) => (
               <EventCardV2 
