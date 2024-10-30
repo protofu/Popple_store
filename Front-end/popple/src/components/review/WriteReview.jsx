@@ -25,12 +25,12 @@ export default function WriteReviewModal({ isOpen, onClose }) {
 
       reader.readAsDataURL(file);
       reader.onload = () => {
-          console.log('File content:', reader.result); // 결과 확인
-          setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
-          setData((prevData) => ({
-            ...prevData,
-            image: file, // 파일 객체를 이미지 필드에 저장
-          }));
+        console.log('File content:', reader.result); // 결과 확인
+        setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
+        setData((prevData) => ({
+          ...prevData,
+          image: file, // 파일 객체를 이미지 필드에 저장
+        }));
       };
   };
 

@@ -9,7 +9,8 @@ import ReviewInDetail from "../components/review/ReviewInDetail";
 import Reservation from "../components/exhibition/Reservation";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { useParams } from "react-router-dom";
-import { TbCurrencyDollarOff } from "react-icons/tb";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { likeAPI } from "../api/services/Like";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -21,6 +22,25 @@ export default function DetailPage() {
   const [value, onChange] = useState(moment(curDate).format('YYYY-MM-DD'));
   const [selectTab, setSelectTab] = useState("이용정보");
   
+  const { id } = useParams();
+  
+  // 좋아요
+  const [isLiked, setIsLiked] = useState(false);
+  const handleClickLike = () => {
+    setIsLiked(prev => !prev);
+  }
+
+
+  useEffect(() => {
+    const likeData = async () => {
+      const res = await likeAPI.amILiked(id);
+      console.log("잉", res);
+      setIsLiked(res.data);
+    };
+    likeData();
+    console.log(isLiked);
+  }, [isLiked]);
+
   // json데이터 담을 state
   const [exhi, setExhi] = useState(null);
   const [chartData, setChartData] = useState(null);
@@ -28,7 +48,6 @@ export default function DetailPage() {
   // 모달 상태
   const [showReservationModal, setShowReservationModal] = useState(false);
 
-  const { id } = useParams();
 
   // 예시 데이터
   useEffect(() => {
@@ -36,7 +55,6 @@ export default function DetailPage() {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
         const resDetail = await exhibitionAPI.get(id);
-        console.log("디테일", resDetail);
         const resChartData = await axios.get('/jsons/visitors.json');
         setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
         setChartData(resChartData.data);
@@ -75,11 +93,6 @@ export default function DetailPage() {
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
 
-  const spanStyle = "w-[95px]";
-  const iconStyle = "w-fit flex items-center gap-4 font-bold";
-  const innerIconStyle = "size-[36px] mb-2 mx-auto";
-  const innerTextStyle = "text-[12px] text-center";
-
   return (
     <div className="mt-10 h-full">
       <h1 className="text-2xl m-10 font-bold">{exhi.exhibitionName}</h1>
@@ -111,12 +124,17 @@ export default function DetailPage() {
               </h1>
             </div>
           </div>
-          <div className="mt-8 border-b-2 border-[#868686]">
+          <div className="mt-10 border-b-2 border-[#868686] flex justify-between">
             <nav className="flex pb-2 ml-4">
               <div className={tabStyle} onClick={() => handleTab("이용정보")}>이용정보</div>
               <div className={tabStyle} onClick={() => handleTab("리뷰")}>리뷰</div>
               <div className={tabStyle} onClick={() => handleTab("EVENT")}>EVENT</div>
             </nav>
+            <div className="flex gap-4 mr-5 mb-1">
+              <div onClick={() => handleClickLike()}>{isLiked ? <FaHeart className="text-red-500 text-[32px]"/> : <FaRegHeart className="text-red-500 text-[32px]"/>}</div>
+              <div>구독</div>
+              <div>알람설정</div>
+            </div>
           </div>
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}
