@@ -5,5 +5,6 @@ export const eventAPI = {
   getAll :  () => api.get("/event"),
   getEvent : (id) => api.get(`/event/${id}`),
   delete : (data) => api.delete(`/event/delete/${data}`),
-  update : (data) => api.patch("/event/update",data)
+  update : (data) => api.patch("/event/update",data),
+  isMine : (data) => api.get("/event/is", data)
 }
