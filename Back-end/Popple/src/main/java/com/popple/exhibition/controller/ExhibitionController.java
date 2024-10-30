@@ -1,7 +1,6 @@
 package com.popple.exhibition.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,17 +105,17 @@ public class ExhibitionController {
 
 	// 전제 조회
 	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 반환합니다.")
-	@GetMapping("")
-	public ResponseEntity<List<ExhibitionResponse>> getAllExhibition(){
-		List<ExhibitionResponse> exhibitionList = exService.getAllExhibition();
+	@GetMapping("/{id}")
+	public ResponseEntity<List<ExhibitionResponse>> getAllExhibition(@PathVariable(value = "id", required = false) Long id){
+		List<ExhibitionResponse> exhibitionList = exService.getAllExhibition(id);
 		return ResponseEntity.ok(exhibitionList);
 	}
 	
 	// 특정 조회
 	@Operation(summary = "특정 팝업 or 전시 조회(디테일)", description = "특정 팝업 or 전시(디테일)를 반환합니다.")
-	@GetMapping("/{id}")
+	@GetMapping("/detail/{id}")
 	public ResponseEntity<ExhibitionResponse> getExhibitionById(Long id) {
-		ExhibitionResponse exhibitionResponse = exService.getAllExhibitionById(id);
+		ExhibitionResponse exhibitionResponse = exService.getExhibitionById(id);
 		return ResponseEntity.ok(exhibitionResponse);
 	}
 	

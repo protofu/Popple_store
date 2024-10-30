@@ -15,6 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private String uploadPath;
 	@Value("${spring.upload.event_poster_location}")
 	private String eventPosterPath;
+	@Value("${spring.upload.image_location}")
+	private String imagePath;
+	@Value("${spring.upload.poster_location}")
+	private String posterPath;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -31,6 +35,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry
 		.addResourceHandler("/review_image/**")
 		.addResourceLocations("file:"+uploadPath + "/");
+		registry
+		.addResourceHandler("/image/**")
+		.addResourceLocations("file:"+imagePath + "/");
+		registry
+		.addResourceHandler("/poster/**")
+		.addResourceLocations("file:"+posterPath + "/");
 		registry
 		.addResourceHandler("/event_poster_image/**")
 		.addResourceLocations("file:"+eventPosterPath + "/");

@@ -12,75 +12,19 @@ import PostCarousel from "../components/poster-card/PostCarousel";
 import PostCard from "../components/poster-card/PostCard";
 import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
+import { exhibitionAPI } from "../api/services/Exhibition";
+
+function dateToString(arr) {
+  const [y,m,d] = arr;
+  return y+"."+m+"."+d;
+}
 
 export default function PopUpPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
-  // 팝업 더미 데이터
-  const popUp = [
-    {
-      img: eventImg,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg2,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg3,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg4,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg2,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg3,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg4,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg2,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg3,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg4,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }
-  ];
-  
+  const [popupData, setPopupData] = useState([]);
+  const [visitCountData, setVisitCountData] = useState([]);
+    
   const eventList = [{
     slogun: "DIALOGUE IN THE DARK",
     title: "어둠속의대화",
@@ -116,14 +60,17 @@ export default function PopUpPage() {
   // 현재 페이지에 따라 아이템 인덱스 계산
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = popUp.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = popupData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(popUp.length / itemsPerPage);
+  const totalPages = Math.ceil(popupData.length / itemsPerPage);
 
+  
   // 페이지 변경 함수
   const handlePageChange = (page) => {
     setCurrentPage(page);
   }
+  
+  
   useEffect(() => {
     const updateItemsPerPage = () => {
       const width = window.innerWidth;
@@ -135,6 +82,24 @@ export default function PopUpPage() {
         setItemsPerPage(12);
       }
     };
+    const getPopupList = async () => {
+      try {
+        const res = await exhibitionAPI.getlist(1); // 실제 API 엔드포인트로 수정하세요.
+        const today = new Date(); // 오늘 날짜 가져오기
+        const filtered = res.data.filter(item => {
+            const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+            return endAt > today; // 오늘보다 후인지 확인
+        });
+        const visitCountRes = res.data.sort((a, b) => b.visitCount - a.visitCount);
+        setPopupData(filtered); // 상태에 필터링된 데이터 설정
+        console.log(visitCountRes);
+        setVisitCountData(visitCountRes);
+        
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
+    };
+    getPopupList();
 
     updateItemsPerPage(); // 컴포넌트가 마운트될 때 실행
     window.addEventListener("resize", updateItemsPerPage); // 리사이즈 이벤트 리스너 추가
@@ -143,20 +108,24 @@ export default function PopUpPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, []);
+
   const titleStyle = "flex items-center w-full mt-10 mb-5 ml-0";
   const textStyle = "text-2xl ml-2 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
 
   return (
     <div className="w-full mx-auto mt-4">
-      <PostCarousel />
-
+      <div>
+        <h1 className={textStyle}>가장 많이 본 POP-UP</h1>
+        <PostCarousel items={visitCountData.slice(0,10)} />
+      </div>
       {/* 인기있는 POP-UP */}
       <div className={titleStyle}> 
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>인기있는 POP-UP</h1>
       </div>
-      <PosterSlide items={popUp}/>
+      {/* 상위 10개만 전달 */}
+      <PosterSlide items={popupData.slice(0, 10)}/>
 
       {/* EVENT */}
       <div className={titleStyle}>
@@ -180,10 +149,10 @@ export default function PopUpPage() {
           {currentItems.map((item, index) => (
             <PostCard
               key={index}
-              img={item.img}
-              title={item.title}
-              addr={item.addr}
-              duration={item.duration}
+              img={item.savedImage} 
+              title={item.exhibitionName} 
+              addr={item.address} 
+              duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
               styles={"aspect-[2/3] w-[15rem] h-auto"}
             />
           ))}

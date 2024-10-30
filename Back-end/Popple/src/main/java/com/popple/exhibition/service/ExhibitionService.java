@@ -1,8 +1,7 @@
 package com.popple.exhibition.service;
 
-import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +15,8 @@ import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.entity.Image;
 import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.exhibition.repository.ImageRepository;
+import com.popple.exhibition.repository.PosterRepository;
 import com.popple.type.ExhiType;
 import com.popple.type.repository.ExhiTypeRepository;
 
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExhibitionService {
 	private final ExhibitionRepository exhibitionRepository;
 	private final ExhiTypeRepository exhiTypeRepository;
+	private final PosterRepository posterRepository;
 	private final ImageService imageService;
 	private final PosterService posterService;
 	private final UserRepository ur;
@@ -164,19 +166,41 @@ public class ExhibitionService {
 //		return convertToExhibitionResponse(exhibition);
 //	}
 	
-	// 팝업/전시 전체 조회
+	
+	// 팝업/전시 전체 조회 - 모든 전시를 조회
 	public List<ExhibitionResponse> getAllExhibition() {
 		List<Exhibition> exhibitions = exhibitionRepository.findAll();
-		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환
+		
 		return exhibitions.stream()
-				.map(this::entityToResponse)
+				.map(e -> {
+					Optional<String> savedName = posterRepository.findFirstByExhibition(e.getId());
+					return entityToResponse(e, savedName.get());
+				})
+//				.map(this::entityToResponse)
+				.collect(Collectors.toList());
+	}
+	
+	// 팝업/전시 선택 전체 조회
+	public List<ExhibitionResponse> getAllExhibition(Long id) {
+		log.info("타입으로 리스트 조회 : {}", id);
+		ExhiType type = exhiTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 타입 요청입니다."));
+		List<Exhibition> exhibitions = exhibitionRepository.findAllByType(type);
+
+		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환	
+		return exhibitions.stream()
+				.map(e -> {
+					String savedName = posterRepository.findFirstByExhibition(e.getId()).orElse(null);
+					return entityToResponse(e, savedName);
+				})
 				.collect(Collectors.toList());
 	}
 	
 	// 특정 팝업 or 전시 조회(디테일)
-	public ExhibitionResponse getAllExhibitionById(Long id) {
+	public ExhibitionResponse getExhibitionById(Long id) {
 		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업 혹은 전시가 존재하지 않습니다."));
-		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(exhibition);
+		exhibition.setVisitCount(exhibition.getVisitCount()+1);
+		Exhibition savedExhibition = exhibitionRepository.save(exhibition);
+		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(savedExhibition);
 		return exhibitionResponse;
 	}
 
@@ -232,18 +256,20 @@ public class ExhibitionService {
 
 	// [조회에서 사용] Exhibition -> Response로 변환 메서드
 	// {{{{ 이미지 넣어야해 }}}}
-	private ExhibitionResponse entityToResponse(Exhibition exhibition) {
+	private ExhibitionResponse entityToResponse(Exhibition exhibition, String savedImage) {
 		return ExhibitionResponse.builder()
+				.id(exhibition.getId())
+				.typeId(exhibition.getType().getId())
 				.exhibitionName(exhibition.getExhibitionName())
 				.address(exhibition.getAddress())
 				.startAt(exhibition.getStartAt())
 				.endAt(exhibition.getEndAt())
+				.savedImage(savedImage)
+				.visitCount(exhibition.getVisitCount())
 				.build();
 	}
 
-
-
-
+	
 
     
 }

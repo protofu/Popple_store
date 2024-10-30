@@ -5,23 +5,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import "./styles/zIndex.css";
-import Img1 from "../../assets/img1.png";
-import Img2 from "../../assets/img2.png";
-import Img3 from "../../assets/img3.png";
-import Img4 from "../../assets/img4.png";
 
-export default function PostCarousel() {
-  const arr = [
-    { id: 1, title: Img1 },
-    { id: 2, title: Img2 },
-    { id: 3, title: Img3 },
-    { id: 4, title: Img4 },
-    { id: 5, title: Img1 },
-    { id: 6, title: Img2 },
-    { id: 7, title: Img3 },
-    { id: 8, title: Img4 },
-  ];
-
+export default function PostCarousel({ items }) {
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
@@ -44,7 +29,7 @@ export default function PostCarousel() {
         modules={[Pagination, Autoplay]}
         className="postCarouselSwiper mySwiper w-full"
       >
-        {arr.map((data) => (
+        {items.map((data) => (
           <SwiperSlide key={data.id} >
           {({ isActive, isPrev, isNext }) => (
             <PostMiniCard 

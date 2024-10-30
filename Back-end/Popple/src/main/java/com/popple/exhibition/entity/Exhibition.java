@@ -151,6 +151,11 @@ public class Exhibition {
 	@Column(nullable = false)
 	private boolean reserve = false;
 	
+	//예약여부
+	@Builder.Default
+	@Column(nullable = false)
+	private int visitCount = 0;
+	
 	//생성일자
 	@CreatedDate
 	@Column(name = "created_at", nullable = false)

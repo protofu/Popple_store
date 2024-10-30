@@ -40,4 +40,6 @@ public class ExhibitionResponse {
     private LocalDateTime createdAt;  // 전시 생성 시간
     private LocalDateTime updatedAt;  // 전시 업데이트 시간
     private boolean isDeleted;  // 삭제 여부
+    private String savedImage;
+    private int visitCount;
 }

@@ -8,6 +8,11 @@ import PostCard from "./PostCard";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
+function dateToString(arr) {
+  const [y,m,d] = arr;
+  return y+"."+m+"."+d;
+}
+
 export default function PosterSlide({ items }) {
   const [size, setSize] = useState(window.innerWidth);
   const [slidesPerView, setSlidesPerView] = useState(6);
@@ -38,7 +43,7 @@ export default function PosterSlide({ items }) {
         <Swiper
           loop
           slidesPerView={slidesPerView}
-          spaceBetween={0}
+          spaceBetween={5}
           centeredSlides={false}
           navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
           pagination={{
@@ -52,13 +57,13 @@ export default function PosterSlide({ items }) {
               <PostCard 
                 key={index}
                 id={index}
-                img={item.img} 
-                title={item.title} 
-                addr={item.addr} 
-                duration={item.duration}
+                img={item.savedImage} 
+                title={item.exhibitionName} 
+                addr={item.address} 
+                duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
                 styles={"w-full h-auto"}
               />
-          </SwiperSlide>
+            </SwiperSlide>
           ))}
         </Swiper>
       </div>
@@ -67,11 +72,3 @@ export default function PosterSlide({ items }) {
   );
 }
 
-PosterSlide.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    img: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    addr: PropTypes.string.isRequired,
-    duration: PropTypes.string.isRequired,
-  })).isRequired,
-};

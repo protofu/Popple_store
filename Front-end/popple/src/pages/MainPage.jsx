@@ -126,7 +126,7 @@ export default function MainPage() {
       </div>
       {/* 포스터 캐러셀 */}
       <div className={styles.carouselContainer}>
-        <PostCarousel />
+        {/* <PostCarousel /> */}
       </div>
       {/* 이벤트 섹션 */}
       <div className="mt-10">
