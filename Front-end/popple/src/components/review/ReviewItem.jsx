@@ -1,6 +1,6 @@
 import reviewImg from "../../assets/review-img.png";
 
-export default function ReviewItem({ review }) {
+export default function ReviewItem({ review, style }) {
   const createdAt = review.createdAt; // createdAt 배열
   
   // 배열에서 각 요소를 추출
@@ -15,7 +15,7 @@ export default function ReviewItem({ review }) {
   console.log(imageUrl);
 
   return (
-    <div className="grid grid-cols-[1fr_4fr] border-2 border-[#A4A4A4] rounded-[0.4rem] p-3 m-5 mb-1 h-[148px]">
+    <div className={`grid grid-cols-[1fr_4fr] border-2 border-[#A4A4A4] rounded-[0.4rem] p-3 m-5 mb-1 h-[148px] ${style}`}>
       <div className=" w-[150px] h-[120px]">
         { review.image?.savedName && 
           <img src={imageUrl} alt="리뷰이미지" className="h-full w-full border-2 border-[#A4A4A4] rounded-[0.8rem]" />

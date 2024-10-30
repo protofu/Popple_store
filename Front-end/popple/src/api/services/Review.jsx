@@ -5,5 +5,11 @@ export const reviewAPI = {
     writeReview: (data) => api.post(`/review`, data),
     // 리뷰 목록
     getReviewList: (id) => api.get(`/review/${id}`),
+    // 나의 리뷰 목록
+    getMyReviewList: () => api.get(`/review/my`),
+    // 나의 리뷰 삭제
+    deleteReview: (id) => api.delete(`/review/${id}`),
+    // 나의 리뷰 수정
+    modifyReview: (id, data) => api.patch(`/review/${id}`, data),
   };
   
