@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.popple.auth.domain.RoleEnum;
 import com.popple.auth.entity.User;
-import com.popple.company.entity.Company;
 
 import lombok.Data;
 import lombok.ToString;

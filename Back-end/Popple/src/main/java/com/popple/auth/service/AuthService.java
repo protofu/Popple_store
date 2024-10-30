@@ -7,11 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.popple.auth.domain.request.LoginRequest;
 import com.popple.auth.domain.request.SignUpRequest;
 import com.popple.auth.domain.request.UserDeleteRequest;
 import com.popple.auth.domain.request.UserEditRequest;
-import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.domain.response.SignUpResponse;
 import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;

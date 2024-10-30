@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mysql.cj.protocol.x.Ok;
 import com.popple.auth.entity.User;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
@@ -59,7 +58,7 @@ public class ReservationController {
 	
 	// 예약 취소
 	@Operation(summary = "예약 취소", description = "예약을 취소합니다.")
-	@PatchMapping("/cancel")
+	@PatchMapping("/cancel/{id}")
 	public ResponseEntity<ReservationResponse> cancel(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
 		ReservationResponse res = reservationService.cancelReserve(exId, user);
 		return ResponseEntity.ok(res);
@@ -67,8 +66,8 @@ public class ReservationController {
 	
 	// 방문 확인
 	@Operation(summary = "방문 확인", description = "예약을 확인 처리 합니다.")
-	@PatchMapping("/check")
-	public ResponseEntity<?> checkReserver(@RequestParam("id") Long exId, @AuthenticationPrincipal User user) {
+	@PatchMapping("/check/{id}")
+	public ResponseEntity<?> checkReserver(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
 		if (user == null) {
 			ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 		}
