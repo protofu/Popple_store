@@ -116,11 +116,11 @@ export default function ExhibitionRegistPage() {
       formData.append("exhibitionName", information.exhibitionName);
       formData.append("subTitle", information.subTitle);
       formData.append("detailDescription", information.detailDescription);
-      formData.append("address", information.address);
+      formData.append("address", information.address + " " + information.detailAddress);
       formData.append("notice", information.notice);
       formData.append("terms", information.terms);
       formData.append("homepageLink", information.homepageLink);
-      formData.append("instagramLink", information.instagramLink);
+      formData.append("instagramLink", "https://www.instagram.com/" + information.instagramLink.substring(1));
       formData.append("free", information.free);
       formData.append("park", information.constraints.park);
       formData.append("wifi", information.constraints.wifi);

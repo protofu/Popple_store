@@ -353,11 +353,11 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
           />
 
-          <label>인스타그램 링크</label>
+          <label>인스타그램 계정</label>
           <input
             name="instagramLink"
             className={inputStyle}
-            value={information.instagramLink || "https://"}
+            value={information.instagramLink || "@"}
             onChange={(e) => changeInformation(e)}
           />
 

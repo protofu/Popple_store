@@ -59,7 +59,7 @@ public class Exhibition {
 	private String subTitle;
 	
 	//상세설명
-	@Column(nullable = true)
+	@Column(nullable = true, length=2000)
 	private String detailDescription;
 	
 	//전시주소
@@ -145,6 +145,11 @@ public class Exhibition {
 	//토요일
 	@Column(nullable = false)
 	private String saturday;
+	
+	//예약여부
+	@Builder.Default
+	@Column(nullable = false)
+	private boolean reserve = false;
 	
 	//생성일자
 	@CreatedDate
