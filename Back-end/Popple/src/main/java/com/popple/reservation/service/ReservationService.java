@@ -62,7 +62,9 @@ public class ReservationService {
 	public List<ReserverResponse> getReserveList(Long id) {
 		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("유효하지 않은 팝업/전시 입니다."));
 		List<Reservation> reserverList = reservationRepository.findByExhibition(exhibition);
-		return reserverList.stream().map(reservation -> ReserverResponse.builder()
+		return reserverList.stream()
+				.filter(reservation -> reservation.getDeletedAt()==null) // 예약취소 안된 것(deletedAt)
+				.map(reservation -> ReserverResponse.builder()
 				.id(reservation.getId())
 				.reserverName(reservation.getUser().getName())
 				.reserveTime(reservation.getReservationDate())

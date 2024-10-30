@@ -91,7 +91,7 @@ public class ReviewController {
 		log.info("[Review] 리뷰 수정 : {}", id);
 		ReviewResponse res = reviewService.modifyReview(id, req, file, user);
 		if (res == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자신의 리뷰만 삭제 가능 합니다.");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("자신의 리뷰만 수정 가능 합니다.");
 		}
 		return ResponseEntity.ok().body(res);
 	}	

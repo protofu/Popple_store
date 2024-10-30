@@ -3,6 +3,7 @@ import Nav from '../pages/layouts/Nav_mypage';
 import { useLoginUserStore } from '../stores/LoginUserState';
 import LikeList from '../components/my-page/LikeList';
 import ReservationList from '../components/my-page/ReservationList';
+import MyReview from '../components/my-page/MyReview';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -59,7 +60,7 @@ export default function MyPage() {
   const contentMap = {
     "찜": <LikeList />,
     "예약 목록": <ReservationList />,
-    "방문 리뷰": '방문 리뷰 관련 내용',
+    "방문 리뷰": <MyReview />,
     "정보 수정": renderPasswordInput(),
     "탈퇴": renderPasswordInput(),
     "팝업/전시 목록": '팝업/전시 목록 관련 내용 (기업)',
