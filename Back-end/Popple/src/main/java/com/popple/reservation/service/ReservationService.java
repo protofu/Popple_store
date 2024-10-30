@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.popple.auth.entity.User;
-import com.popple.auth.repository.UserRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.reservation.domain.ReservationRequest;
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ExhibitionRepository exhibitionRepository;
-	private final UserRepository userRepository;
 	
 	// 예약
 	public ReservationResponse reserve(ReservationRequest request, User user) {

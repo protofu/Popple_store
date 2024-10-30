@@ -6,13 +6,13 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuthService {
 	private final UserAuthRepository userAuthRepository;
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final OAuth2Properties oAuth2Properties;
 	private final TokenUtils tokenUtils;
 	
@@ -103,12 +102,12 @@ public class OAuthService {
 		params.add("redirect_uri", client.getRedirectUri());
 		RestTemplate rt = new RestTemplate();
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
-		ResponseEntity<Map> responseEntity = rt.postForEntity(client.getTokenUri(), requestEntity, Map.class);
-		
-		if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
+		ResponseEntity<Map<String, Object>> responseEntity = rt.exchange(client.getTokenUri(), HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {});
+		Map<String, Object> tokenResponse = responseEntity.getBody();
+		if (!responseEntity.getStatusCode().is2xxSuccessful() || tokenResponse == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 정보를 가져올 수 없음");
 		}
-		return (String) responseEntity.getBody().get("access_token");
+		return (String) tokenResponse.get("access_token");
 	}
 	
 	private JsonNode generateOAuthUser(String accessToken, String provider) {
