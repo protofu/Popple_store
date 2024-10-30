@@ -3,6 +3,7 @@ package com.popple.event.domain;
 import java.time.LocalDate;
 
 import com.popple.event.entity.Event;
+import com.popple.exhibition.entity.Exhibition;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class EventResponse {
 	private String description; // ?
 	private LocalDate startAt; // 시작일
 	private LocalDate endAt; // 종료일
+	private Exhibition exhibition;
 	private String image;
 	
 	public static EventResponse toDTO(Event event) {
@@ -26,6 +28,7 @@ public class EventResponse {
 				.summary(event.getSummary())
 				.startAt(event.getStartAt())
 				.endAt(event.getEndAt())
+				.exhibition(event.getExhibition())
 				.build();
 	}
 	
@@ -37,6 +40,7 @@ public class EventResponse {
 				.summary(event.getSummary())
 				.startAt(event.getStartAt())
 				.endAt(event.getEndAt())
+				.exhibition(event.getExhibition())
 				.image(image)
 				.build();
 	}

@@ -3,21 +3,23 @@ import Vibrant from "node-vibrant";
 import PropTypes from "prop-types";
 import EventCard from "../EventCard";
 import { eventAPI } from "../../api/services/Event";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLoginUserStore } from "../../stores/LoginUserState";
+import { MdOutlineCancel } from "react-icons/md";
 
 export default function EventCardV2({
-  admin,
   dispatch,
   evId,
   slogun,
   title,
   duration,
   img,
+  usernickname,
   description,
 }) {
   const [palette, setPalette] = useState([]);
   const [textColor, setTextColor] = useState();
-  
+
   function corsProxy(url) {
     return `${url}`;
   }
@@ -91,12 +93,12 @@ export default function EventCardV2({
   const [isModalOpen, setModalOpen] = useState(false);
 
   const eventDetail = {
-    admin,
     evId,
     slogun,
     title,
     duration,
     img,
+    usernickname,
     description,
   };
   const handleModalOpen = () => {
@@ -114,7 +116,7 @@ export default function EventCardV2({
         style={{ backgroundColor: palette }}
         onClick={handleModalOpen}
       >
-        <img                        
+        <img
           src={img}
           alt="이벤트 이미지"
           className="w-2/5 h-full object-cover rounded-[12px] ml-auto"
@@ -124,19 +126,23 @@ export default function EventCardV2({
             backgroundColor: "black", // 투명한 부분을 검정색으로 채움
           }}
         />
-        <div className="absolute inset-0 flex flex-col justify-center items-start px-2" style={{ color: textColor }}>
+        <div
+          className="absolute inset-0 flex flex-col justify-center items-start px-2"
+          style={{ color: textColor }}
+        >
           <p className="text-sm">{slogun}</p>
           <h2 className="text-lg font-bold">{title}</h2>
           <p className="text-sm">{duration}</p>
         </div>
       </div>
-      {isModalOpen &&
+      {isModalOpen && (
         <EventDetailModal
           onClose={handleModalClose}
           eventDetail={eventDetail}
           dispatch={dispatch}
+          open={handleModalOpen}
         />
-      }
+      )}
     </div>
   );
 }
@@ -149,7 +155,9 @@ EventCardV2.propTypes = {
   img: PropTypes.string.isRequired, // 이미지 URL
 };
 
-function EventDetailModal({ onClose, eventDetail, dispatch }) {
+function EventDetailModal({ onClose, eventDetail, dispatch, open }) {
+  console.log(eventDetail);
+  const { loginUserNickname } = useLoginUserStore();
   const navigate = useNavigate();
 
   //이벤트 삭제 핸들러
@@ -162,30 +170,47 @@ function EventDetailModal({ onClose, eventDetail, dispatch }) {
       alert("삭제 불가");
     }
   };
+
   const handleNavi = () => {
-    navigate(`/event-update?id=${eventDetail.evId}`)
-  }
-  
-  
+    navigate(`/event-update?id=${eventDetail.evId}`);
+  };
+
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="flex flex-col items-center bg-white rounded-lg p-5 w-[70%] h-[80%]">
-        <div className="grid grid-cols-3 w-full text-2xl font-bold border-b-2 pb-2 mb-2">
-          <div className="inline" onClick={onClose}>닫기</div>
+    <div
+      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-auto "
+      onClick={onClose}
+    >
+      <div className="flex flex-col justify-evenly items-center bg-white rounded-lg p-5 w-[40%] h-auto ">
+        <div className="grid grid-cols-3 w-full text-2xl font-bold border-b-2 pb-2 mb-2 ">
+          <div className="inline"></div>
           <span className="text-center">{eventDetail.title}</span>
           <span className="mt-auto text-right text-sm">
             {eventDetail.duration}
           </span>
         </div>
-        <div className="relative flex rounded-[12px] overflow-hidden aspect-[700/900] w-5/6 h-auto max-w-[345px] bg-black">
-          <img src={eventDetail.img} className="object-cover"/>
+
+        <div className="relative flex rounded-[12px] overflow-hidden aspect-auto w-full h-[90%] max-w-[345px] bg-black">
+          <img src={eventDetail.img} className="object-cover" />
         </div>
+        <div className="mt-8">
         {eventDetail.description}
-        <div className="">
-          <button className="inline border" onClick={() => handleDelete()}>
-            삭제
-          </button>
-          <button className="border" onClick={handleNavi}>수정</button>
+        </div>
+
+        <div className="w-full mt-20">
+          {loginUserNickname === eventDetail.usernickname && (
+            <div className="flex justify-around">
+              <button
+                className="border rounded-lg p-2"
+                onClick={() => handleDelete()}
+              >
+                삭제
+              </button>
+              <span></span>
+              <button className="border rounded-lg p-2" onClick={handleNavi}>
+                수정
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

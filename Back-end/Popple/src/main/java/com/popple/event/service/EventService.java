@@ -119,4 +119,14 @@ public class EventService {
 		return res;
 	}
 
+	public boolean isMine(Long id, User user) {
+		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다."));
+		if(user.getId() == event.getExhibition().getUser().getId()) {
+			return true;
+		}else {
+			return true;
+		}
+		
+	}
+
 }

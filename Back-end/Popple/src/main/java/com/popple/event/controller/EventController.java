@@ -69,7 +69,9 @@ public class EventController {
 	@Operation(summary = "이벤트 삭제", description = "이벤트를 삭제합니다.")
 	@DeleteMapping("/delete/{id}")
 	public void deleteEvent(@PathVariable("id") Long id, @AuthenticationPrincipal User user ) {
-		eventService.deleteEvent(id, user);
+		if (eventService.isMine(id, user)) {
+			eventService.deleteEvent(id, user);			
+		}
 		return;
 	}
 	
@@ -81,8 +83,9 @@ public class EventController {
 			@AuthenticationPrincipal User user, 
 			@RequestParam(name = "eventImage") List<MultipartFile> images, 
 			@RequestParam(name = "eventPoster") MultipartFile poster) {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		EventResponse event = eventService.updateEvent(user, images, poster, req);
-		return ResponseEntity.ok(event);
+		if (eventService.isMine(req.getExId(), user)) {
+			EventResponse event = eventService.updateEvent(user, images, poster, req);			
+			return ResponseEntity.ok(event);
+		} return ResponseEntity.ok(null);
 	}
 }
