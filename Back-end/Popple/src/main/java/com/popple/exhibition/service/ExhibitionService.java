@@ -8,14 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.popple.auth.entity.User;
-import com.popple.auth.repository.UserRepository;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.entity.Exhibition;
-import com.popple.exhibition.entity.Image;
-import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
-import com.popple.exhibition.repository.ImageRepository;
 import com.popple.exhibition.repository.PosterRepository;
 import com.popple.type.ExhiType;
 import com.popple.type.repository.ExhiTypeRepository;
@@ -32,7 +28,6 @@ public class ExhibitionService {
 	private final PosterRepository posterRepository;
 	private final ImageService imageService;
 	private final PosterService posterService;
-	private final UserRepository ur;
 	
 	// 팝업/전시 생성
 	public ExhibitionResponse createExhibition(ExhibitionRequest req, List<MultipartFile> images, List<MultipartFile> posters, User user) {
@@ -79,9 +74,9 @@ public class ExhibitionService {
 	    exhibitionRepository.save(exhibition);
 	    
 	    // 이미지 저장하기
-	    List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image, exhibition)).collect(Collectors.toList());
+	    images.stream().map(image -> imageService.saveImage(image, exhibition)).collect(Collectors.toList());
 	    // 포스터 저장하기
-	    List<Poster> savePosters = posters.stream().map(poster -> posterService.savePoster(poster, exhibition)).collect(Collectors.toList());
+	    posters.stream().map(poster -> posterService.savePoster(poster, exhibition)).collect(Collectors.toList());
 
 	    // ExhibitionResponse 생성
 	    ExhibitionResponse response = convertToExhibitionResponse(exhibition);

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.popple.exhibition.entity.Image;
 import com.popple.exhibition.entity.Poster;
 
 @Component

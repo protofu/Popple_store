@@ -1,7 +1,6 @@
 package com.popple.event.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,7 +14,6 @@ import com.popple.event.domain.EventResponse;
 import com.popple.event.entity.Event;
 import com.popple.event.entity.EventImage;
 import com.popple.event.entity.EventPoster;
-import com.popple.event.respository.EventImageRepository;
 import com.popple.event.respository.EventPosterRepository;
 import com.popple.event.respository.EventRepository;
 import com.popple.exhibition.entity.Exhibition;
@@ -49,10 +47,10 @@ public class EventService {
 		eventRepo.save(event);
 
 		// 이미지 저장
-		List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event))
+		images.stream().map(image -> eventImageService.saveImage(image, event))
 				.collect(Collectors.toList());
 		// 포스터 저장
-		EventPoster savedPoster = eventPosterService.savePoster(poster, event);
+		eventPosterService.savePoster(poster, event);
 
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
@@ -107,12 +105,12 @@ public class EventService {
 			
 			if (images != null) {
 				prevImage.forEach(i -> eventImageService.deleteImage(i.getId()));
-				List<EventImage> savedImages = images.stream().map(image -> eventImageService.saveImage(image, event))
+				images.stream().map(image -> eventImageService.saveImage(image, event))
 						.collect(Collectors.toList());
 			}
 			if (poster != null) {
 				eventPosterService.deletePoster(prevPoster.getId());
-				EventPoster savedPoster = eventPosterService.savePoster(poster, event);
+				eventPosterService.savePoster(poster, event);
 			}
 		}
 		EventResponse res = EventResponse.toDTO(event);

@@ -7,7 +7,6 @@ import com.popple.event.entity.Event;
 import com.popple.event.entity.EventPoster;
 import com.popple.event.respository.EventPosterRepository;
 import com.popple.event.utils.EventPosterUtils;
-import com.popple.exhibition.entity.Poster;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

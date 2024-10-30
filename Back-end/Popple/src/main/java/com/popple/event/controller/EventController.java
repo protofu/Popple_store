@@ -20,7 +20,6 @@ import com.popple.auth.entity.User;
 import com.popple.event.domain.EventRequest;
 import com.popple.event.domain.EventResponse;
 import com.popple.event.service.EventService;
-import com.popple.exhibition.entity.Exhibition;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
