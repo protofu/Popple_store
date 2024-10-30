@@ -21,6 +21,8 @@ import HelpDetailPage from "../pages/HelpDetailPage";
 import EventRegister from "../pages/EventRegister";
 import ScrollToTop from "../components/common/ScrollToTop";
 import HelpCreate from "../pages/HelpCreate";
+import EventDetailPage from "../pages/EventDetailPage";
+import EventUpdate from "../components/exhibition/EventUpdate";
 
 
 
@@ -45,7 +47,9 @@ export default function Router() {
           <Route path="/my-page" element={<MyPage />} />
           {/* 고객센터, 이벤트 페이지 */}
           <Route path="/event" element={<EventPage />} />
+          <Route path="/event/detail/:id" element={<EventDetailPage/>}/>
           <Route path="/event-regist" element={<EventRegister/>}/>
+          <Route path="/event-update" element={<EventUpdate/>}/>
           <Route path="/help" element={<HelpServicePage />} />
           <Route path="/help/detail" element={<HelpDetailPage />} />
           <Route path="/help/create" element={<HelpCreate />} />

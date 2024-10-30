@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,7 +58,8 @@ public class EventController {
 	// 특정 이벤트 조회
 	@Operation(summary = "이벤트 상세 조회", description = "특정 이벤트를 조회합니다.")
 	@GetMapping("/{id}")
-	public ResponseEntity<EventResponse> getEvent(Long id) {
+	public ResponseEntity<EventResponse> getEvent(@PathVariable("id") Long id) {
+		log.info("이벤트 정보 조회:{}",id);
 		EventResponse event = eventService.getEvent(id);
 		return ResponseEntity.ok(event);
 
@@ -65,14 +67,14 @@ public class EventController {
 
 	// 이벤트 삭제
 	@Operation(summary = "이벤트 삭제", description = "이벤트를 삭제합니다.")
-	@DeleteMapping("/delete")
-	public void deleteEvent(Long id, @AuthenticationPrincipal User user ) {
+	@DeleteMapping("/delete/{id}")
+	public void deleteEvent(@PathVariable("id") Long id, @AuthenticationPrincipal User user ) {
 		eventService.deleteEvent(id, user);
 		return;
 	}
 	
 	//이벤트 수정
-	@Operation(summary = "이벤트 수정", description = "이벤트를 삭제합니다.")
+	@Operation(summary = "이벤트 수정", description = "이벤트를 수정합니다.")
 	@PatchMapping("/update")
 	public ResponseEntity<EventResponse> updateEvent(
 			Long id, @AuthenticationPrincipal User user, List<MultipartFile> images, MultipartFile poster){
