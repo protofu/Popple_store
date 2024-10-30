@@ -4,7 +4,7 @@ import Complete from "../common/Complete";
 export default function ExStepComplete({ exhiId }) {
     return (
         <div className="mt-10 h-full">
-            path, text, onClose
+            
             <Complete path={`/event-regist?id=${exhiId}`} text={"이벤트 등록"}/>
         </div>
     );

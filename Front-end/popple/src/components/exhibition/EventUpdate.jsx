@@ -10,7 +10,7 @@ export default function EventUpdate() {
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const evId = queryParams.get("id");
-  console.log("가져온 이벤트 id", evId)
+ 
 
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
@@ -54,7 +54,7 @@ export default function EventUpdate() {
         return [...prevPreviews, ...newPreviews];
       });
     });
-    setInfo(prev => ({ ...prev, eventImage: files }))
+    setInfo((prev) => ({ ...prev, eventImage: files }));
   };
 
   //파일 이미지 삭제
@@ -77,37 +77,61 @@ export default function EventUpdate() {
     reader.onload = () => {
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
     };
-    setInfo(prev => ({ ...prev, eventPoster: file }))
+    setInfo((prev) => ({ ...prev, eventPoster: file }));
   };
 
   const [eventData, setEventData] = useState({});
 
   //이벤트 정보 가져오자
-  const handleGet = async() => {
+  const handleGet = async () => {
     try {
-      const res = await eventAPI.getEvent(evId)
-      if(res.status === 200){
-        const {eventName, summary, description,startAt, endAt, eventPoster, eventImage} = res.data;
+      const res = await eventAPI.getEvent(evId);
+      if (res.status === 200) {
+        const {
+          eventName,
+          summary,
+          description,
+          startAt,
+          endAt,
+          eventPoster,
+          eventImage,
+        } = res.data;
         setEventData({
           eventName: eventName,
-          summary: summary, 
+          summary: summary,
           description: description,
           startAt: startAt,
           endAt: endAt,
           eventPoster: eventPoster,
-          eventImage: eventImage
+          eventImage: eventImage,
         });
       }
     } catch (error) {
       console.error(error);
     }
-  }
-  console.log(eventData);
+  };
+
+  
+  // //날짜 변환기
+  // const year = eventData.startAt[0];
+  // const month = eventData.startAt[1];
+  // const day = eventData.startAt[2];
+  // const start = `${year}-${month}-${day}`;
+  // console.log("시작일", start);
+
   //가져온 이벤트 정보 뿌리기
   useEffect(() => {
     handleGet();
   }, []);
 
+  useEffect(() => {
+    if (Object.keys(eventData).length > 0) {
+      setInfo((prev) => ({
+        ...prev,
+        ...eventData, // 가져온 데이터를 info에 반영
+      }));
+    }
+  }, [eventData]);
 
   //입력 정보
   const [info, setInfo] = useState({
@@ -120,20 +144,54 @@ export default function EventUpdate() {
     startAt: "",
     endAt: "",
   });
+  console.log(info)
   const navigate = useNavigate();
-  const ChangeInfo = (e) => {
+  const changeInformation = (e) => {
     const { name, type } = e.target;
     let { value } = e.target;
     const keys = name.split(".");
-  }
+
+    if (name === "endAt" || name === "startAt") {
+      const startAt = new Date(info.startAt);
+      const endAt = new Date(name === "endAt" ? value : info.endAt);
+      
+      if (endAt < startAt) {
+        alert("종료일은 시작일보다 빠를 수 없습니다.");
+        return;
+      }
+    }
+    if (keys.length === 1) {
+      setInfo({
+        ...info,
+        [name]: value,
+      });
+    } else if (keys.length === 2) {
+      setInfo({
+        ...info,
+        [keys[0]]: {
+          ...info[keys[0]],
+          [keys[1]]: value,
+        },
+      });
+    } else if (keys.length === 3) {
+      setInfo({
+        ...info,
+        [keys[0]]: {
+          ...info[keys[0]],
+          [keys[1]]: {
+            ...info[keys[0]][keys[1]],
+            [keys[2]]: value,
+          },
+        },
+      });
+    }
+  };
 
   //수정 핸들러
   const handleSubmit = async (event) => {
-
     try {
-
       event.preventDefault(); // 기본 폼 제출 방지
-      console.log("인포",info);
+      console.log("인포", info);
 
       const formData = new FormData();
 
@@ -147,7 +205,7 @@ export default function EventUpdate() {
           formData.append(`eventImage`, img);
         });
       }
-      formData.append("exId", info.exId);
+      formData.append("exId", Number(info.exId));
       formData.append("startAt", info.startAt);
       formData.append("endAt", info.endAt);
       formData.append("description", info.description);
@@ -155,29 +213,40 @@ export default function EventUpdate() {
       formData.append("eventName", info.eventName);
 
       const res = await eventAPI.update(formData);
-      console.log(formData)
+      console.log(formData);
       console.log(res.status);
       if (res.status === 200 || res.status === 204) {
         alert("이벤트가 수정되었습니다.");
-        navigate('/')
+        navigate("/");
       }
+      
     } catch (error) {
-      alert("이벤트 등록에 실패하였습니다.");
+      alert("이벤트 수정에 실패하였습니다.");
       console.error("오류 발생:" + error);
     }
+    setInfo({});
   };
 
   // 마크다운 입력 핸들러
   const handleMarkDown = (name, value) => {
-    setInfo(prev => ({ ...prev, [name]: value }));
+    setInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-   //날짜 지정 (오늘날짜)
-   const today = new Date().toISOString().split("T")[0];
+  //날짜 지정 (오늘날짜)
+  const today = new Date().toISOString().split("T")[0];
 
+
+  // 날짜값 변환해서 value값에 넣기 위한 함수
+  const dateToInputValue = (dateArr) => {
+    if (dateArr.length == 3) {
+      const [y, m, d] = dateArr;
+      return y+"-"+m+"-"+d;
+    } return dateArr;
+    
+  }
   return (
     <>
-      <p className="text-lg mb-2 mt-10 ">팝업/전시 등록</p>
+      <p className="text-lg mb-2 mt-10 ">팝업/전시 수정</p>
       <hr className="w-full" />
       <div className="mt-2">이벤트 정보</div>
 
@@ -188,8 +257,8 @@ export default function EventUpdate() {
           </label>
           <input
             name="eventName"
-            value={eventData.eventName}
-            onChange={(e) => setInfo({ ...info, eventName: e.target.value })}
+            value={info.eventName}
+            onChange={(e) => changeInformation(e)}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
           <label className="text-sm" htmlFor="1">
@@ -197,8 +266,8 @@ export default function EventUpdate() {
           </label>
           <textarea
             name="summary"
-            onChange={(e) => setInfo({ ...info, summary: e.target.value })}
-            value={eventData.summary}
+            onChange={(e) => changeInformation(e)}
+            value={info.summary}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
           <label className="text-sm" htmlFor="1">
@@ -206,8 +275,8 @@ export default function EventUpdate() {
           </label>
           <input
             name="description"
-            onChange={(e) => setInfo({ ...info, description: e.target.value })}
-            value={eventData.description}
+            onChange={(e) => changeInformation(e)}
+            value={info.description}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
           {/* <div>
@@ -224,8 +293,8 @@ export default function EventUpdate() {
               <input
                 name="startAt"
                 type="date"
-                value={eventData.startAt}
-                onChange={(e) => setInfo({ ...info, startAt: e.target.value })}
+                onChange={(e) => changeInformation(e)}
+                value={dateToInputValue(info.startAt)}
                 className="bg-gray-50 border rounded-lg p-2.5 text-xs"
                 required
                 placeholder="시작일"
@@ -239,8 +308,8 @@ export default function EventUpdate() {
               </label>
               <input
                 name="endAt"
-                onChange={(e) => setInfo({ ...info, endAt: e.target.value })}
-                value={eventData.endAt}
+                onChange={(e) => changeInformation(e)}
+                value={dateToInputValue(info.endAt)}
                 type="date"
                 className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
                 required
@@ -252,7 +321,7 @@ export default function EventUpdate() {
         </div>
         <div className="grid grid-cols-2 gap-x-20 gap-y-10 my-10">
           <div>
-            <label htmlFor="poster" className="text-sm">
+            <label htmlFor="eventPoster" className="text-sm">
               포스터
             </label>
             <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
@@ -271,13 +340,14 @@ export default function EventUpdate() {
             </label>
           </div>
           <div>
-            <label htmlFor="detailImage" className="text-sm">
+            <label htmlFor="eventImage" className="text-sm">
               상세 이미지
             </label>
             <div className="h-full">
               <label
-                className={`preview ${isActive ? "active" : " "
-                  } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
+                className={`preview ${
+                  isActive ? "active" : " "
+                } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
                 onDragEnter={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
@@ -308,11 +378,10 @@ export default function EventUpdate() {
             </div>
           </div>
           <button type="submit" className="border p-3" onClick={handleSubmit}>
-            등록
+            완료
           </button>
         </div>
       </div>
     </>
-     
   );
 }
