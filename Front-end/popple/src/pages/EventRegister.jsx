@@ -141,63 +141,75 @@ export default function EventRegister() {
 
       <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
         <div className="grid grid-cols-2 gap-x-20 gap-y-10">
-          <label className="text-sm" htmlFor="1">
-            이벤트명 <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="eventName"
-            value={info.eventName}
-            onChange={(e) => setInfo({ ...info, eventName: e.target.value })}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          <label className="text-sm" htmlFor="1">
-            요약설명 <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="summary"
-            onChange={(e) => setInfo({ ...info, summary: e.target.value })}
-            value={info.summary}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          <label className="text-sm" htmlFor="1">
-            상세설명 <span className="text-red-500">*</span>
-          </label>
-          <div>
-            <Markdown
-              content={info.description}
-              contentChange={(e) => handleMarkDown("description", e)}
-            />
-          </div>
-          <div className="flex ">
-            <div className="flex flex-col mt-1">
-              <label className="text-sm" htmlFor="start">
-                이벤트 시작일<span className="text-red-500">*</span>
+          <div className="flex flex-col gap-10">
+            <div>
+              <label className="text-sm" htmlFor="1">
+                이벤트명 <span className="text-red-500">*</span>
               </label>
               <input
-                id="startAt"
-                type="date"
-                value={info.startAt}
-                onChange={(e) => setInfo({ ...info, startAt: e.target.value })}
-                className="bg-gray-50 border rounded-lg p-2.5 text-xs"
-                required
-                placeholder="시작일"
-                min={`${today}`}
+                id="eventName"
+                value={info.eventName}
+                onChange={(e) =>
+                  setInfo({ ...info, eventName: e.target.value })
+                }
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
               />
             </div>
-            <span className="ml-7 mr-7 mt-7">~</span>
-            <div className="flex flex-col mt-1">
-              <label className="text-sm" htmlFor="end">
-                이벤트 종료일<span className="text-red-500">*</span>
+            <div>
+              <label className="text-sm" htmlFor="1">
+                요약설명 <span className="text-red-500">*</span>
               </label>
-              <input
-                id="endAt"
-                onChange={(e) => setInfo({ ...info, endAt: e.target.value })}
-                value={info.endAt}
-                type="date"
-                className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
-                required
-                placeholder="종료일"
-                min={`${today}`}
+              <textarea
+                id="summary"
+                onChange={(e) => setInfo({ ...info, summary: e.target.value })}
+                value={info.summary}
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
+              />
+            </div>
+            <div className="flex ">
+              <div className="flex flex-col mt-1">
+                <label className="text-sm" htmlFor="start">
+                  이벤트 시작일<span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="startAt"
+                  type="date"
+                  value={info.startAt}
+                  onChange={(e) =>
+                    setInfo({ ...info, startAt: e.target.value })
+                  }
+                  className="bg-gray-50 border rounded-lg p-2.5 text-xs"
+                  required
+                  placeholder="시작일"
+                  min={`${today}`}
+                />
+              </div>
+              <span className="ml-7 mr-7 mt-7">~</span>
+              <div className="flex flex-col mt-1">
+                <label className="text-sm" htmlFor="end">
+                  이벤트 종료일<span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="endAt"
+                  onChange={(e) => setInfo({ ...info, endAt: e.target.value })}
+                  value={info.endAt}
+                  type="date"
+                  className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
+                  required
+                  placeholder="종료일"
+                  min={`${today}`}
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <label className="text-sm" htmlFor="1">
+              상세설명 <span className="text-red-500">*</span>
+            </label>
+            <div>
+              <Markdown
+                content={info.description}
+                contentChange={(e) => handleMarkDown("description", e)}
               />
             </div>
           </div>
@@ -260,9 +272,22 @@ export default function EventRegister() {
               </div>
             </div>
           </div>
-          <button type="submit" className="border p-3" onClick={handleSubmit}>
-            등록
-          </button>
+        </div>
+        <div>
+          <hr className="w-full mt-10" />
+          <div className="flex justify-between">
+            <button className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
+              onClick={()=>navigate("/")}
+            >
+              취소</button>
+            <button
+              type="submit"
+              className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
+              onClick={handleSubmit}
+            >
+              등록
+            </button>
+          </div>
         </div>
       </div>
     </>

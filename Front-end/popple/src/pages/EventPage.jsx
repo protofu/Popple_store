@@ -53,7 +53,7 @@ export default function EventPage() {
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
         <button className="p-5 border" onClick={()=>navigate('/event-regist')}>이벤트 등록 지름길</button>
         {/* <ExStepComplete exhiId={exhiId}/> */}
-        <div className="flex flex-wrap justify-center gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center">
           {state.map((item, index) => (
               <EventCardV2 
                 dispatch={dispatch} 
