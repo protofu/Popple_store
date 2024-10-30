@@ -100,15 +100,10 @@ export default function ExhibitionRegistPage() {
 
   // 팝업/전시 등록 완료 -> 메인으로 갈꺼냐, 이벤트 등록을 할거냐?
 
-  // information 값 확인용도
-  // useEffect(() => {
-  //     console.log(information);
-  // }, [information]);
 
   // 팝업/전시 등록 버튼 클릭 시 동작
   const registerExhibition = async () => {
     try {
-      console.log(information);
       // FormData 생성
       const formData = new FormData();
       // ExhibitionRequest 필드에 맞게 데이터 추가
@@ -155,15 +150,11 @@ export default function ExhibitionRegistPage() {
       const res = await exhibitionAPI.regist(formData);
           
       if (res.status === 201) {
-        console.log('생성 성공');
         setExhiId(res.data.id);
         setInformation({});
         setStep(prev => prev + 1);
-      } else {
-          console.error('실패');
       }
     } catch (error) {
-        console.error('Error occurred while submitting exhibition data:', error);
     }
   };
 

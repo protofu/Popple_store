@@ -95,8 +95,6 @@ public class EventService {
 	}
 
 	// 이벤트 수정
-	
-
 	public EventResponse updateEvent(User user, List<MultipartFile> images, MultipartFile poster, EventRequest req) {
 		Event event = eventRepo.findById(req.getExId()).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		List<EventImage> prevImage = eventImageService.findAll();

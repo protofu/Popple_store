@@ -27,8 +27,6 @@ export default function EventPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
-
-  console.log(state)
   const exhiId= 1;
   //추가될 때마다 
   useEffect(() => {
@@ -38,7 +36,6 @@ export default function EventPage() {
         const res = await eventAPI.getAll();
         dispatch({ type: "getList", value: res.data})
       } catch (error) {
-        console.error(error)
       }
     }
     getEvent();

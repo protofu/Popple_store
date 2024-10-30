@@ -35,7 +35,6 @@ const ExStep1 = ({ information, changeInformation }) => {
   const [address, setAddress] = useState({});
 
   useEffect(() => {
-    console.log(address);
     // 주소 선택 시 정보 변경
     if (address.roadAddress) {
       changeInformation({
@@ -62,14 +61,12 @@ const ExStep1 = ({ information, changeInformation }) => {
 
   const onPosterUpload = (e) => {
     const file = e.target.files[0];
-    console.log("Selected file:", file); // 파일 확인
     if (!file) return;
 
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
     reader.onload = () => {
-      console.log("File content:", reader.result); // 결과 확인
       setPosterPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
     };
     changeInformation({
@@ -78,7 +75,6 @@ const ExStep1 = ({ information, changeInformation }) => {
         value: file,
       },
     });
-    console.log("정보", information);
   };
 
   // 이미지 다중 업로드 관련 상태
@@ -94,7 +90,6 @@ const ExStep1 = ({ information, changeInformation }) => {
     e.preventDefault();
     setIsActive(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log("올라갈 파일:", files);
     onImageArrUpload(files);
   };
   const handleDragOver = (e) => {
@@ -107,7 +102,7 @@ const ExStep1 = ({ information, changeInformation }) => {
   const onImageArrUpload = (files) => {
     // 파일이 fileMax보다 많으면 이상이면 업로드 안함
     if (imagePreviewArr.length >= fileMax) {
-      console.log(`파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
+      alert(`파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
       setUploadPossible(false);
       return;
     }
@@ -220,7 +215,6 @@ const ExStep1 = ({ information, changeInformation }) => {
   //항목 상태 관리
   const handleDropdown = (e) => {
     const selectValue = e.target.value;
-    console.log(selectValue)
     changeInformation({
         target:{
             name:"typeId",

@@ -42,7 +42,6 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
     e.preventDefault();
     setIsActive(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log("올라갈 파일:", files);
     onUpload2(files);
   };
   const handleDragOver = (e) => {
@@ -63,14 +62,12 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
 
   const onUpload = (e) => {
     const file = e.target.files[0];
-    console.log("Selected file:", file); // 파일 확인
     if (!file) return;
 
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
     reader.onload = () => {
-      console.log("File content:", reader.result); // 결과 확인
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
     };
   };
@@ -79,7 +76,6 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
   const onUpload2 = (files) => {
     // 파일이 2개 이상이면 업로드 안함
     if (preview2.length >= fileMax) {
-      console.log("나 업로드 안할래");
       setUploadPossible(false);
       return false;
     }
@@ -99,7 +95,6 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
         return [...prevPreviews, ...newPreviews];
       });
     });
-    console.log("업로드 완료! 파일 개수", preview2.length);
   };
   
 
@@ -147,7 +142,6 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
     setAllOfPopUpData((prev) => {
       return { ...prev, [name]: value };
     });
-    console.log(e)
   };
 
   //전시기간 날짜 선택 관리

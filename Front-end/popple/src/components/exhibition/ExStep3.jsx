@@ -28,8 +28,6 @@ export default function ExStep3({ information }) {
 
     const [selectTab, setSelectTab] = useState("이용정보");
 
-    console.log("데이ㅏㅌ", information)
-
     const handleTab = (tab) => {
         setSelectTab(tab);
     }

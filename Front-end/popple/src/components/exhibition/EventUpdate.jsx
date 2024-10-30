@@ -34,7 +34,6 @@ export default function EventUpdate() {
   const [preview2, setPreview2] = useState([]);
   const onUpload2 = (files) => {
     if (preview2.length >= fileMax) {
-      console.log("나 업로드 안할래");
       setUploadPossible(false);
       return;
     }
@@ -107,17 +106,8 @@ export default function EventUpdate() {
         });
       }
     } catch (error) {
-      console.error(error);
     }
   };
-
-  
-  // //날짜 변환기
-  // const year = eventData.startAt[0];
-  // const month = eventData.startAt[1];
-  // const day = eventData.startAt[2];
-  // const start = `${year}-${month}-${day}`;
-  // console.log("시작일", start);
 
   //가져온 이벤트 정보 뿌리기
   useEffect(() => {
@@ -144,7 +134,7 @@ export default function EventUpdate() {
     startAt: "",
     endAt: "",
   });
-  console.log(info)
+  
   const navigate = useNavigate();
   const changeInformation = (e) => {
     const { name, type } = e.target;
@@ -191,8 +181,6 @@ export default function EventUpdate() {
   const handleSubmit = async (event) => {
     try {
       event.preventDefault(); // 기본 폼 제출 방지
-      console.log("인포", info);
-
       const formData = new FormData();
 
       // 포스터 파일 추가
@@ -213,8 +201,6 @@ export default function EventUpdate() {
       formData.append("eventName", info.eventName);
 
       const res = await eventAPI.update(formData);
-      console.log(formData);
-      console.log(res.status);
       if (res.status === 200 || res.status === 204) {
         alert("이벤트가 수정되었습니다.");
         navigate("/");
@@ -222,7 +208,7 @@ export default function EventUpdate() {
       
     } catch (error) {
       alert("이벤트 수정에 실패하였습니다.");
-      console.error("오류 발생:" + error);
+      
     }
     setInfo({});
   };

@@ -13,7 +13,6 @@ export default function EventRegister() {
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const exhibitionId = queryParams.get("id");
-  console.log("가져온 팝업 id", exhibitionId)
 
 
   //드래그앤 드랍 상태 관리
@@ -38,7 +37,6 @@ export default function EventRegister() {
   const [preview2, setPreview2] = useState([]);
   const onUpload2 = (files) => {
     if (preview2.length >= fileMax) {
-      console.log("나 업로드 안할래");
       setUploadPossible(false);
       return;
     }
@@ -101,11 +99,7 @@ export default function EventRegister() {
   const handleSubmit = async (event) => {
 
     try {
-
       event.preventDefault(); // 기본 폼 제출 방지
-      console.log("인포",info);
-      console.log("팝업아이디",info.exId)
-
       const formData = new FormData();
 
       // 포스터 파일 추가
@@ -126,14 +120,12 @@ export default function EventRegister() {
       formData.append("eventName", info.eventName);
 
       const res = await eventAPI.regist(formData);
-      console.log(res.status);
       if (res.status === 201) {
         alert("이벤트가 등록되었습니다.");
         navigate('/')
       }
     } catch (error) {
       alert("이벤트 등록에 실패하였습니다.");
-      console.error("오류 발생:" + error);
     }
   };
 

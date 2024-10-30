@@ -22,7 +22,6 @@ const ExStep2 = ({information, changeInformation}) => {
                 });
             }
         } catch (error) {
-            console.error(error)
         }
     }
 

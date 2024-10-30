@@ -34,7 +34,8 @@ public class EventPosterService {
 		eventPosterRepository.deleteById(id);
 	}
 	public EventPoster findPoster(Long id) {
-		EventPoster poster = eventPosterRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 포스터가 존재하지 않습니다"));
+		
+		EventPoster poster = eventPosterRepository.findByEventId(id).orElseThrow(() -> new IllegalArgumentException("해당 포스터가 존재하지 않습니다"));
 		return poster;
 	}
 }
