@@ -117,7 +117,7 @@ export default function PopUpPage() {
     <div className="w-full mx-auto mt-4">
       <div>
         <h1 className={textStyle}>가장 많이 본 POP-UP</h1>
-        <PostCarousel items={visitCountData.slice(0,10)} />
+        <PostCarousel items={visitCountData.slice(0,10)} max={10} />
       </div>
       {/* 인기있는 POP-UP */}
       <div className={titleStyle}> 

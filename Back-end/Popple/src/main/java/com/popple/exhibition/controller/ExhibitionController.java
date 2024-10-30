@@ -114,13 +114,13 @@ public class ExhibitionController {
 	// 특정 조회
 	@Operation(summary = "특정 팝업 or 전시 조회(디테일)", description = "특정 팝업 or 전시(디테일)를 반환합니다.")
 	@GetMapping("/detail/{id}")
-	public ResponseEntity<ExhibitionResponse> getExhibitionById(Long id) {
+	public ResponseEntity<ExhibitionResponse> getExhibitionById(@PathVariable("id") Long id) {
 		ExhibitionResponse exhibitionResponse = exService.getExhibitionById(id);
 		return ResponseEntity.ok(exhibitionResponse);
 	}
 	
 	// 자신이 작성한 팝업/전시 목록 불러오기
-	@Operation(summary = "특정 팝업 or 전시 조회(디테일)", description = "특정 팝업 or 전시(디테일)를 반환합니다.")
+	@Operation(summary = "내가 만든 팝업 or 전시 리스트 조회", description = "내가 만든 팝업 or 전시 리스트 조회 결과를 반환합니다.")
 	@GetMapping("/my-exhibition")
 	public ResponseEntity<List<ExhibitionResponse>> getExhibitionByUser(@AuthenticationPrincipal User user) {
 		List<ExhibitionResponse> exhibitionList = exService.getAllExhibitionByUser(user);

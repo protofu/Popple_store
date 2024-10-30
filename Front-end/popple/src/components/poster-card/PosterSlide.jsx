@@ -40,32 +40,34 @@ export default function PosterSlide({ items }) {
     <div className="flex flex-wrap w-full items-center">
       <IoArrowBackCircleOutline className="arrow-left arrow size-10 cursor-pointer text-zinc-600" />
       <div className="flex justify-center items-center w-[calc(100%-100px)]">
-        <Swiper
-          loop
-          slidesPerView={slidesPerView}
-          spaceBetween={5}
-          centeredSlides={false}
-          navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
-          pagination={{
-            dynamicBullets: true,
-            clickable: true,
-          }}
-          modules={[Navigation, Pagination]}
-        >
-          {items.map((item, index) => (
-            <SwiperSlide key={index}>
-              <PostCard 
-                key={index}
-                id={index}
-                img={item.savedImage} 
-                title={item.exhibitionName} 
-                addr={item.address} 
-                duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
-                styles={"w-full h-auto"}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        { items?.length > 0 &&
+          <Swiper
+            loop
+            slidesPerView={slidesPerView}
+            spaceBetween={5}
+            centeredSlides={false}
+            navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
+            pagination={{
+              dynamicBullets: true,
+              clickable: true,
+            }}
+            modules={[Navigation, Pagination]}
+          >
+            {items.map((item, index) => (
+              <SwiperSlide key={index}>
+                <PostCard 
+                  key={item.id}
+                  id={item.id}
+                  img={item.savedImage} 
+                  title={item.exhibitionName} 
+                  addr={item.address} 
+                  duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
+                  styles={"w-full h-auto"}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        }
       </div>
       <IoArrowForwardCircleOutline className="arrow-right arrow size-10 cursor-pointer text-zinc-600" />
     </div>

@@ -1,8 +1,5 @@
-// import { useParams } from "react-router-dom";
-import detailExam from "../assets/detail-exam.png";
 import Calendar from "react-calendar";
 import moment from "moment";
-// import momentTZ from "moment-timezone";
 import "react-calendar/dist/Calendar.css";
 import "./styles/calendar.css";
 import { useEffect, useState } from "react";
@@ -10,6 +7,13 @@ import UseInfo from "../components/exhi-details/UseInfo";
 import axios from "axios";
 import ReviewInDetail from "../components/review/ReviewInDetail";
 import Reservation from "../components/exhibition/Reservation";
+import { exhibitionAPI } from "../api/services/Exhibition";
+import { useParams } from "react-router-dom";
+
+function dateToString(arr) {
+  const [y,m,d] = arr;
+  return y+"."+m+"."+d;
+}
 
 export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
@@ -17,25 +21,23 @@ export default function DetailPage() {
   const [selectTab, setSelectTab] = useState("이용정보");
   
   // json데이터 담을 state
-  const [data, setData] = useState(null);
+  const [exhi, setExhi] = useState(null);
   const [chartData, setChartData] = useState(null);
 
   // 모달 상태
   const [showReservationModal, setShowReservationModal] = useState(false);
 
-  // const { id } = useParams();
-  // API 호출로 정보를 받아오고
-  // State 값으로 저장
+  const { id } = useParams();
 
   // 예시 데이터
   useEffect(() => {
     const axiosData = async () => {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
-        const resDetail = await axios.get('/jsons/detail.json');
+        const resDetail = await exhibitionAPI.get(id);
+        console.log("디테일", resDetail);
         const resChartData = await axios.get('/jsons/visitors.json');
-        resDetail.data.poster = detailExam;
-        setData(resDetail.data); // 불러온 데이터를 상태에 저장
+        setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
         setChartData(resChartData.data);
       } catch (error) {
         console.error('Error fetching JSON data:', error);
@@ -45,7 +47,7 @@ export default function DetailPage() {
     axiosData(); // 비동기 함수 호출
   }, []);
 
-  if (!data) {
+  if (!exhi) {
     return <div>Loading...</div>; // 데이터 로딩 중 표시
   }
 
@@ -64,13 +66,17 @@ export default function DetailPage() {
   const openModal = () => setShowReservationModal(true);
   const closeModal = () => setShowReservationModal(false);
 
+  // 날짜
+  const startAt = dateToString(exhi.startAt);
+  const endAt = dateToString(exhi.endAt);
+
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
   
   return (
     <div className="mt-10 h-full">
-      <h1 className="text-2xl m-10">{data.exhibitionName}</h1>
+      <h1 className="text-2xl m-10">{exhi.exhibitionName}</h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
         <div className="col-span-5">
@@ -78,21 +84,20 @@ export default function DetailPage() {
           <div className="grid grid-cols-2">
             {/* 포스터 */}
             <div className="">
-              <img src={data.poster} alt="포스터 이미지" className="w-[70%] mx-auto" />
+              <img src={`http://localhost:8080/poster/${exhi.savedImage}`} alt="포스터 이미지" className="w-[70%] mx-auto" />
             </div>
             
             {/* 간략 내용 */}
             <div className="grid grid-cols-3 my-auto gap-14">
               <label htmlFor="location" className={infoGridStyle}>장소</label>
-              <h1 id="location" className={infoH1GridStyle}>{data.address}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.address}</h1>
               <label htmlFor="location" className={infoGridStyle}>기간</label>
-              <h1 id="location" className={infoH1GridStyle}>{data.duration}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{startAt + " - " + endAt}</h1>
               <label htmlFor="location" className={infoGridStyle}>관람연령</label>
-              <h1 id="location" className={infoH1GridStyle}>{data.grade}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.grade}</h1>
               <label htmlFor="location" className={infoGridStyle}>입장료</label>
-              <h1 id="location" className={infoH1GridStyle}>{data.fee} 원</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.fee} 원</h1>
               <label htmlFor="location" className={infoGridStyle}>주의사항</label>
-              <h1 id="location" className={infoH1GridStyle}>{data.address}</h1>
             </div>
           </div>
           <div className="mt-8 border-b-2 border-[#868686]">
@@ -103,7 +108,7 @@ export default function DetailPage() {
             </nav>
           </div>
           <div className="mt-4">
-            {selectTab === "이용정보" && <UseInfo data={data} chart={chartData} />}
+            {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
             {selectTab === "EVENT" && <span>3</span>}
           </div>
@@ -127,10 +132,11 @@ export default function DetailPage() {
             <p className="text-center text-white text-[1rem]">예약하기</p>
           </div>
           {showReservationModal && ( 
-            <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={data} onClose={closeModal}/>
+            <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={exhi} onClose={closeModal}/>
           )}
         </div>
       </div>
     </div>
   );
 };
+

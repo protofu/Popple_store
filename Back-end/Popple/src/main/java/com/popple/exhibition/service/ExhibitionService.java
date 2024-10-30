@@ -222,6 +222,7 @@ public class ExhibitionService {
 	
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
     public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition) {
+    	String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
         return ExhibitionResponse.builder()
                 .id(exhibition.getId())
                 .typeId(exhibition.getType().getId())
@@ -251,6 +252,7 @@ public class ExhibitionService {
                 .saturday(exhibition.getSaturday())
                 .startAt(exhibition.getStartAt())
                 .endAt(exhibition.getEndAt())
+                .savedImage(savedImage)
                 .build();
     }
 
