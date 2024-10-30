@@ -1,10 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,redis
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,redis
-.gradle
 .settings
 .vscode
 .classpath
 .project
+.gradle
+gradle */
 ### Java ###
 # Compiled class file
 *.class
