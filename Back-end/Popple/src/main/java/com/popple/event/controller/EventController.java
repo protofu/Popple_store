@@ -58,7 +58,8 @@ public class EventController {
 	// 특정 이벤트 조회
 	@Operation(summary = "이벤트 상세 조회", description = "특정 이벤트를 조회합니다.")
 	@GetMapping("/{id}")
-	public ResponseEntity<EventResponse> getEvent(Long id) {
+	public ResponseEntity<EventResponse> getEvent(@PathVariable("id") Long id) {
+		log.info("이벤트 정보 조회:{}",id);
 		EventResponse event = eventService.getEvent(id);
 		return ResponseEntity.ok(event);
 

@@ -11,15 +11,14 @@ const ExStep2 = ({information, changeInformation}) => {
     // 로그인한 기업 회원으로부터 정보 가져오기
     const getCompanyInfo = async(data) => {
         try {
-            console.log("data",data)
             const res = await companyAuthAPI.getInfo(data);
             if (res.status === 200) {
-                const { address, buisinessNumber, leader, tel } = res.data;
+                const {leader,buisinessNumber, tel,address } = res.data;
                 setCompanyInfo({ 
-                    companyName: address,
+                    companyName: leader,
                     businessNumber : buisinessNumber,
-                    contact : leader,
-                    companyAddress : tel
+                    contact : tel,
+                    companyAddress : address
                 });
             }
         } catch (error) {

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../../components/exhibition/FileCarousel";
 import { eventAPI } from "../../api/services/Event";
 import { useNavigate } from "react-router-dom";
+import { data } from "autoprefixer";
 export default function EventUpdate() {
   const fileMax = 5;
   // param으로 넘겨서
@@ -10,21 +11,6 @@ export default function EventUpdate() {
   // key값이 id 인 것의 value값을 가져옴
   const evId = queryParams.get("id");
   console.log("가져온 이벤트 id", evId)
-
-  const [eventData, setEventData] = useState({});
-
-  //이벤트 정보 가져오자
-  const handleGet = async() => {
-    try {
-      const res = await eventAPI.getEvent(evId);
-      console.log("가져온 데이터", res.data)
-      setEventData(res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  console.log(eventData)
 
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
@@ -94,6 +80,34 @@ export default function EventUpdate() {
     setInfo(prev => ({ ...prev, eventPoster: file }))
   };
 
+  const [eventData, setEventData] = useState({});
+
+  //이벤트 정보 가져오자
+  const handleGet = async() => {
+    try {
+      const res = await eventAPI.getEvent(evId)
+      if(res.status === 200){
+        const {eventName, summary, description,startAt, endAt, eventPoster, eventImage} = res.data;
+        setEventData({
+          eventName: eventName,
+          summary: summary, 
+          description: description,
+          startAt: startAt,
+          endAt: endAt,
+          eventPoster: eventPoster,
+          eventImage: eventImage
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  console.log(eventData);
+  //가져온 이벤트 정보 뿌리기
+  useEffect(() => {
+    handleGet();
+  }, []);
+
 
   //입력 정보
   const [info, setInfo] = useState({
@@ -107,6 +121,12 @@ export default function EventUpdate() {
     endAt: "",
   });
   const navigate = useNavigate();
+  const ChangeInfo = (e) => {
+    const { name, type } = e.target;
+    let { value } = e.target;
+    const keys = name.split(".");
+  }
+
   //수정 핸들러
   const handleSubmit = async (event) => {
 
@@ -167,8 +187,8 @@ export default function EventUpdate() {
             이벤트명 <span className="text-red-500">*</span>
           </label>
           <input
-            id="eventName"
-            value={info.eventName}
+            name="eventName"
+            value={eventData.eventName}
             onChange={(e) => setInfo({ ...info, eventName: e.target.value })}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
@@ -176,19 +196,18 @@ export default function EventUpdate() {
             요약설명 <span className="text-red-500">*</span>
           </label>
           <textarea
-            id="summary"
+            name="summary"
             onChange={(e) => setInfo({ ...info, summary: e.target.value })}
-            value={info.summary}
+            value={eventData.summary}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
           <label className="text-sm" htmlFor="1">
             상세설명 <span className="text-red-500">*</span>
           </label>
           <input
-            id="description"
-           
+            name="description"
             onChange={(e) => setInfo({ ...info, description: e.target.value })}
-            value={info.description}
+            value={eventData.description}
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
           />
           {/* <div>
@@ -203,9 +222,9 @@ export default function EventUpdate() {
                 이벤트 시작일<span className="text-red-500">*</span>
               </label>
               <input
-                id="startAt"
+                name="startAt"
                 type="date"
-                value={info.startAt}
+                value={eventData.startAt}
                 onChange={(e) => setInfo({ ...info, startAt: e.target.value })}
                 className="bg-gray-50 border rounded-lg p-2.5 text-xs"
                 required
@@ -219,9 +238,9 @@ export default function EventUpdate() {
                 이벤트 종료일<span className="text-red-500">*</span>
               </label>
               <input
-                id="endAt"
+                name="endAt"
                 onChange={(e) => setInfo({ ...info, endAt: e.target.value })}
-                value={info.endAt}
+                value={eventData.endAt}
                 type="date"
                 className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
                 required
@@ -238,7 +257,7 @@ export default function EventUpdate() {
             </label>
             <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
               <input
-                id="poster"
+                name="eventPoster"
                 className="hidden w-fit h-fit"
                 type="file"
                 onChange={onUpload}
@@ -266,7 +285,7 @@ export default function EventUpdate() {
               >
                 <input
                   type="file"
-                  id="detailImage"
+                  name="eventImage"
                   className="hidden"
                   multiple
                   onChange={onUpload2}
@@ -291,7 +310,6 @@ export default function EventUpdate() {
           <button type="submit" className="border p-3" onClick={handleSubmit}>
             등록
           </button>
-          <button onClick={handleGet}>가져오나 설마</button>
         </div>
       </div>
     </>
