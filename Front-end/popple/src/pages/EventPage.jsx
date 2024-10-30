@@ -27,22 +27,22 @@ export default function EventPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
-
-  console.log(state)
   const exhiId= 1;
+
   //추가될 때마다 
   useEffect(() => {
     //저장된 이벤트 가져오기
     const getEvent = async() => {
       try {
         const res = await eventAPI.getAll();
-        dispatch({ type: "getList", value: res.data})
+        dispatch({ type: "getList", value: res.data});
+        console.log(res.data)
       } catch (error) {
-        console.error(error)
       }
     }
     getEvent();
   }, []);
+  
   
 
   return (
@@ -52,7 +52,6 @@ export default function EventPage() {
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
         <ExStepComplete exhiId={exhiId}/>
-        {/* <Button exhiId={exhiId} type="button" className="border" onClick={()=>navigate("/event-regist")}></Button> */}
         <div className="flex flex-wrap justify-center gap-10">
           {state.map((item, index) => (
               <EventCardV2 

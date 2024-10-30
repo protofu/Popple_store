@@ -25,7 +25,6 @@ export default function CompanySignUpPage() {
   });
 
   useEffect(() => {
-    console.log("s",address);
     // 주소 선택 시 정보 변경
     if (address.roadAddress) {
       setAddress(address.roadAddress)
@@ -150,17 +149,13 @@ export default function CompanySignUpPage() {
   const onSubmit = async (data) => {
     try {
       data.sector = drop;
-      console.log("데이타", data);
       const res = await companyAuthAPI.create(data);
       alert("가입 성공");
       navigate("/login");
     } catch (error) {
-      console.error("가입 실패" + error);
       alert("가입 실패" + error.data || error.message);
     }
   };
-
-  console.log(watch())
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-2xl"> 기업 정보입력</h1>

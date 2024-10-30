@@ -28,8 +28,6 @@ export default function ExStep3({ information }) {
 
     const [selectTab, setSelectTab] = useState("이용정보");
 
-    console.log("데이ㅏㅌ", information)
-
     const handleTab = (tab) => {
         setSelectTab(tab);
     }
@@ -42,12 +40,7 @@ export default function ExStep3({ information }) {
     const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
     const infoH1GridStyle2 = "flex gap-1 text-[24px] my-auto text-popple";
     const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-
-    //이미지가 잘 불러와지나
-    console.log(information.poster)
-
-   
-
+    
     return (
         <div className="mt-10 h-full">
             <h1 className="text-2xl m-10">{information.exhibitionName}</h1>

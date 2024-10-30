@@ -77,8 +77,12 @@ public class EventController {
 	@Operation(summary = "이벤트 수정", description = "이벤트를 수정합니다.")
 	@PatchMapping("/update")
 	public ResponseEntity<EventResponse> updateEvent(
-			Long id, @AuthenticationPrincipal User user, List<MultipartFile> images, MultipartFile poster){
-		EventResponse event = eventService.updateEvent(id, user, images, poster);
+			EventRequest req,
+			@AuthenticationPrincipal User user, 
+			@RequestParam(name = "eventImage") List<MultipartFile> images, 
+			@RequestParam(name = "eventPoster") MultipartFile poster) {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		EventResponse event = eventService.updateEvent(user, images, poster, req);
 		return ResponseEntity.ok(event);
 	}
 }

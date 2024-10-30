@@ -6,6 +6,7 @@ import { eventAPI } from "../../api/services/Event";
 import {useNavigate } from "react-router-dom";
 
 export default function EventCardV2({
+  admin,
   dispatch,
   evId,
   slogun,
@@ -58,7 +59,6 @@ export default function EventCardV2({
     const brightness = r * 0.299 + g * 0.587 + b * 0.114;
 
     // 밝기가 128보다 크면 어두운 색상, 그렇지 않으면 밝은 색상을 반환
-    console.log(brightness);
     return brightness < 128 ? "#ffffff" : "#000000"; // 어두운 텍스트는 검정색, 밝은 텍스트는 흰색
   }
 
@@ -91,6 +91,7 @@ export default function EventCardV2({
   const [isModalOpen, setModalOpen] = useState(false);
 
   const eventDetail = {
+    admin,
     evId,
     slogun,
     title,
@@ -109,7 +110,7 @@ export default function EventCardV2({
   return (
     <div>
       <div
-        className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-[345px] h-auto max-w-[345px] bg-black`}
+        className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-[345px] h-auto max-w-[345px] bg-black  hover:cursor-pointer`}
         style={{ backgroundColor: palette }}
         onClick={handleModalOpen}
       >
@@ -150,17 +151,14 @@ EventCardV2.propTypes = {
 
 function EventDetailModal({ onClose, eventDetail, dispatch }) {
   const navigate = useNavigate();
-  console.log("이벤트디테일", eventDetail);
 
   //이벤트 삭제 핸들러
   const handleDelete = async () => {
     try {
       const res = await eventAPI.delete(eventDetail.evId);
-      console.log("res.data", res);
       alert("삭제 완료");
       dispatch({ type: "deleteEvent", value: eventDetail.evId });
     } catch (error) {
-      console.error(error);
       alert("삭제 불가");
     }
   };
@@ -179,8 +177,8 @@ function EventDetailModal({ onClose, eventDetail, dispatch }) {
             {eventDetail.duration}
           </span>
         </div>
-        <div>
-          <img src={eventDetail.img} />
+        <div className="relative flex rounded-[12px] overflow-hidden aspect-[700/900] w-5/6 h-auto max-w-[345px] bg-black">
+          <img src={eventDetail.img} className="object-cover"/>
         </div>
         {eventDetail.description}
         <div className="">

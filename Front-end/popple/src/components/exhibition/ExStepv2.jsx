@@ -89,30 +89,11 @@ export default function ExStepv2() {
   };
  
   useEffect(() => {
-    console.log(information);
+    
   }, [information]);
 
-  const registerExhibition = () => {
-    console.log(information);
-    // information data를 형식에 맞게 formData로 변환해서 요청 보내야됨. (multipart/formData);
-    // axios.post('/api/exhibition', information)
-    //     .then((res) => {
-    //         console.log(res);
-    //         if(res.status === 201) {
-    //             alert("이벤트 등록이 완료되었습니다.");
-    //             setStep((prevStep) => prevStep + 1);
-    //         })
-    //     .catch((err) => {
-    //         console.error(err);
-    //     });
-  };
-
-  // const handleNavigate = () => {
-  //   navigate('/event-regist');
-  // }
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
-    console.log("데이터", data);
 
     const formData = new FormData();
     formData.append("userId", data.userId);
@@ -127,7 +108,6 @@ export default function ExStepv2() {
       }
     } catch (error) {
       alert("등록 실패");
-      console.log(error.message);
     }
   };
   return (

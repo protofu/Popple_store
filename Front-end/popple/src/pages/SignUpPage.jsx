@@ -33,7 +33,6 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
               return "중복된 이메일입니다.";
             }
           } catch (error) {
-            console.error(error)
           }
         },
         pattern: {
@@ -101,7 +100,6 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
               return "중복된 닉네임입니다.";
             }
           } catch (error) {
-            console.error(error)
           }
         },
         pattern: {
@@ -147,7 +145,6 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
       alert("가입 성공");
       navigate("/login");
     } catch (error) {
-      console.error("가입 실패" + error);
       alert("가입 실패" + error.message);
     }
   };

@@ -1,8 +1,6 @@
 
 export default function ExStep3Info({information}) {
 
-
-    console.log("데이터", information);
     const h1Style = "font-bold text-[1.25rem]";
     const innerInfo = "m-6";
 

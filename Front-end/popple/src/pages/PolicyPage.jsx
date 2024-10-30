@@ -64,7 +64,6 @@ export default function PolicyPage() {
 
   useEffect(() => {
     const allChecked = popple && location && info && marketing;
-    console.log("전체 체크",allChecked)
     if (allCheck === true) {
       setAllCheck(allChecked);
     } else {
