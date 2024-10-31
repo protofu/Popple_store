@@ -131,4 +131,9 @@ public class EventService {
 		
 	}
 
+	public List<EventResponse> getAllEventByExId(Long exId) {
+		List<Event> events = eventRepo.findAllByExhibitionId(exId);
+		return events.stream().map(EventResponse::toDTO).toList();
+	}
+
 }

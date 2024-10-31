@@ -1,55 +1,45 @@
 import { ResponsiveBar } from "@nivo/bar";
 
-export default function AgeChart({ chart }) {
-  const curYear = new Date().getFullYear();
-  let totalCount = 0;
+export default function AgeChart({ ageData, humanCount }) {
+  const result = [];
 
-  const barChart = chart.reduce((acc, item) => {
-    const birthYear = new Date(item.user.birth).getFullYear();
-    const age = curYear - birthYear;
-    totalCount += 1;
-    // Determine age group
-    let ageKey;
-    if (age < 10) {
-      ageKey = "10대";
-    } else if (age < 20) {
-      ageKey = "10대";
-    } else if (age < 30) {
-      ageKey = "20대";
-    } else if (age < 40) {
-      ageKey = "30대";
-    } else if (age < 50) {
-      ageKey = "40대";
-    } else {
-      ageKey = "50대~";
+  for (const [key, count] of Object.entries(ageData)) {
+    let ageGroup;
+
+    // key에 따라 변환
+    switch (key) {
+      case "Teens":
+        ageGroup = "10대";
+        break;
+      case "Twenties":
+        ageGroup = "20대";
+        break;
+      case "Thirties":
+        ageGroup = "30대";
+        break;
+      case "Forties":
+        ageGroup = "40대";
+        break;
+      case "Fifties_above":
+        ageGroup = "50대 이상";
+        break;
+      default:
+        ageGroup = key; // 기본값 설정
     }
 
-    // Initialize count
-    if (!acc[ageKey]) {
-      acc[ageKey] = 0;
-    }
+    // 백분율 계산
+    const value = humanCount > 0 ? ((count / humanCount) * 100).toFixed(2) : 0;
 
-    // Increment count
-    acc[ageKey] += 1;
-    return acc;
-  }, {});
+    // 결과에 추가
+    result.push({
+      key: ageGroup,
+      count,
+      value: parseFloat(value) // string이 아닌 숫자로 변환
+    });
+  }
 
-  
-  // Convert to array for Nivo
-  const barChartData = Object.entries(barChart).map(([key, value]) => ({
-    key : key,
-    ageGroup: key,
-    count: value,
-    value: Math.round((value / totalCount) * 100 * 100) / 100,
-  }));
-  // 눈금 최대치 구하기 위해 맥스값 계산
-  const maxValueItem = barChartData.reduce((max, item) => (item.value > max.value ? item : max), barChartData[0]);
-
-  // key 값 : value 만 담긴 배열
-  const keyValue = barChartData.reduce((acc, item) => {
-    acc[item.ageGroup] = item.value; // ageGroup과 value로 구성
-    return acc;
-  }, {});
+  return result;
+};
 
 
   const ageGroupColors = {
@@ -59,7 +49,7 @@ export default function AgeChart({ chart }) {
     "40대": "#d62728",
     "50대~": "#9467bd",
   };
-  
+  console.log(barChartData);
   
   return (
     <div className="w-full h-[200px] mx-auto">

@@ -15,6 +15,7 @@ import { FaLink } from "react-icons/fa6";
 import KakaoShareButton from "../components/common/KakaoShareButton";
 import CateButton from "../components/common/CateButton";
 import { reservationAPI } from "../api/services/Reservation";
+import DetailsEvent from "../components/exhi-details/DetailsEvent";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -194,7 +195,7 @@ export default function DetailPage() {
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
-            {selectTab === "EVENT" && <span>3</span>}
+            {selectTab === "EVENT" && <DetailsEvent />}
           </div>
         </div>
         {/* 캘린더 */}
@@ -210,7 +211,7 @@ export default function DetailPage() {
               tileContent={({ date, view }) => {
                 let html = [];
                 if (reservedDate.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
-                  html.push(<div className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
+                  html.push(<div key={moment(date).format("YYYY-MM-DD")} className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
                 }
                 return html;
               }}
@@ -220,7 +221,7 @@ export default function DetailPage() {
               <h1 className="m-2 text-popple-dark">{reservedDate ? "예약된 날짜": "선택된 날짜"}</h1>
               <div className="w-full text-center border-2 rounded-lg py-1">
                 {reservedDate ? (
-                  moment(reservedDate).format("YYYY년 MM월 DD일")
+                  moment(reservedDate[0]).format("YYYY년 MM월 DD일")
                 ) : (
                   value && moment(value).format("YYYY년 MM월 DD일")
                 )}

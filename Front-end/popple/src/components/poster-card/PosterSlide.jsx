@@ -5,7 +5,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { IoArrowForwardCircleOutline, IoArrowBackCircleOutline } from "react-icons/io5";
 import PostCard from "./PostCard";
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
 function dateToString(arr) {
@@ -14,6 +13,7 @@ function dateToString(arr) {
 }
 
 export default function PosterSlide({ items }) {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const [size, setSize] = useState(window.innerWidth);
   const [slidesPerView, setSlidesPerView] = useState(6);
   useEffect(() => {
@@ -23,17 +23,17 @@ export default function PosterSlide({ items }) {
   
   useEffect(() => {
     if (size >= 1650) {
-      setSlidesPerView(6)
+      setSlidesPerView(items?.length >= 6 ? 6 : items?.length)
     } else if (size >= 1400) {
-      setSlidesPerView(5)
+      setSlidesPerView(items?.length >= 5 ? 5 : items?.length)
     } else if (size >= 850) {
-      setSlidesPerView(4)
+      setSlidesPerView(items?.length >= 4 ? 4 : items?.length)
     } else if (size >= 660) {
-      setSlidesPerView(3)
+      setSlidesPerView(items?.length >= 3 ? 3 : items?.length)
     } else {
-      setSlidesPerView(2)
+      setSlidesPerView(items?.length >= 2 ? 2 : items?.length)
     }
-  }, [size]);
+  }, [size, items]);
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
@@ -44,7 +44,7 @@ export default function PosterSlide({ items }) {
           <Swiper
             loop
             slidesPerView={slidesPerView}
-            spaceBetween={5}
+            spaceBetween={10}
             centeredSlides={false}
             navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
             pagination={{
@@ -58,7 +58,7 @@ export default function PosterSlide({ items }) {
                 <PostCard 
                   key={item.id}
                   id={item.id}
-                  img={item.savedImage} 
+                  img={`${posterURL}${item.savedImage}`} 
                   title={item.exhibitionName} 
                   addr={item.address} 
                   duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}

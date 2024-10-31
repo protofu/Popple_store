@@ -1,6 +1,4 @@
 import MiniStatistics from "../charts/MiniStatistics";
-
-
 import {
   FaDog,
   FaUserSlash,
@@ -20,9 +18,10 @@ const escapeHtml = (text) => {
 };
 
 export default function UseInfo({ data, chart }) {
+  const imageURL = import.meta.env.VITE_EXHIBITION_IMAGE;
   const h1Style = "font-bold text-[1.25rem]";
   const innerInfo = "m-6";
-
+  console.log(data);
   function getMarkdownText(text) {
     // 이모지를 감지하기 위한 정규식
     const emojiRegex = /((?![\u{23}-\u1F6F3]([^\u{FE0F}]|$))\p{Emoji}(?:(?!\u{200D})\p{EComp}|(?=\u{200D})\u{200D}\p{Emoji})*)/gu;
@@ -30,9 +29,10 @@ export default function UseInfo({ data, chart }) {
     // 이모지 앞뒤로 공백 추가
     return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(emojiRegex, ' $1 ');
   }
+  console.log(`${imageURL}${data.descriptionImage}`);
   const sections = [
-    { title: "관람정보", content: "" },
-    { title: "공지사항", content: data.notice },
+    { title: "관람정보", content: <img src={`${imageURL}${data.descriptionImage}`} alt="설명 이미지" /> },
+    { title: "공지사항", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
     { title: "상세정보", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
     { title: "방문통계", content: <MiniStatistics chart={chart} /> },
   ];
@@ -93,7 +93,7 @@ function IconBox({ data }) {;
       </span>}
       {!data.camera &&  
       <span className={spanStyle}>
-        <div className={iconStyle}><LuCameraOff className={innerIconStyle}/><span className={innerTextStyle}>카메라 가능</span></div>
+        <div className={iconStyle}><LuCameraOff className={innerIconStyle}/><span className={innerTextStyle}>카메라 불가</span></div>
       </span>}
       {data.fee === "0" &&  
       <span className={spanStyle}>

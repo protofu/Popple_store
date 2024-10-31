@@ -14,8 +14,8 @@ export default function Complete({ path, text, onClose, title, description, caut
         {/* <FiUserCheck className="text-4xl text-popple-light size-48 mb-4" /> */}
         <img src="/user_check.png" alt="완료이미지" />
         <div className="mb-4">
-          <h1 className="text-2xl font-bold">{title}</h1>
-          <h1 className="text-lg">{description}</h1>
+          <h1 className="text-2xl font-bold mb-4">{title}</h1>
+          <h1 className="text-[16px]">{description}</h1>
         </div>
         <h2 className="text-sm text-gray-600">{caution}</h2>
       </div>

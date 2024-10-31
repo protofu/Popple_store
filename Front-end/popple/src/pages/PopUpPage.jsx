@@ -20,6 +20,7 @@ function dateToString(arr) {
 }
 
 export default function PopUpPage() {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [popupData, setPopupData] = useState([]);
@@ -150,7 +151,7 @@ export default function PopUpPage() {
             <PostCard
               key={index}
               id={item.id}
-              img={item.savedImage} 
+              img={`${posterURL}${item.savedImage}`} 
               title={item.exhibitionName} 
               addr={item.address} 
               duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}

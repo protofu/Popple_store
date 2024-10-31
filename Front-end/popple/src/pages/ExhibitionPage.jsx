@@ -17,10 +17,12 @@ import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
 import MapModal from "../components/map-view/MapModal";
+import { exhibitionAPI } from "../api/services/Exhibition";
 
 
 
 export default function ExhibitionPage() {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleModalToggle = () => {
@@ -29,6 +31,8 @@ export default function ExhibitionPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
+
+  const [exhibitionData, setExhibitionData] = useState([]);
   // 팝업 더미 데이터
   const popUp = [
     {
@@ -126,6 +130,18 @@ export default function ExhibitionPage() {
     img: eventImg6
   }];
 
+  function dateToString(arr) {
+    const [y,m,d] = arr;
+    return y+"."+m+"."+d;
+  }
+
+  // 전시 가져오기
+  const getExhibitions = async () => {
+    const res = await exhibitionAPI.getlist(2);
+    console.log(res.data);
+    setExhibitionData(res.data);
+  };
+
   // 현재 페이지에 따라 아이템 인덱스 계산
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -138,6 +154,7 @@ export default function ExhibitionPage() {
     setCurrentPage(page);
   }
   useEffect(() => {
+    getExhibitions();
     const updateItemsPerPage = () => {
       const width = window.innerWidth;
       if (width < 640) {
@@ -162,7 +179,7 @@ export default function ExhibitionPage() {
   const titleImgStyle = "inline w-[2.5rem]";
 
   return (
-    <>
+    <div className="w-full mx-auto">
       <ExhibitionCarousel />
       {/* 가장 많이 방문한 POP-UP */}
       <div className={titleStyle}> 
@@ -170,7 +187,7 @@ export default function ExhibitionPage() {
         <h1 className={textStyle}>인기 전시회</h1>
       </div>
       <div className="flex justify-center mx-auto">
-        <PosterSlide items={popUp}/>
+        <PosterSlide items={exhibitionData}/>
       </div>
       
       {/* EVENT */}
@@ -194,13 +211,14 @@ export default function ExhibitionPage() {
       {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>
       <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-          {currentItems.map((item, index) => (
+          {exhibitionData.map((item, index) => (
             <PostCard
-              key={index}
-              img={item.img}
-              title={item.title}
-              addr={item.addr}
-              duration={item.duration}
+              key={item.id}
+              id={item.id}
+              img={`${posterURL}${item.savedImage}`}
+              title={item.exhibitionName}
+              addr={item.address}
+              duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
               styles={"aspect-[2/3] w-[15rem] h-auto"}
             />
           ))}
@@ -220,6 +238,6 @@ export default function ExhibitionPage() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -12,6 +12,7 @@ import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.exhibition.repository.ImageRepository;
 import com.popple.exhibition.repository.PosterRepository;
 import com.popple.type.ExhiType;
 import com.popple.type.repository.ExhiTypeRepository;
@@ -26,6 +27,7 @@ public class ExhibitionService {
 	private final ExhibitionRepository exhibitionRepository;
 	private final ExhiTypeRepository exhiTypeRepository;
 	private final PosterRepository posterRepository;
+	private final ImageRepository imageRepository;
 	private final ImageService imageService;
 	private final PosterService posterService;
 	
@@ -168,7 +170,8 @@ public class ExhibitionService {
 		return exhibitions.stream()
 				.map(e -> {
 					Optional<String> savedName = posterRepository.findFirstByExhibition(e.getId());
-					return entityToResponse(e, savedName.get());
+					Optional<String> descriptionImage = imageRepository.findFirstByExhibition(e.getId());
+					return entityToResponse(e, savedName.get(), descriptionImage.get());
 				})
 //				.map(this::entityToResponse)
 				.collect(Collectors.toList());
@@ -184,7 +187,8 @@ public class ExhibitionService {
 		return exhibitions.stream()
 				.map(e -> {
 					String savedName = posterRepository.findFirstByExhibition(e.getId()).orElse(null);
-					return entityToResponse(e, savedName);
+					String descriptionImage = imageRepository.findFirstByExhibition(e.getId()).orElse(null);
+					return entityToResponse(e, savedName, descriptionImage);
 				})
 				.collect(Collectors.toList());
 	}
@@ -217,6 +221,7 @@ public class ExhibitionService {
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
     public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition) {
     	String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
+    	String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
         return ExhibitionResponse.builder()
                 .id(exhibition.getId())
                 .typeId(exhibition.getType().getId())
@@ -248,12 +253,13 @@ public class ExhibitionService {
                 .endAt(exhibition.getEndAt())
                 .savedImage(savedImage)
                 .reserve(exhibition.isReserve())
+                .descriptionImage(descriptionImage)
                 .build();
     }
 
 	// [조회에서 사용] Exhibition -> Response로 변환 메서드
 	// {{{{ 이미지 넣어야해 }}}}
-	private ExhibitionResponse entityToResponse(Exhibition exhibition, String savedImage) {
+	private ExhibitionResponse entityToResponse(Exhibition exhibition, String savedImage, String descriptionImage) {
 		return ExhibitionResponse.builder()
 				.id(exhibition.getId())
 				.typeId(exhibition.getType().getId())
@@ -264,6 +270,7 @@ public class ExhibitionService {
 				.savedImage(savedImage)
 				.visitCount(exhibition.getVisitCount())
 				.reserve(exhibition.isReserve())
+				.descriptionImage(descriptionImage)
 				.build();
 	}
 

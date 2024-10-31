@@ -21,7 +21,7 @@ export default function PostCard({ id, img, title, addr, duration, styles }) {
 
   return (
     <div className={`${styles} cursor-pointer`} onClick={() => handleNavigate(id)}>
-      <img src={img ? `http://localhost:8080/poster/${img}` : '/waiting_for_Image.png'} className="min-h-[275px] max-w-[200px] rounded-lg shadow-xl" alt="포스터이미지" />
+      <img src={img ? `${img}` : '/waiting_for_Image.png'} className="min-h-[275px] max-w-[200px] rounded-lg shadow-xl" alt="포스터이미지" />
       <div className="relative mt-2 max-w-[200px]">
         <p className="font-bold text-[1rem] my-1 min-h-[50px]">{title}</p>
         <p className="text-[0.8rem] text-[#4e4e4e]">{addr}</p>
