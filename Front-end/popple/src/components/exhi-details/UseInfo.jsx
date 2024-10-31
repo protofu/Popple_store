@@ -23,10 +23,17 @@ export default function UseInfo({ data, chart }) {
   const h1Style = "font-bold text-[1.25rem]";
   const innerInfo = "m-6";
 
+  function getMarkdownText(text) {
+    // 이모지를 감지하기 위한 정규식
+    const emojiRegex = /((?![\u{23}-\u1F6F3]([^\u{FE0F}]|$))\p{Emoji}(?:(?!\u{200D})\p{EComp}|(?=\u{200D})\u{200D}\p{Emoji})*)/gu;
+    
+    // 이모지 앞뒤로 공백 추가
+    return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(emojiRegex, ' $1 ');
+  }
   const sections = [
     { title: "관람정보", content: "" },
     { title: "공지사항", content: data.notice },
-    { title: "상세정보", content: <MDEditor.Markdown source={escapeHtml(data.detailDescription)} /> },
+    { title: "상세정보", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
     { title: "방문통계", content: <MiniStatistics chart={chart} /> },
   ];
   // 방문 통계

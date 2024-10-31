@@ -65,8 +65,7 @@ public class ExhibitionService {
 	            .saturday(req.getSaturday())
 	            .startAt(req.getStartAt())
 	            .endAt(req.getEndAt())
-//	            .images(savedImages)
-//	            .posters(savePosters)
+	            .reserve(req.isReserve())
 	            .build();
 	    
 	    
@@ -248,6 +247,7 @@ public class ExhibitionService {
                 .startAt(exhibition.getStartAt())
                 .endAt(exhibition.getEndAt())
                 .savedImage(savedImage)
+                .reserve(exhibition.isReserve())
                 .build();
     }
 
@@ -263,6 +263,7 @@ public class ExhibitionService {
 				.endAt(exhibition.getEndAt())
 				.savedImage(savedImage)
 				.visitCount(exhibition.getVisitCount())
+				.reserve(exhibition.isReserve())
 				.build();
 	}
 

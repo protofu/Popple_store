@@ -42,4 +42,5 @@ public class ExhibitionResponse {
     private boolean isDeleted;  // 삭제 여부
     private String savedImage;
     private int visitCount;
+    private boolean reserve;
 }

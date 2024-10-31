@@ -2,14 +2,14 @@ import { useEffect } from "react";
 
 export default function KakaoShareButton({ data }) {
 
-  // const resultUrl = "http://localhost:5173/pop-up/detail/2531";
-  const resultUrl = "https://www.naver.com";
+  
+  const resultUrl = window.location.href;
+  // const resultUrl = "https://www.naver.com";
 
   useEffect(() => {
     const loadKakaoSDK = () => {
       return new Promise((resolve, reject) => {
         if (window.Kakao && window.Kakao.isInitialized()) {
-          console.log("Kakao SDK가 이미 초기화되었습니다."); // 이미 초기화된 경우 메시지
           resolve(); // 초기화 완료
         } else {
           window.Kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);

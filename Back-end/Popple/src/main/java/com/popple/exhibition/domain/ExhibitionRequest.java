@@ -37,4 +37,5 @@ public class ExhibitionRequest {
 	private String saturday;
 	private LocalDate startAt;
 	private LocalDate endAt;
+	private boolean reserve;
 }

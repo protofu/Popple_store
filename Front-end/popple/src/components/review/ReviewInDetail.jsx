@@ -9,9 +9,12 @@ export default function ReviewInDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState(null);
   const { id } = useParams("id");
-
+  const [reviewReload, setReviewReload] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setReviewReload(prev => !prev);
+    setIsModalOpen(false);
+  }
 
   useEffect(() => {
     const getReview = async () => {
@@ -26,7 +29,7 @@ export default function ReviewInDetail() {
     };
 
     getReview();
-  }, [id]);
+  }, [id, reviewReload]);
 
   const h1Style = "font-bold text-[1.25rem]";
 

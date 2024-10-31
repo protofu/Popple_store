@@ -13,6 +13,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { likeAPI } from "../api/services/Like";
 import { FaLink } from "react-icons/fa6";
 import KakaoShareButton from "../components/common/KakaoShareButton";
+import CateButton from "../components/common/CateButton";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -115,13 +116,16 @@ export default function DetailPage() {
   const startAt = dateToString(exhi.startAt);
   const endAt = dateToString(exhi.endAt);
 
+
+  const type = exhi.typeId === 1 ? "팝업" : "전시";
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-
+  console.log(exhi);
   return (
     <div className="mt-10 h-full">
-      <h1 className="text-2xl m-10 font-bold">{exhi.exhibitionName}</h1>
+      <CateButton text={type} />
+      <h1 className="text-2xl m-3 font-bold">{exhi.exhibitionName} {exhi.reserve && <span className="text-[12px] text-white bg-popple-light rounded-[12px] px-2 py-1">예약 가능</span>} </h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
         <div className="col-span-5">
@@ -152,9 +156,9 @@ export default function DetailPage() {
           </div>
           <div className="mt-10 border-b-2 border-[#868686] flex justify-between items-end">
             <nav className="flex pb-2 ml-4">
-              <div className={tabStyle} onClick={() => handleTab("이용정보")}>이용정보</div>
-              <div className={tabStyle} onClick={() => handleTab("리뷰")}>리뷰</div>
-              <div className={tabStyle} onClick={() => handleTab("EVENT")}>EVENT</div>
+              <div className={`${tabStyle} ${selectTab === "이용정보" && 'font-bold border-b-2 border-popple-light text-popple-light'}`} onClick={() => handleTab("이용정보")}>이용정보</div>
+              <div className={`${tabStyle} ${selectTab === "리뷰" && 'font-bold border-b-2 border-popple-light text-popple-light'}`} onClick={() => handleTab("리뷰")}>리뷰</div>
+              <div className={`${tabStyle} ${selectTab === "EVENT" && 'font-bold border-b-2 border-popple-light text-popple-light'}`} onClick={() => handleTab("EVENT")}>EVENT</div>
             </nav>
             <div className="flex gap-4 mr-5 items-end pb-2">
               <div className="flex flex-col">
@@ -172,27 +176,32 @@ export default function DetailPage() {
           </div>
         </div>
         {/* 캘린더 */}
-        <div className="col-span-2 mx-auto">
-          <h1>예약하기</h1>
-          <Calendar 
-            onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
-            formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
-            calendarType="gregory"  // 그레고리를 통한 토요일 시작
-            value={value} // 선택된 value값 (default 오늘)
-            showNeighboringMonth={true} // 다음달 날짜도 보이게
-          /> 
-          <div className="text-gray-500 mt-4">
-            { value &&
-              moment(value).format("YYYY년 MM월 DD일")
-            }
+        {exhi.reserve &&
+          <div className="col-span-2 mx-auto">
+            {/* <h1>예약하기</h1> */}
+            <Calendar 
+              onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
+              formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
+              calendarType="gregory"  // 그레고리를 통한 토요일 시작
+              value={value} // 선택된 value값 (default 오늘)
+              showNeighboringMonth={true} // 다음달 날짜도 보이게
+            /> 
+            <div className="flex flex-col justify-center items-center text-gray-500 mt-4">
+              <h1 className="m-2 text-popple-dark">선택된 날짜</h1>
+              <div className="w-full text-center border-2 rounded-lg py-1">
+                {value &&
+                  moment(value).format("YYYY년 MM월 DD일")
+                }
+              </div>
+            </div>
+            <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
+              <p className="text-center text-white text-[1rem]">예약하기</p>
+            </div>
+            {showReservationModal && ( 
+              <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={exhi} onClose={closeModal}/>
+            )}
           </div>
-          <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
-            <p className="text-center text-white text-[1rem]">예약하기</p>
-          </div>
-          {showReservationModal && ( 
-            <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={exhi} onClose={closeModal}/>
-          )}
-        </div>
+        }
       </div>
     </div>
   );

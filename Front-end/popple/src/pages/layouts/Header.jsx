@@ -34,7 +34,7 @@ export default function Header() {
     setIsLoggedIn(false);
     setLoginUser(null);
     removeCookie("accessToken");
-    window.location.href='/';
+    window.location.reload("/");
     console.log("로그아웃");
   }
 
