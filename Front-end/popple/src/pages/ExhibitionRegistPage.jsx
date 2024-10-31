@@ -23,6 +23,7 @@ export default function ExhibitionRegistPage() {
       homepageLink: "", // 홈페이지 링크
       instagramLink: "", // 인스타그램 링크
       notice: "", // 공지사항
+      reserve: false,
       image: [], // 이미지
       terms: "", // 유효 기간/이용 조건
       openTime: {
@@ -124,6 +125,7 @@ export default function ExhibitionRegistPage() {
       formData.append("kids", information.constraints.kids);
       formData.append("food", information.constraints.food);
       formData.append("fee", information.fee || 0);
+      formData.append("reserve", information.reserve);
 
       // 요일별 오픈 시간 추가
       formData.append("sunday", `${information.openTime.sunday.open}-${information.openTime.sunday.close}`);
@@ -157,6 +159,10 @@ export default function ExhibitionRegistPage() {
     } catch (error) {
     }
   };
+  const handleAlert = () => {
+    alert("필수사항이 작성되지 않았습니다.")
+    return;
+  }
 
   return (
     <>
@@ -195,14 +201,19 @@ export default function ExhibitionRegistPage() {
             {step === 1 ? (
               // 1단계 하단
               <div className="flex justify-end">
-                { information.address &&  information.detailDescription?
+                { information.address &&  information.poster && information.image && information.startAt && information.endAt && information.exhibitionName && information.typeId && information.subTitle && information.openTime.friday?
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
                   onClick={() => setStep((step) => step + 1)}
                 >
                   다음
-                </button> : <>안돼</>
+                </button> : 
+                <button
+                  className="border rounded-lg p-3 mt-10"
+                  onClick={handleAlert}>
+                  다음
+                </button>
             }
             </div>
             ) : step === 2 ? (

@@ -39,6 +39,7 @@ export default function CompanySignUpPage() {
     setDrop(e.target.value);
   };
 
+  console.log("주소",address)
   //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
     {
@@ -93,7 +94,7 @@ export default function CompanySignUpPage() {
       name: "sector",
       label: "기업 업종",
       type: "text",
-      placeholder: "선택 또는 작성.", //드롭다운임
+      placeholder: "기업 업종 선택", //드롭다운임
       condition: { required: "기업업종은 필수값입니다.", maxLength: 255 },
     },
   ]);
@@ -242,7 +243,7 @@ export default function CompanySignUpPage() {
                             type={a.type}
                             id={a.name}
                             {...register(a.name, a.condition)}
-                            className={inputStyle}
+                            className="w-[232px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2"
                             placeholder={a.placeholder}
                             required={true}
                             value={address.roadAddress} // 주소 값을 상태로 설정
