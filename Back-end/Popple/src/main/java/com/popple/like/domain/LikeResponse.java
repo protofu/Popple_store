@@ -9,4 +9,5 @@ import lombok.Data;
 @Builder
 public class LikeResponse {
 	private Exhibition exhi;
+	private String posterSavedName;
 }

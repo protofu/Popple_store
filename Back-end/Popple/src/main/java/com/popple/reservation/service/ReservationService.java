@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.popple.auth.entity.User;
+import com.popple.auth.service.AuthService;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.reservation.domain.ReservationRequest;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final AuthService authService;
 	
 	// 예약
 	public ReservationResponse reserve(ReservationRequest request, User user) {
@@ -46,11 +48,15 @@ public class ReservationService {
 	// 자신이 예약한 리스트
 	public List<ReservationResponse> getAllReserve(User user) {
 		List<Reservation> reserveList = reservationRepository.findByUser(user);
-		List<ReservationResponse> resList = reserveList.stream().map(reserve -> ReservationResponse.builder()
+		List<ReservationResponse> resList = reserveList.stream()
+				.filter(reserve -> reserve.getDeletedAt() == null)		
+				.map(reserve -> ReservationResponse.builder()
 				.id(reserve.getId())
+				.exhibitionId(reserve.getExhibition().getId())
 				.exhibitionName(reserve.getExhibition().getExhibitionName())
+				.address(reserve.getExhibition().getAddress())
 				.reserver(reserve.getUser().getName())
-		        .reservationDate(reserve.getReservationDate())
+		    .reservationDate(reserve.getReservationDate())
 				.build())
 			.collect(Collectors.toList());
 		return resList;
@@ -72,6 +78,10 @@ public class ReservationService {
 
 	// 예약 취소
 	public ReservationResponse cancelReserve(Long exId, User user) {
+		// if (!authService.checkPassword(user, password)) {
+		// 	throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+		// }
+		// log.info("비밀번호는 일치 ");
 		Reservation reservation = reservationRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시가 존재하지 않습니다."));
 		if (!user.getId().equals(reservation.getUser().getId())) {
 			throw new IllegalArgumentException("예약자 본인만 취소 가능합니다.");
