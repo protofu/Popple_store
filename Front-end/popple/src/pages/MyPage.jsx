@@ -4,24 +4,23 @@ import { useLoginUserStore } from '../stores/LoginUserState';
 import LikeList from '../components/my-page/LikeList';
 import ReservationList from '../components/my-page/ReservationList';
 import MyReview from '../components/my-page/MyReview';
+import { useLocation, useParams } from 'react-router-dom';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   const subtitleStyle = "text-[21px] font-semibold mt-2";
   const inputStyle = "w-[300px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2";
-  
+
+  const { state }= useLocation();
   const { loginUserRole } = useLoginUserStore(state => state);
-  const [activeItem, setActiveItem] = useState("찜");
+  const [activeItem, setActiveItem] = useState(state?.activeItem || "찜");
   const [password, setPassword] = useState('');
 
   useEffect(() => {
     // 역할에 따라 초기값 설정
     if (loginUserRole === "ROLE_COMPANY") {
       setActiveItem("팝업/전시 목록");
-    } else {
-      setActiveItem("찜");
-    }
-
+    } 
     // 마이페이지를 벗어날 때 초기화
     return () => {
       localStorage.setItem('activeItem', activeItem);
@@ -56,7 +55,7 @@ export default function MyPage() {
       </button>
     </div>
   );
-
+  
   const contentMap = {
     "찜": <LikeList />,
     "예약 목록": <ReservationList />,
