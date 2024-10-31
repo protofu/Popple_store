@@ -11,6 +11,10 @@ export default function ReservationList() {
   const [reservationIdToCancel, setReservationIdToCancel] = useState(null);
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] = useState(""); // 오류 메시지 상태 추가
+const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 상태 추가
+
+
   const handleCancel = (id) => {
     setReservationIdToCancel(id);
     setShowCancelModal(true);
@@ -66,10 +70,16 @@ export default function ReservationList() {
         const res = await authAPI.checkPassword(requestData);
         if (res.status === 200) {
           await reservationAPI.cancel(reservationId);
+          setSuccessMessage("예약이 취소되었습니다.");
+          setTimeout(() => {
+            getMyReservationList();
+            onClose();
+          }, 2000); // 2초 후 모달 닫기
         }
-        getMyReservationList();
-        onClose();
+        // getMyReservationList();
+        // onClose();
       } catch (error) {
+        setErrorMessage("비밀번호가 틀렸습니다."); 
         console.error("취소 실패:",  error.response ? error.response.data : error);
       }
     };
@@ -90,6 +100,12 @@ export default function ReservationList() {
             onChange={(e) => setPassword(e.target.value)} 
             className="border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none w-full p-2"
           />
+          {errorMessage && (
+  <p className="text-red-500 text-xs mt-1">{errorMessage}</p> // 오류 메시지 표시
+)}
+{successMessage && (
+  <p className="text-green-500 text-xs mt-1">{successMessage}</p> // 성공 메시지 표시
+)}
           <div className="flex justify-center w-full">
             <button className="bg-[#8900E1] text-white px-4 py-2 rounded" onClick={handleConfirm}>
               확인

@@ -1,6 +1,9 @@
 package com.popple.reservation.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,8 +102,14 @@ public class ReservationService {
 
 	// 방문 확인
 	public ReserverResponse checkReserver(Long exId, User user) {
+		
+		LocalDate currentDate = LocalDate.now();
 		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("잘못된 팝업/전시 입니다."));
-		Reservation reservation = reservationRepository.findByExhibitionAndUser(exhibition, user).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
+		List<Reservation> reservationList = reservationRepository.findByExhibitionAndUser(exhibition, user);
+		Optional<Reservation> optReservation = reservationList.stream()
+			.filter(reservation -> reservation.getReservationDate().equals(currentDate))
+    	.findFirst();
+		Reservation reservation = optReservation.orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
 		if (!reservation.getUser().getId().equals(user.getId()) ) {
 			return null;
 		}
@@ -116,24 +125,18 @@ public class ReservationService {
 	}
 
 	// 특정 팝업에 대한 나의 예약 가져오기
-	public ReservationResponse getMyReservationByExId(Long exId, User user) {
+	public List<ReservationResponse> getMyReservationByExId(Long exId, User user) {
 		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
-		Optional<Reservation> reservationOpt = reservationRepository.findByExhibitionAndUser(exhibition, user);
+		List<Reservation> reservationList = reservationRepository.findByExhibitionAndUser(exhibition, user);
 		
-		if (reservationOpt.isPresent()) {
+		return reservationList.stream().map(r -> {
 			return ReservationResponse.builder()
-					.id(exId)
-					.reservationDate(reservationOpt.get().getReservationDate())
-					.build();			
-		}
-	    // 예약이 없을 경우 처리
-	    return ReservationResponse.builder()
-	            .id(exId)
-	            .reservationDate(null) // 예약 날짜가 없음을 명시
-	            .build();
-		
+						.id(r.getExhibition().getId())
+						.reservationDate(r.getReservationDate()) // 예약 날짜가 없음을 명시
+						.isAttend(r.isAttend())
+						.isDeleted(r.getDeletedAt() != null)
+						.build();
+		}).toList();
 	}
-	
-
 }
 

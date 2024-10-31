@@ -86,7 +86,7 @@ public class ReservationController {
 	@Operation(summary = "방문 확인", description = "예약을 확인 처리 합니다.")
 	@GetMapping("/check/{id}")
 	public ResponseEntity<?> checkMyReservation(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
-		ReservationResponse res = reservationService.getMyReservationByExId(exId, user);
+		List<ReservationResponse> res = reservationService.getMyReservationByExId(exId, user);
 		return ResponseEntity.ok(res);
 	}
 }
