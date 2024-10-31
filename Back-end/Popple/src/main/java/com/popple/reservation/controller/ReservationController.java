@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.popple.auth.domain.request.UserPasswordCheckRequest;
 import com.popple.auth.entity.User;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/reservation")
 public class ReservationController {
 	private final ReservationService reservationService;
+	
 	
 	// 예약 등록
 	@Operation(summary = "예약 등록", description = "예약을 생성합니다.")

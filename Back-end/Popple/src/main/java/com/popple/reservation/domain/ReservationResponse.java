@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ReservationResponse {
-	private Long id;
-	private String exhibitionName, reserver;
+	private Long id,exhibitionId;
+	private String exhibitionName, reserver, address;
 	private LocalDate reservationDate;
 
 }	

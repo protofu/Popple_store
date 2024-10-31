@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.popple.auth.entity.User;
 import com.popple.exhibition.entity.Exhibition;
+import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.exhibition.repository.PosterRepository;
 import com.popple.like.domain.LikeResponse;
 import com.popple.like.entity.Like;
 import com.popple.like.repository.LikeRepository;
@@ -22,12 +24,24 @@ import lombok.extern.slf4j.Slf4j;
 public class LikeService {
 	private final LikeRepository likeRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final PosterRepository posterRepository;
 	
 	// 나의 좋아요 목록 반환
 	public List<LikeResponse> getMyLikeList(User user) {
 		List<Like> likeList = likeRepository.findAllByUserId(user.getId());
-		List<LikeResponse> res = likeList.stream().map(like -> LikeResponse.builder().exhi(like.getExhibition()).build()).collect(Collectors.toList());
-		return res;
+		// List<LikeResponse> res = likeList.stream().map(like -> LikeResponse.builder().exhi(like.getExhibition()).build()).collect(Collectors.toList());
+		// return res;
+		return likeList.stream().map(like -> {
+			Exhibition exhibition = like.getExhibition();
+			// 포스터의 savedName을 가져오기
+			Optional<String> savedNameOpt = posterRepository.findFirstByExhibition(exhibition.getId());
+			String savedName = savedNameOpt.orElse(null);
+
+			return LikeResponse.builder()
+					.exhi(exhibition)
+					.posterSavedName(savedName)
+					.build();
+		}).collect(Collectors.toList());
 	}
 
 	// 좋아요 누르기

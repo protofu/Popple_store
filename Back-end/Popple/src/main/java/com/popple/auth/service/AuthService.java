@@ -139,4 +139,15 @@ public class AuthService {
 		return res;
 	}
 
+	// 사용자 비밀번호 체크
+	public boolean checkPassword(User user, String password) {
+    boolean isMatch = bCryptPasswordEncoder.matches(password, user.getPassword());
+		log.info("비밀번호 맞냐? : {}", isMatch);
+    if (!isMatch) {
+        throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+    }
+		return true;
+	}
+
+
 }

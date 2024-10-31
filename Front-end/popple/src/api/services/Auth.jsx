@@ -8,5 +8,6 @@ export const authAPI = {
   duplicateNickname : (nickname) => api.get(`/auth/nickname?nickname=${nickname}`),
   // login : (data) =>api.post("/auth/login", data)
   login : (data) => api.post("/auth/login", data),
-  getUser : (id) => api.get(`/auth/${id}`)
+  getUser : (id) => api.get(`/auth/${id}`),
+  checkPassword: (data) => api.post("/auth/check-password", data)
 }

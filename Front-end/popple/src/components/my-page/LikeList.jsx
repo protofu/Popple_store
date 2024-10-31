@@ -1,76 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { likeAPI } from "../../../src/api/services/Like";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function LikeList(params) {
   const [likeList, setLikeList] = useState([]);
+  const [reloadLikeList, setReloadLikeList] = useState(true);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const LikeList = async () => {
-  //     try {
-  //       const response = await likeAPI.getMyLikeList();
-  //       console.log(response.data);
-  //       setLikeList(response.data);
-  //     } catch (error) {
-  //       console.error("실패", error);
-  //     }
-  //   };
-
-  //   LikeList();
-  // }, []);
-
-  //ex
   useEffect(() => {
-    const exampleData = [
-      {
-        exhibitionId: 1,
-        exhibitionName: "전시 제목 1",
-        posterName: "/src/assets/img1.png"
-      },
-      {
-        exhibitionId: 2,
-        exhibitionName: "전시 제목 2",
-        posterName: "/src/assets/img1.png"
-      },
-      {
-        exhibitionId: 3,
-        exhibitionName: "전시 제목 3",
-        posterName: "/src/assets/img1.png"
-      },
-      {
-        exhibitionId: 4,
-        exhibitionName: "전시 제목 4",
-        posterName: "/src/assets/img1.png"
-      },
-      {
-        exhibitionId: 5,
-        exhibitionName: "전시 제목 1",
-        posterName: "/src/assets/img2.png"
-      },
-      {
-        exhibitionId: 6,
-        exhibitionName: "전시 제목 2",
-        posterName: "/src/assets/img3.png"
-      },
-      {
-        exhibitionId: 7,
-        exhibitionName: "전시 제목 3",
-        posterName: "/src/assets/img4.png"
-      },
-      {
-        exhibitionId: 8,
-        exhibitionName: "전시 제목 4",
-        posterName: "poster4.jpg"
+    const getLikeList = async () => {
+      try {
+        const response = await likeAPI.getMyLikeList();
+        console.log(response.data);
+        setLikeList(response.data);
+      } catch (error) {
+        console.error("실패", error);
       }
-    ];
+    };
 
-    setLikeList(exampleData);
-  }, []);
-  
+    getLikeList();
+  }, [reloadLikeList]);
+
   const handleUnlike = async (exhibitionId) => {
     try {
       await likeAPI.unlike(exhibitionId);
-      setLikeList(prevList => prevList.filter(item => item.exhibitionId !== exhibitionId));
+      setReloadLikeList(prev => !prev);
     } catch (error) {
       console.error("좋아요 취소 실패:", error);
     }
@@ -81,33 +35,33 @@ export default function LikeList(params) {
   };
 
   return (
-    <div className="flex flex-wrap justify-center mx-[10px] ">
+    <div className="flex flex-wrap mx-[10px] gap-6">
       {likeList.map(item => (
         <div 
-          key={item.exhibitionId} 
-          className="flex-shrink-0 w-[calc(17%-10px)] m-[24px] mb-5 border border-[#ccc] 
+          key={item.exhi.id} 
+          className="flex-shrink-0 w-[calc(19%-10px)] my-3 border border-[#ccc] 
                       rounded-lg overflow-hidden text-center shadow-md transition-transform 
-                      duration-200 transform hover:scale-105"
-          onClick={() => handleCardClick(item.exhibitionId)} // 카드 클릭 이벤트 추가
+                      duration-200 transform hover:scale-105 flex flex-col"
+          onClick={() => handleCardClick(item.exhi.id)}
         >
-          <div className="flex justify-center items-center h-[20vh] m-3">
+          <div className="flex justify-center items-center m-2">
             <img 
-              src={item.posterName}
-              alt={item.exhibitionName} 
-              className="max-w-full max-h-full object-contain" 
+              src={`http://localhost:8080/poster/${item.posterSavedName}`}
+              alt={item.exhi.exhibitionName} 
+              className="aspect-[2.5/3] w-[160px] h-auto object-cover" 
             />
           </div>
-          <div className="flex justify-center items-center pb-3 text-lg font-bold">
-            <h3 className="mr-5">{item.exhibitionName}</h3>
-            <span 
-              className="text-xl cursor-pointer transition-transform duration-200 hover:scale-125" 
-              onClick={(e) => {
-                e.stopPropagation(); // 디테일이동 X
-                handleUnlike(item.exhibitionId);
-              }}
-            >
-              ❤️
-            </span>
+          <div className="flex flex-col items-center mx-2 h-full">
+            <div className="flex flex-col items-center pb-3 text-lg font-bold mt-2 h-full">
+              <h3 className="mr-5 text-[14px]">{item.exhi.exhibitionName}</h3>
+              <div className="flex justify-end w-full items-end h-full">
+                <FaHeart className="text-red-500 text-[20px] cursor-pointer transition-transform duration-200 hover:scale-150"
+                  onClick={(e) => {
+                  e.stopPropagation(); // 디테일이동 X
+                  handleUnlike(item.exhi.id);}}
+                />
+              </div>
+            </div>
           </div>
         </div>
       ))}

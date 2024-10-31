@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.popple.auth.domain.request.SignUpRequest;
 import com.popple.auth.domain.request.UserDeleteRequest;
 import com.popple.auth.domain.request.UserEditRequest;
+import com.popple.auth.domain.request.UserPasswordCheckRequest;
 import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.domain.response.SignUpResponse;
 import com.popple.auth.entity.User;
@@ -106,5 +107,20 @@ public class AuthController {
 		tokenUtils.setRefreshTokenCookie(res, tokenMap.get("refreshToken"));
 		
 		return ResponseEntity.ok(LoginResponse.builder().accessToken(tokenMap.get("accessToken")).build());
+	}
+	// 사용자의 비밀번호 확인
+	@Operation(summary = "비밀번호 확인", description = "사용자가 입력한 비밀번호를 확인합니다.")
+	@PostMapping("/check-password")
+	public ResponseEntity<String> passwordCheck(@AuthenticationPrincipal User user, @RequestBody UserPasswordCheckRequest userPasswordCheckRequest) {
+			log.info("userPassword : {}", userPasswordCheckRequest);
+		try {
+					boolean isMatched = authService.checkPassword(user, userPasswordCheckRequest.getPassword());
+					if (isMatched) {
+						return ResponseEntity.ok("비밀번호가 일치합니다.");
+					}
+			} catch (RuntimeException e) {
+					return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+			}
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
 	}
 }
