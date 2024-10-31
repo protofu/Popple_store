@@ -162,8 +162,8 @@ export default function ExhibitionRegistPage() {
     <>
       <ExhibitionHeader step={step} />
       {/* 맨 위 박스  */}
-      <div>
-        <div className="flex flex-col gap-5 mt-16">
+      <div className="flex justify-center">
+        <div className="flex flex-col gap-5 mt-16 w-5/6 h-full">
           {step === 1 && (
             <ExStep1
               information={information}

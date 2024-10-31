@@ -19,8 +19,15 @@ import Markdown from "../common/Markdown";
 import PostCode from "../common/PostCode";
 import FileCarousel from "./FileCarousel";
 import TypeDropdown from "./TypeDropdown";
+import { useForm } from "react-hook-form";
+import { title } from "process";
 
 const ExStep1 = ({ information, changeInformation }) => {
+
+  const {
+    register,
+    formState: { errors },
+  } = useForm();
   // input 태그 스타일 지정
   const inputStyle =
     "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg inline-block p-2.5 mb-10";
@@ -56,7 +63,7 @@ const ExStep1 = ({ information, changeInformation }) => {
     });
   };
 
-  // 상세설명 포스터 업로드
+  // 메인 포스터 업로드
   const [posterPreview, setPosterPreview] = useState(null);
 
   const onPosterUpload = (e) => {
@@ -225,20 +232,25 @@ const ExStep1 = ({ information, changeInformation }) => {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-x-10 w-full h-full">
+    <div>
+      <div className="grid grid-cols-2 gap-x-32 w-full h-full">
         <div className="flex flex-col justify-between">
           <label>팝업, 전시 항목 선택 <span className="text-red-500">*</span></label>
           <TypeDropdown className={inputStyle} onChange={handleDropdown} />
 
-          <label>{information.typeId == 1 ? "팝업" : "전시"}명</label>
+          <label>{information.typeId == 1 ? "팝업" : "전시"}명 <span className="text-red-500">*</span></label>
           <input
             name="exhibitionName"
             className={inputStyle}
             value={information.exhibitionName}
             onChange={(e) => changeInformation(e)}
+            required="팝업/전시 명은 필수값입니다."
+          //   {...register("exhibitionName", {
+          //     required: "exhibitionName is required",
+          //     validate: (value) =>
+          //       value  ? "no nico allowed" : true,
+          // })}
           />
-
           <label>부제 <span className="text-red-500">*</span></label>
           <input
             name="subTitle"
@@ -275,7 +287,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             />
           </div>
 
-          <label>상세설명 포스터 <span className="text-red-500">*</span></label>
+          <label>메인 포스터 <span className="text-red-500">*</span></label>
           <label
             className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
           >
@@ -287,7 +299,7 @@ const ExStep1 = ({ information, changeInformation }) => {
               accept="image/*"
             />
             {posterPreview ? (
-              <img className="w-5/6 h-5/6" src={posterPreview} alt="포스터" />
+              <img className="w-[250px] h-auto" src={posterPreview} alt="메인 포스터" />
             ) : (
               <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl inline-block" />
             )}
@@ -311,6 +323,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           </div>
           <input
             name="detailAddr"
+            placeholder="상세주소"
             className={inputStyle}
             value={information.detailAddr}
             onChange={(e) => changeInformation(e)}
@@ -523,7 +536,10 @@ const ExStep1 = ({ information, changeInformation }) => {
             </tbody>
           </table>
         </div>
-        <div className="cursor-pointer grid grid-cols-4 gap-7 mt-10">
+      </div>
+        <label className="ml-10">유의사항</label>
+        <div className="grid grid-cols-2">
+        <div className="cursor-pointer grid grid-cols-4 gap-7">
           {Object.keys(information.constraints).map((key, idx) => {
             return (
               <ToggleConstraint
@@ -535,8 +551,8 @@ const ExStep1 = ({ information, changeInformation }) => {
             );
           })}
         </div>
-      </div>
-    </>
+        </div>
+    </div>
   );
 };
 

@@ -273,22 +273,7 @@ export default function EventRegister() {
             </div>
           </div>
         </div>
-        <div>
-          <hr className="w-full mt-10" />
-          <div className="flex justify-between">
-            <button className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
-              onClick={()=>navigate("/")}
-            >
-              취소</button>
-            <button
-              type="submit"
-              className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
-              onClick={handleSubmit}
-            >
-              등록
-            </button>
-          </div>
-        </div>
+        
       </div>
     </>
   );
