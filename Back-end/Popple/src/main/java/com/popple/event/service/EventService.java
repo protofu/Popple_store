@@ -116,6 +116,7 @@ public class EventService {
 				eventPosterService.savePoster(poster, event);
 			}
 		}
+		eventRepo.save(event);
 		EventResponse res = EventResponse.toDTO(event);	
 		return res;
 	}

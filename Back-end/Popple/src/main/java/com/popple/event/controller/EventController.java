@@ -78,7 +78,7 @@ public class EventController {
 	@Operation(summary = "이벤트 수정", description = "이벤트를 수정합니다.")
 	@PatchMapping("/update")
 	public ResponseEntity<EventResponse> updateEvent(
-			EventRequest req,
+			@ModelAttribute EventRequest req,
 			@AuthenticationPrincipal User user, 
 			@RequestParam(name = "eventImage") List<MultipartFile> images, 
 			@RequestParam(name = "eventPoster") MultipartFile poster) {

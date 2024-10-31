@@ -13,9 +13,10 @@ const ExStep2 = ({information, changeInformation}) => {
         try {
             const res = await companyAuthAPI.getInfo(data);
             if (res.status === 200) {
-                const {leader,buisinessNumber, tel,address } = res.data;
+                const {name,buisinessNumber, tel,address } = res.data;
+                console.log(res.data)
                 setCompanyInfo({ 
-                    companyName: leader,
+                    name: name,
                     businessNumber : buisinessNumber,
                     contact : tel,
                     companyAddress : address
@@ -33,10 +34,10 @@ const ExStep2 = ({information, changeInformation}) => {
         <>
             {
                 companyInfo &&
-                <div className="grid grid-cols-2 gap-x-10 w-full h-full">
+                <div className="grid grid-cols-2 gap-x-32 w-full h-full">
                     <div className="flex flex-col">
                         <label>주최/기획</label>
-                        <input name="companyName" className={inputStyle} value={companyInfo.companyName} readOnly />
+                        <input name="name" className={inputStyle} value={companyInfo.name} readOnly />
                     </div>
                     <div className="flex flex-col">
                         <label>사업자 등록번호</label>

@@ -4,9 +4,12 @@ import FileCarousel from "../components/exhibition/FileCarousel";
 import { eventAPI } from "../api/services/Event";
 import { useNavigate } from "react-router-dom";
 import Markdown from "../components/common/Markdown";
-import { data } from "autoprefixer";
 
 export default function EventRegister() {
+
+  const inputStyle =
+    "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg inline-block p-2.5 mb-10";
+
   const fileMax = 5;
   // param으로 넘겨서
   const queryParams = new URLSearchParams(location.search);
@@ -57,12 +60,19 @@ export default function EventRegister() {
     setInfo((prev) => ({ ...prev, eventImage: files }));
   };
 
-  //파일 이미지 삭제
-  function deleteImg(index) {
-    const deletePreview2 = [...preview2];
-    deletePreview2.splice(index, 1);
-    setPreview2(deletePreview2);
-  }
+  //이게 되려나
+  // const onUpload3 = (e) => {
+  //   const file = e.target.files[0];
+  //   if(!file) return;
+
+  //   const reader = new FileReader();
+  //   const preview = reader.readAsDataURL(file);
+  //   return new Promise((resolve) => {
+  //     reader.onload = () => resolve(reader.result);
+      
+  //   });
+ 
+  // }
 
   //포스터 이미지 상태 관리
   const [preview, setPreview] = useState(null);
@@ -80,6 +90,14 @@ export default function EventRegister() {
     setInfo((prev) => ({ ...prev, eventPoster: file }));
   };
 
+  //파일 이미지 삭제
+  function deleteImg(index) {
+    const deletePreview2 = [...preview2];
+    deletePreview2.splice(index, 1);
+    setPreview2(deletePreview2);
+  }
+
+  
   //입력 정보
   const [info, setInfo] = useState({
     eventImage: [],
@@ -219,7 +237,7 @@ export default function EventRegister() {
             <label htmlFor="poster" className="text-sm">
               포스터
             </label>
-            <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
+            <label className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}>
               <input
                 id="poster"
                 className="hidden w-fit h-fit"
@@ -228,9 +246,9 @@ export default function EventRegister() {
                 accept="image/*"
               />
               {preview ? (
-                <img className="w-5/6 h-5/6" src={preview} alt="포스터" />
+                <img className="w-[250px] h-auto" src={preview} alt="포스터" />
               ) : (
-                <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl" />
+                <LuFilePlus className="w-full h-full" />
               )}
             </label>
           </div>
@@ -247,6 +265,7 @@ export default function EventRegister() {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragLeave={handleDragEnd}
+                
               >
                 <input
                   type="file"

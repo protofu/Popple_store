@@ -201,7 +201,7 @@ export default function EventUpdate() {
       const res = await eventAPI.update(formData);
       if (res.status === 200 || res.status === 204) {
         alert("이벤트가 수정되었습니다.");
-        navigate("/");
+        navigate("/event");
       }
     } catch (error) {
       alert("이벤트 수정에 실패하였습니다.");
@@ -228,7 +228,7 @@ export default function EventUpdate() {
   };
   return (
     <>
-      <p className="text-lg mb-2 mt-10 ">팝업/전시 수정</p>
+      <p className="text-lg mb-2 mt-10 ">이벤트 수정</p>
       <hr className="w-full" />
       <div className="mt-2">이벤트 정보</div>
 

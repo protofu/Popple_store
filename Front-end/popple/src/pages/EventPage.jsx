@@ -27,7 +27,7 @@ export default function EventPage() {
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
   
-  // const exhiId = 1;
+  // const exhiId = 2572;
   //추가될 때마다 
   useEffect(() => {
     //저장된 이벤트 가져오기

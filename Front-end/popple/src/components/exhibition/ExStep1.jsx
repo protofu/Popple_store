@@ -19,8 +19,14 @@ import Markdown from "../common/Markdown";
 import PostCode from "../common/PostCode";
 import FileCarousel from "./FileCarousel";
 import TypeDropdown from "./TypeDropdown";
+import { useForm } from "react-hook-form";
+import { title } from "process";
 
 const ExStep1 = ({ information, changeInformation }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useForm();
   // input 태그 스타일 지정
   const inputStyle =
     "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg inline-block p-2.5 mb-10";
@@ -56,7 +62,7 @@ const ExStep1 = ({ information, changeInformation }) => {
     });
   };
 
-  // 상세설명 포스터 업로드
+  // 메인 포스터 업로드
   const [posterPreview, setPosterPreview] = useState(null);
 
   const onPosterUpload = (e) => {
@@ -216,30 +222,41 @@ const ExStep1 = ({ information, changeInformation }) => {
   const handleDropdown = (e) => {
     const selectValue = e.target.value;
     changeInformation({
-        target:{
-            name:"typeId",
-            value: selectValue,
-        },
+      target: {
+        name: "typeId",
+        value: selectValue,
+      },
     });
- 
   };
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-x-10 w-full h-full">
+    <div>
+      <div className="grid grid-cols-2 gap-x-32 w-full h-full">
         <div className="flex flex-col justify-between">
-          <label>팝업, 전시 항목 선택 <span className="text-red-500">*</span></label>
+          <label>
+            팝업, 전시 항목 선택 <span className="text-red-500">*</span>
+          </label>
           <TypeDropdown className={inputStyle} onChange={handleDropdown} />
 
-          <label>{information.typeId == 1 ? "팝업" : "전시"}명</label>
+          <label>
+            {information.typeId == 1 ? "팝업" : "전시"}명{" "}
+            <span className="text-red-500">*</span>
+          </label>
           <input
             name="exhibitionName"
             className={inputStyle}
             value={information.exhibitionName}
             onChange={(e) => changeInformation(e)}
+            required="팝업/전시 명은 필수값입니다."
+            //   {...register("exhibitionName", {
+            //     required: "exhibitionName is required",
+            //     validate: (value) =>
+            //       value  ? "no nico allowed" : true,
+            // })}
           />
-
-          <label>부제 <span className="text-red-500">*</span></label>
+          <label>
+            부제 <span className="text-red-500">*</span>
+          </label>
           <input
             name="subTitle"
             className={inputStyle}
@@ -248,7 +265,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           />
 
           <label>
-            입장료 <span className="text-red-500">*</span>
+            입장료
             <span className="float-right">
               <input
                 type="checkbox"
@@ -267,7 +284,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             disabled={information.free}
           />
 
-          <label>상세 설명 <span className="text-red-500">*</span></label>
+          <label>상세 설명</label>
           <div className={inputStyle}>
             <Markdown
               content={information.detailDescription}
@@ -275,7 +292,9 @@ const ExStep1 = ({ information, changeInformation }) => {
             />
           </div>
 
-          <label>상세설명 포스터 <span className="text-red-500">*</span></label>
+          <label>
+            메인 포스터 <span className="text-red-500">*</span>
+          </label>
           <label
             className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
           >
@@ -287,15 +306,21 @@ const ExStep1 = ({ information, changeInformation }) => {
               accept="image/*"
             />
             {posterPreview ? (
-              <img className="w-5/6 h-5/6" src={posterPreview} alt="포스터" />
+              <img
+                className="w-[250px] h-auto"
+                src={posterPreview}
+                alt="메인 포스터"
+              />
             ) : (
-              <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl inline-block" />
+              <LuFilePlus className="w-full h-full" />
             )}
           </label>
         </div>
 
         <div className="flex flex-col justify-between">
-          <label>장소 <span className="text-red-500">*</span></label>
+          <label>
+            장소 <span className="text-red-500">*</span>
+          </label>
           <div className="flex">
             <input
               name="address"
@@ -311,11 +336,15 @@ const ExStep1 = ({ information, changeInformation }) => {
           </div>
           <input
             name="detailAddr"
+            placeholder="상세주소"
             className={inputStyle}
             value={information.detailAddr}
             onChange={(e) => changeInformation(e)}
           />
-          <label>{information.typeId == 1 ? "팝업" : "전시"} 기간 <span className="text-red-500">*</span></label>
+          <label>
+            {information.typeId == 1 ? "팝업" : "전시"} 기간{" "}
+            <span className="text-red-500">*</span>
+          </label>
           <div className="flex justify-between">
             <input
               placeholder="시작일"
@@ -354,7 +383,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
           />
 
-          <label>공지사항 <span className="text-red-500">*</span></label>
+          <label>공지사항</label>
           <div className={inputStyle}>
             <Markdown
               content={information.notice}
@@ -402,7 +431,9 @@ const ExStep1 = ({ information, changeInformation }) => {
 
         {/* 관람시간 요일 선택 */}
         <div className={`col-span-2`}>
-          <label>관람시간 정보 <span className="text-red-500">*</span></label>
+          <label>
+            관람시간 정보 <span className="text-red-500">*</span>
+          </label>
           <div className={`${inputStyle} flex justify-between`}>
             {daysOfWeek.map((day) => (
               <div
@@ -523,7 +554,10 @@ const ExStep1 = ({ information, changeInformation }) => {
             </tbody>
           </table>
         </div>
-        <div className="cursor-pointer grid grid-cols-4 gap-7 mt-10">
+      </div>
+      <label className="ml-7">유의사항</label>
+      <div className="grid grid-cols-2">
+        <div className="cursor-pointer grid grid-cols-4 gap-7">
           {Object.keys(information.constraints).map((key, idx) => {
             return (
               <ToggleConstraint
@@ -535,8 +569,18 @@ const ExStep1 = ({ information, changeInformation }) => {
             );
           })}
         </div>
+      <div>
+        <input
+          name="reserve"
+          type="checkbox"
+          className="ml-10"
+          onChange={(e) => changeInformation(e)}
+          checked={information.reserve}
+        />
+        <label>예약 여부</label>
       </div>
-    </>
+      </div>
+    </div>
   );
 };
 
