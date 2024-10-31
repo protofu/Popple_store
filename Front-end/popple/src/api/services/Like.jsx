@@ -3,8 +3,9 @@ import api from "../api";
 export const likeAPI = {
    
     getMyLikeList: () => api.get("/like"),
-    pressLike: (id) => api.post(`/like/${id}`),
-    unlike: (id) => api.delete(`/like/${id}`),
-    howManyLikes: (id) => api.get(`/help/${id}`),
+    pressLike: (exId) => api.post(`/like/${exId}`),
+    unlike: (exId) => api.delete(`/like/${exId}`),
+    howManyLikes: (exId) => api.get(`/like/${exId}`),
+    amILiked: (exId) => api.get(`/like/me/${exId}`)
   };
   

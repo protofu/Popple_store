@@ -9,6 +9,10 @@ import ReviewInDetail from "../components/review/ReviewInDetail";
 import Reservation from "../components/exhibition/Reservation";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { useParams } from "react-router-dom";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { likeAPI } from "../api/services/Like";
+import { FaLink } from "react-icons/fa6";
+import KakaoShareButton from "../components/common/KakaoShareButton";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -19,7 +23,41 @@ export default function DetailPage() {
   const curDate = new Date(); // 현재 날짜
   const [value, onChange] = useState(moment(curDate).format('YYYY-MM-DD'));
   const [selectTab, setSelectTab] = useState("이용정보");
+  const [likeCount, setLikeCount] = useState(0);
   
+  const { id } = useParams();
+  
+  // 좋아요
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleClickLike = async () => {
+    if (isLiked) {
+      await likeAPI.unlike(id);
+    } else {
+      await likeAPI.pressLike(id);
+    }
+    // 좋아요 수 가져오기
+    const res = await likeAPI.howManyLikes(id);
+    setLikeCount(res.data);
+    setIsLiked(prev => !prev);
+  }
+  
+
+  useEffect(() => {
+    // 내가 좋아요를 눌렀나요?
+    const likeData = async () => {
+      const res = await likeAPI.amILiked(id);
+      setIsLiked(res.data);
+    };
+    // 좋아요 수 가져오기 default 셋팅
+    const getLikeCount = async () => {
+      const res = await likeAPI.howManyLikes(id);
+      setLikeCount(res.data);
+    };
+    getLikeCount();
+    likeData();
+  }, [id]);
+
   // json데이터 담을 state
   const [exhi, setExhi] = useState(null);
   const [chartData, setChartData] = useState(null);
@@ -27,7 +65,15 @@ export default function DetailPage() {
   // 모달 상태
   const [showReservationModal, setShowReservationModal] = useState(false);
 
-  const { id } = useParams();
+  // 현재 페이지 링크복사
+  const copyCurrentLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("링크가 복사되었습니다!");
+    } catch (error) {
+      console.error("링크 복사에 실패했습니다.", error);
+    }
+  };
 
   // 예시 데이터
   useEffect(() => {
@@ -35,7 +81,6 @@ export default function DetailPage() {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
         const resDetail = await exhibitionAPI.get(id);
-        console.log("디테일", resDetail);
         const resChartData = await axios.get('/jsons/visitors.json');
         setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
         setChartData(resChartData.data);
@@ -73,10 +118,10 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  
+
   return (
     <div className="mt-10 h-full">
-      <h1 className="text-2xl m-10">{exhi.exhibitionName}</h1>
+      <h1 className="text-2xl m-10 font-bold">{exhi.exhibitionName}</h1>
       <div className="grid grid-cols-7 w-full mt-6">
         {/* 정보 */}
         <div className="col-span-5">
@@ -94,18 +139,31 @@ export default function DetailPage() {
               <label htmlFor="location" className={infoGridStyle}>기간</label>
               <h1 id="location" className={infoH1GridStyle}>{startAt + " - " + endAt}</h1>
               <label htmlFor="location" className={infoGridStyle}>관람연령</label>
-              <h1 id="location" className={infoH1GridStyle}>{exhi.grade}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.grade ? "전연령" : "청소년 관람 불가"}</h1>
               <label htmlFor="location" className={infoGridStyle}>입장료</label>
-              <h1 id="location" className={infoH1GridStyle}>{exhi.fee} 원</h1>
-              <label htmlFor="location" className={infoGridStyle}>주의사항</label>
+              <h1 id="location" className={infoH1GridStyle}>
+                {exhi.fee !== "0" ? (
+                  <span>{exhi.fee} 원</span>
+                ) : (
+                  <span className="font-bold">입장료 무료</span>
+                )}
+              </h1>
             </div>
           </div>
-          <div className="mt-8 border-b-2 border-[#868686]">
+          <div className="mt-10 border-b-2 border-[#868686] flex justify-between items-end">
             <nav className="flex pb-2 ml-4">
               <div className={tabStyle} onClick={() => handleTab("이용정보")}>이용정보</div>
               <div className={tabStyle} onClick={() => handleTab("리뷰")}>리뷰</div>
               <div className={tabStyle} onClick={() => handleTab("EVENT")}>EVENT</div>
             </nav>
+            <div className="flex gap-4 mr-5 items-end pb-2">
+              <div className="flex flex-col">
+                <span className="w-full text-center text-[10px] text-red-400">{likeCount}</span>
+                <div onClick={() => handleClickLike()} className="cursor-pointer">{isLiked ? <FaHeart className="text-red-500 text-[24px]"/> : <FaRegHeart className="text-red-500 text-[24px]"/>}</div>
+              </div>
+              <div onClick={() => copyCurrentLink()} className="cursor-pointer"><FaLink className="text-[24px] text-blue-600" /></div>
+              <div className="w-[26px]"><KakaoShareButton data={exhi} /></div>
+            </div>
           </div>
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}

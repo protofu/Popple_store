@@ -1,6 +1,7 @@
 package com.popple.like.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -52,6 +53,15 @@ public class LikeService {
 	public int getLikesCount(Long exId) {
 		int countLike = likeRepository.countByExhibitionId(exId);
 		return countLike;
+	}
+
+	// 내가 좋아요 했나?
+	public boolean getLikesState(Long exId, User user) {
+		Optional<Like> like = likeRepository.findByExhibitionIdAndUserId(exId, user.getId());
+		if (like.isPresent()) {
+			return true;
+		}
+		return false;			
 	}
 
 }

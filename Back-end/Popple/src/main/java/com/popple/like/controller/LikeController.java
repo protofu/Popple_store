@@ -2,6 +2,7 @@ package com.popple.like.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,10 +54,19 @@ public class LikeController {
     }
     
     // Like 갯수
-    @Operation(summary = "좋아요 취소", description = "좋아요를 취소 합니다.")
+    @Operation(summary = "좋아요 갯수", description = "좋아요 갯수를 반환합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<?> howManyLikes(@PathVariable("id") Long exId) {
     	int likeCount = likeService.getLikesCount(exId);
         return ResponseEntity.ok(likeCount);
+    }
+    
+    // 내가 좋아요 했나?
+    @Operation(summary = "좋아요 여부 확인", description = "좋아요 여부를 확인합니다.")
+    @GetMapping("/me/{id}")
+    public ResponseEntity<Boolean> amILiked(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
+    	log.info("여부확인");
+    	boolean isLiked = likeService.getLikesState(exId, user);
+    	return ResponseEntity.ok(isLiked);    		
     }
 }

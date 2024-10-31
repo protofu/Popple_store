@@ -149,6 +149,7 @@ export default function PopUpPage() {
           {currentItems.map((item, index) => (
             <PostCard
               key={index}
+              id={item.id}
               img={item.savedImage} 
               title={item.exhibitionName} 
               addr={item.address} 

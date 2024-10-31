@@ -34,8 +34,8 @@ export default function ReviewInDetail() {
     <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12">
       <div>
         <h1 className={h1Style}>주의사항</h1>
-        <p className="m-6 text-[14px]">게시판 운영 규정에 어긋난다고 판단되는 게시글은 사전 통보없이 블라인드 처리될 수 있습니다.
-        사전 경고에도 불구하고 불량 게시물을 계속적으로 게재한 게시자의 경우 인터파크 티켓 게시판 작성 권한이 제한됩니다.</p>
+        <p className="m-6 text-[14px]">게시판 운영 규정에 어긋난다고 판단되는 게시글은 사전 통보없이 블라인드 처리될 수 있습니다. <br />
+        사전 경고에도 불구하고 불량 게시물을 계속적으로 게재한 게시자의 경우 POPPLE 리뷰 작성 권한이 제한됩니다.</p>
       </div>
       <div>
         <div className="grid grid-cols-[2fr_4fr_2fr] border-b-2 mb-3 p-1">
