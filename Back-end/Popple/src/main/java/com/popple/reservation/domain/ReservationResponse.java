@@ -11,5 +11,6 @@ public class ReservationResponse {
 	private Long id,exhibitionId;
 	private String exhibitionName, reserver, address;
 	private LocalDate reservationDate;
+	private boolean isDeleted, isAttend;
 
 }	

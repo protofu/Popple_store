@@ -29,15 +29,17 @@ export default function DetailPage() {
   const [likeCount, setLikeCount] = useState(0);
   const { id } = useParams();
   
-
   const [reservedDate, setReservedDate] = useState(null);
 
   const getMyReservation = async () => {
     const res = await reservationAPI.checkMyReservation(id);
-    setReservedDate(dateToString(res.data.reservationDate));
+    setReservedDate(
+      res.data.filter(r => r.deleted == false).map(r => {
+        const [y, m, d] = r.reservationDate
+        return moment(new Date(y, m-1, d)).format("YYYY-MM-DD");
+      })
+    );
   };
-  getMyReservation();
-
   
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
@@ -89,6 +91,8 @@ export default function DetailPage() {
 
   // 예시 데이터
   useEffect(() => {
+    getMyReservation();
+
     const axiosData = async () => {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
@@ -120,7 +124,10 @@ export default function DetailPage() {
     setSelectTab(tab);
   }
 
-  const openModal = () => setShowReservationModal(true);
+  const openModal = () => {
+    // 만약 예약하려는 날짜와 24년 01월 01일랑 다르면 >>> setShowReservationModal(true);
+    setShowReservationModal(true);
+  }
   const closeModal = () => setShowReservationModal(false);
 
   const goToReservationListPage = () => {
@@ -136,7 +143,7 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  console.log(exhi);
+
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />
@@ -198,11 +205,11 @@ export default function DetailPage() {
               onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
               formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
               calendarType="gregory"  // 그레고리를 통한 토요일 시작
-              value={reservedDate ? moment(reservedDate).format("YYYY-MM-DD") : value} // 선택된 value값 (default 오늘)
+              value={reservedDate ? reservedDate[0] : value} // 선택된 value값 (default 오늘)
               showNeighboringMonth={true} // 다음달 날짜도 보이게
               tileContent={({ date, view }) => {
                 let html = [];
-                if ([moment(reservedDate).format("YYYY-MM-DD")].find(x => x === moment(date).format("YYYY-MM-DD"))) {;
+                if (reservedDate.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
                   html.push(<div className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
                 }
                 return html;
@@ -219,10 +226,10 @@ export default function DetailPage() {
                 )}
               </div>
             </div>
-            {!reservedDate ?
-              <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
-                <p className="text-center text-white text-[1rem]">예약하기</p>
-              </div> :
+            <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
+              <p className="text-center text-white text-[1rem]">예약하기</p>
+            </div>
+            {reservedDate?.length != 0 &&
               <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={goToReservationListPage}>
                 <p className="text-center text-white text-[1rem]">마이페이지</p>
               </div>
