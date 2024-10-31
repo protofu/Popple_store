@@ -35,7 +35,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       {isComplete ? 
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
-        <Complete text={"닫기"} onClose={onClose} />
+        <Complete text={"닫기"} onClose={onClose} title={"예약완료"} description={"예약은 [마이페이지] - [예약목록]에서 취소할 수 있습니다."}/>
         </div> :
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
           <h1 className="text-[32px]">예약하기</h1>
@@ -74,18 +74,20 @@ export default function Reservation({ reservation, exhi, onClose }) {
             본 서비스 이용을 위해 제3자의 정보 수집 및 공유에 대한 동의 여부를 선택해 주시기 바랍니다.
             </p>
           </div>
-          <div 
-            className={`bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
-            onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
-          >
-            <p className="text-center text-white text-[1.2rem]">예약확정</p>
-          </div>
-          <div 
-            className={`bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
-            onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
-          >
-            <p className="text-center text-white text-[1.2rem]">돌아가기</p>
-          </div>
+          <div className="flex">
+            <div 
+              className="bg-red-500 rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px]" 
+              onClick={onClose} // 클릭 핸들러를 조건부로 설정
+            >
+              <p className="text-center text-white text-[1.2rem]">돌아가기</p>
+            </div>
+            <div 
+              className={`bg-green-600 rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
+              onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
+            >
+              <p className="text-center text-white text-[1.2rem]">예약확정</p>
+            </div>
+          </div> 
         </div>
       }
     </div>
