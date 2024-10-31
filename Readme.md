@@ -15,6 +15,16 @@
 |   <img width="160px" src="" alt="이미지가 들어갈곳" />    |                      <img width="160px" src="" alt="이미지가 들어갈곳" />    |                   <img width="160px" src="" alt="이미지가 들어갈곳" />   |
 |   [@protofu](https://github.com/protofu)   |    [@whgms159](https://github.com/whgms159)  | [@hoohoha](https://github.com/hoohoha)  |
 
+## 협업
+
+### 역할 분담
+| 역할                | 담당자  |
+| :------------------ | :------ |
+| ???                | 김태환  |
+| ???     | 오희재  |
+| ???         | 성제현  |
+
+
 ## 배포 주소
 
 > **개발 버전** : [https://popple.store/](${주소가 들어갈 곳}) <br>
@@ -120,6 +130,27 @@ $ yarn dev
 ### ⭐️ 카카오 맵을 통한 위치기반 조회 팝업/전시 기능
 - 지도를 사용한 등록된 팝업/전시회 조회 기능
 - 위치 검색 혹은 팝업명 검색을 통한 팝업 조회 기능
+
+---
+
+
+### 참고 자료
+- [KAKAOMAP API](https://developers.kakao.com/docs/latest/kakaomap)
+- [KAKAO Message API](https://developers.kakao.com/docs/latest/message)
+- [KAKAO Login API](https://developers.kakao.com/docs/latest/user/user-management#login)
+
+---
+### 설계 문서(이쪽은 넣어야함)
+
+1. 피그마 목업/와이어프레임
+
+2. API문서(swagger가 편할듯)
+
+3. 기능 명세
+
+4. ERD
+
+5. 시스템 아키텍처
 
 ---
 ## 아키텍쳐
@@ -332,15 +363,264 @@ popple
 └─ yarn.lock
 ```
 
----
-### 설계 문서
+### Back-end 디렉토리 구조
+```bash
+├─.gradle
+│  ├─8.10.2
+│  │  ├─expanded
+│  │  └─vcsMetadata
+│  ├─8.11-rc-1
+│  │  ├─checksums
+│  │  ├─executionHistory
+│  │  ├─expanded
+│  │  ├─fileChanges
+│  │  ├─fileHashes
+│  │  └─vcsMetadata
+│  ├─buildOutputCleanup
+│  └─vcs-1
+├─.settings
+├─bin
+│  ├─.gradle
+│  │  ├─8.10.2
+│  │  │  ├─checksums
+│  │  │  ├─dependencies-accessors
+│  │  │  ├─executionHistory
+│  │  │  ├─expanded
+│  │  │  ├─fileChanges
+│  │  │  ├─fileHashes
+│  │  │  └─vcsMetadata
+│  │  ├─buildOutputCleanup
+│  │  └─vcs-1
+│  ├─.settings
+│  ├─gradle
+│  │  └─wrapper
+│  ├─main
+│  │  └─com
+│  │      └─popple
+│  │          ├─auth
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  │  ├─request
+│  │          │  │  └─response
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          ├─common
+│  │          │  ├─config
+│  │          │  ├─jwt
+│  │          │  └─utils
+│  │          ├─company
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          ├─event
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─respository
+│  │          │  ├─service
+│  │          │  └─utils
+│  │          ├─exhibition
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  ├─service
+│  │          │  └─utils
+│  │          ├─help
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          ├─like
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          ├─oauth
+│  │          │  ├─controller
+│  │          │  └─service
+│  │          ├─reservation
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          ├─review
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─entity
+│  │          │  ├─repository
+│  │          │  ├─service
+│  │          │  └─util
+│  │          ├─type
+│  │          │  ├─controller
+│  │          │  ├─domain
+│  │          │  ├─repository
+│  │          │  └─service
+│  │          └─visit
+│  │              ├─controller
+│  │              ├─domain
+│  │              ├─entity
+│  │              ├─repository
+│  │              └─service
+│  └─src
+│      └─main
+│          ├─java
+│          │  └─com
+│          │      └─popple
+│          │          ├─auth
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  │  ├─request
+│          │          │  │  └─response
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          ├─common
+│          │          │  ├─config
+│          │          │  ├─jwt
+│          │          │  └─utils
+│          │          ├─company
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          ├─event
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─respository
+│          │          │  ├─service
+│          │          │  └─utils
+│          │          ├─exhibition
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  ├─service
+│          │          │  └─utils
+│          │          ├─help
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          ├─like
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          ├─oauth
+│          │          │  ├─controller
+│          │          │  └─service
+│          │          ├─reservation
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          ├─review
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─entity
+│          │          │  ├─repository
+│          │          │  ├─service
+│          │          │  └─util
+│          │          ├─type
+│          │          │  ├─controller
+│          │          │  ├─domain
+│          │          │  ├─repository
+│          │          │  └─service
+│          │          └─visit
+│          │              ├─controller
+│          │              ├─domain
+│          │              ├─entity
+│          │              ├─repository
+│          │              └─service
+│          └─resources
+└─src
+    └─main
+        ├─java
+        │  └─com
+        │      └─popple
+        │          ├─auth
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  │  ├─request
+        │          │  │  └─response
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  └─service
+        │          ├─common
+        │          │  ├─config
+        │          │  ├─jwt
+        │          │  └─utils
+        │          ├─company
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  └─service
+        │          ├─event
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─respository
+        │          │  ├─service
+        │          │  └─utils
+        │          ├─exhibition
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  ├─service
+        │          │  └─utils
+        │          ├─help
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  └─service
+        │          ├─like
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  └─service
+        │          ├─oauth
+        │          │  ├─controller
+        │          │  └─service
+        │          ├─reservation
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  └─service
+        │          ├─review
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─entity
+        │          │  ├─repository
+        │          │  ├─service
+        │          │  └─util
+        │          ├─type
+        │          │  ├─controller
+        │          │  ├─domain
+        │          │  ├─repository
+        │          │  └─service
+        │          └─visit
+        │              ├─controller
+        │              ├─domain
+        │              ├─entity
+        │              ├─repository
+        │              └─service
+        └─resources
+```
 
-1. 피그마 목업/와이어프레임
-
-2. API문서(swagger가 편할듯)
-
-3. 기능 명세
-
-4. ERD
-
-5. 시스템 아키텍처
