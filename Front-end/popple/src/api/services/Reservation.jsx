@@ -6,4 +6,5 @@ export const reservationAPI = {
   getReserverList : (id) => api.get(`/reservation/reserver-list/${id}`),
   cancel : (id) => api.patch(`/reservation/cancel/${id}`),
   check : (id) => api.patch(`/reservation/check/${id}`),
+  checkMyReservation : (id) => api.get(`/reservation/check/${id}`),
 }

@@ -1,22 +1,31 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import Complete from "../common/Complete";
+import { reservationAPI } from "../../api/services/Reservation";
 
 export default function Reservation({ reservation, exhi, onClose }) {
-  const [reservationTime, setReservationTime] = useState(moment(reservation).format('YYYY-MM-DD'));
+  const reservationTime = moment(reservation).format('YYYY-MM-DD');
   const [isChecked, setIsChecked] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-
+  const [request, setRequest] = useState({
+    exhibitionId: exhi.id,
+    reservationDate: "",
+  });
   useEffect(() => {
-    setReservationTime(moment(reservation).format('YYYY-MM-DD'));
-  }, [reservation]);
+    setRequest({
+      ...request, 
+      exhibitionId:exhi.id, 
+      reservationDate: moment(reservation).format('YYYY-MM-DD')
+    })
+
+  }, []);
 
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
 
-  const handleClick = () => {
-    // 예약 확정 로직
+  const handleClick = async () => {
+    await reservationAPI.create(request);
     setIsComplete(prev => !prev);
   };
 

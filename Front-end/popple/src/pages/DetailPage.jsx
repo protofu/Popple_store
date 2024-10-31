@@ -8,12 +8,13 @@ import axios from "axios";
 import ReviewInDetail from "../components/review/ReviewInDetail";
 import Reservation from "../components/exhibition/Reservation";
 import { exhibitionAPI } from "../api/services/Exhibition";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { likeAPI } from "../api/services/Like";
 import { FaLink } from "react-icons/fa6";
 import KakaoShareButton from "../components/common/KakaoShareButton";
 import CateButton from "../components/common/CateButton";
+import { reservationAPI } from "../api/services/Reservation";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -21,12 +22,22 @@ function dateToString(arr) {
 }
 
 export default function DetailPage() {
+  const navigate = useNavigate();
   const curDate = new Date(); // 현재 날짜
   const [value, onChange] = useState(moment(curDate).format('YYYY-MM-DD'));
   const [selectTab, setSelectTab] = useState("이용정보");
   const [likeCount, setLikeCount] = useState(0);
-  
   const { id } = useParams();
+  
+
+  const [reservedDate, setReservedDate] = useState(null);
+
+  const getMyReservation = async () => {
+    const res = await reservationAPI.checkMyReservation(id);
+    setReservedDate(dateToString(res.data.reservationDate));
+  };
+  getMyReservation();
+
   
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
@@ -112,6 +123,10 @@ export default function DetailPage() {
   const openModal = () => setShowReservationModal(true);
   const closeModal = () => setShowReservationModal(false);
 
+  const goToReservationListPage = () => {
+    navigate("/my-page");
+  };
+
   // 날짜
   const startAt = dateToString(exhi.startAt);
   const endAt = dateToString(exhi.endAt);
@@ -183,20 +198,35 @@ export default function DetailPage() {
               onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
               formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
               calendarType="gregory"  // 그레고리를 통한 토요일 시작
-              value={value} // 선택된 value값 (default 오늘)
+              value={reservedDate ? moment(reservedDate).format("YYYY-MM-DD") : value} // 선택된 value값 (default 오늘)
               showNeighboringMonth={true} // 다음달 날짜도 보이게
+              tileContent={({ date, view }) => {
+                let html = [];
+                if ([moment(reservedDate).format("YYYY-MM-DD")].find(x => x === moment(date).format("YYYY-MM-DD"))) {;
+                  html.push(<div className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
+                }
+                return html;
+              }}
+              
             /> 
             <div className="flex flex-col justify-center items-center text-gray-500 mt-4">
-              <h1 className="m-2 text-popple-dark">선택된 날짜</h1>
+              <h1 className="m-2 text-popple-dark">{reservedDate ? "예약된 날짜": "선택된 날짜"}</h1>
               <div className="w-full text-center border-2 rounded-lg py-1">
-                {value &&
-                  moment(value).format("YYYY년 MM월 DD일")
-                }
+                {reservedDate ? (
+                  moment(reservedDate).format("YYYY년 MM월 DD일")
+                ) : (
+                  value && moment(value).format("YYYY년 MM월 DD일")
+                )}
               </div>
             </div>
-            <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
-              <p className="text-center text-white text-[1rem]">예약하기</p>
-            </div>
+            {!reservedDate ?
+              <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={openModal}>
+                <p className="text-center text-white text-[1rem]">예약하기</p>
+              </div> :
+              <div className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer" onClick={goToReservationListPage}>
+                <p className="text-center text-white text-[1rem]">마이페이지</p>
+              </div>
+            }
             {showReservationModal && ( 
               <Reservation reservation={moment(value).format('YYYY-MM-DD')} exhi={exhi} onClose={closeModal}/>
             )}

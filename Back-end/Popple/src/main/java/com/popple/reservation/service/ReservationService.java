@@ -2,6 +2,7 @@ package com.popple.reservation.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -102,6 +103,25 @@ public class ReservationService {
 				.reserveTime(savedReservation.getReservationDate())
 				.isAttend(savedReservation.isAttend())
 				.build();
+	}
+
+	// 특정 팝업에 대한 나의 예약 가져오기
+	public ReservationResponse getMyReservationByExId(Long exId, User user) {
+		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
+		Optional<Reservation> reservationOpt = reservationRepository.findByExhibitionAndUser(exhibition, user);
+		
+		if (reservationOpt.isPresent()) {
+			return ReservationResponse.builder()
+					.id(exId)
+					.reservationDate(reservationOpt.get().getReservationDate())
+					.build();			
+		}
+	    // 예약이 없을 경우 처리
+	    return ReservationResponse.builder()
+	            .id(exId)
+	            .reservationDate(null) // 예약 날짜가 없음을 명시
+	            .build();
+		
 	}
 	
 

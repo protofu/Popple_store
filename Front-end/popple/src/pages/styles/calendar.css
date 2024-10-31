@@ -33,6 +33,10 @@
  /* .react-calendar__month-view__days__day--weekend {
   color: #d10000;
  } */
+ .react-calendar__tile {
+  padding: 4px;
+  min-height: 45px
+ }
  .react-calendar__tile:enabled:hover,
  .react-calendar__tile:enabled:focus {
   color: #8900E1;
