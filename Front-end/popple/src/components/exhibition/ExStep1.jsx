@@ -260,7 +260,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           />
 
           <label>
-            입장료 <span className="text-red-500">*</span>
+            입장료
             <span className="float-right">
               <input
                 type="checkbox"
@@ -279,7 +279,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             disabled={information.free}
           />
 
-          <label>상세 설명 <span className="text-red-500">*</span></label>
+          <label>상세 설명</label>
           <div className={inputStyle}>
             <Markdown
               content={information.detailDescription}
@@ -367,7 +367,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
           />
 
-          <label>공지사항 <span className="text-red-500">*</span></label>
+          <label>공지사항</label>
           <div className={inputStyle}>
             <Markdown
               content={information.notice}
