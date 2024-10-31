@@ -4,6 +4,7 @@ import FileCarousel from "../components/exhibition/FileCarousel";
 import { eventAPI } from "../api/services/Event";
 import { useNavigate } from "react-router-dom";
 import Markdown from "../components/common/Markdown";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function EventRegister() {
 
@@ -59,20 +60,6 @@ export default function EventRegister() {
     });
     setInfo((prev) => ({ ...prev, eventImage: files }));
   };
-
-  //이게 되려나
-  // const onUpload3 = (e) => {
-  //   const file = e.target.files[0];
-  //   if(!file) return;
-
-  //   const reader = new FileReader();
-  //   const preview = reader.readAsDataURL(file);
-  //   return new Promise((resolve) => {
-  //     reader.onload = () => resolve(reader.result);
-      
-  //   });
- 
-  // }
 
   //포스터 이미지 상태 관리
   const [preview, setPreview] = useState(null);
@@ -140,6 +127,7 @@ export default function EventRegister() {
       }
     } catch (error) {
       alert("이벤트 등록에 실패하였습니다.");
+      console.error(error, error.message)
     }
   };
 
@@ -150,6 +138,17 @@ export default function EventRegister() {
 
   //날짜 지정 (오늘날짜)
   const today = new Date().toISOString().split("T")[0];
+
+  // const goToNext = () => {
+  //   // 만약에 필수값이 모두 입력되었으면
+  //   const { eventImage, eventName, startAt, endAt, description, eventPoster, summary} = info
+  //   const requiredValueCheck = eventName && description && startAt && endAt && eventPoster && eventImage && summary;
+  //   if (requiredValueCheck) {
+      
+  //   } else {
+  //     poppleAlert.alert("", "필수값을 모두 입력해주세요.");
+  //   }
+  // }
 
   return (
     <>
