@@ -91,22 +91,23 @@ export default function EventUpdate() {
           description,
           startAt,
           endAt,
-          eventPoster,
-          eventImage,
+          image,
         } = res.data;
+        console.log("레데", res.data)
         setEventData({
           eventName: eventName,
           summary: summary,
           description: description,
           startAt: startAt,
           endAt: endAt,
-          eventPoster: eventPoster,
-          eventImage: eventImage,
+          image:image,
         });
       }
     } catch (error) {}
   };
-
+  
+  // src={URL.createObjectURL(information.poster)}
+ 
   //가져온 이벤트 정보 뿌리기
   useEffect(() => {
     handleGet();
@@ -132,7 +133,7 @@ export default function EventUpdate() {
     startAt: "",
     endAt: "",
   });
-
+  
   const navigate = useNavigate();
   const changeInformation = (e) => {
     const { name, type } = e.target;
@@ -218,6 +219,7 @@ export default function EventUpdate() {
   const today = new Date().toISOString().split("T")[0];
 
   console.log("인포", info);
+  console.log("이데",eventData.image)
   // 날짜값 변환해서 value값에 넣기 위한 함수
   const dateToInputValue = (dateArr) => {
     if (dateArr.length == 3) {
@@ -226,6 +228,7 @@ export default function EventUpdate() {
     }
     return dateArr;
   };
+  
   return (
     <>
       <p className="text-lg mb-2 mt-10 ">이벤트 수정</p>
@@ -317,10 +320,11 @@ export default function EventUpdate() {
                 accept="image/*"
               />
               {preview ? (
-                <img className="w-5/6 h-5/6" src={preview} alt="포스터" />
-              ) : (
-                <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl" />
-              )}
+                <img src={info.img}/>
+              ) :(
+                eventData.image && (<img className="w-5/6 h-5/6" src={`http://localhost:8080/event_poster_image/${info.image}`} alt="포스터" />)
+              
+              ) }
             </label>
           </div>
           <div>

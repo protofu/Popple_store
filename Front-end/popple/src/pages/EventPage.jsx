@@ -35,7 +35,7 @@ export default function EventPage() {
       try {
         const res = await eventAPI.getAll();
         dispatch({ type: "getList", value: res.data});
-        console.log(res.data)
+        
       } catch (error) {
         console.error(error)
       }
@@ -43,9 +43,6 @@ export default function EventPage() {
     getEvent();
   }, []);
 
-
-  //임시 네비
-  const navigate = useNavigate();
   return (
     <>
       <h1 className={textStyle}>Event</h1>
@@ -61,7 +58,7 @@ export default function EventPage() {
                 key={index} 
                 description={item.description} 
                 slogun={item.summary} 
-                title={item.eventName} 
+                title={item.eventName}
                 usernickname={item.exhibition.user.nickname}
                 duration={dateToString(item.startAt) + " ~ "+ dateToString(item.endAt)} 
                 img={`http://localhost:8080/event_poster_image/${item.image}`}

@@ -29,7 +29,8 @@ public class EventPosterUtils {
 			// 이미지 크기 가져오기
 			Long mageSize = eventPoster.getSize();
 			// 새로운 이미지명 만들어주기
-			String savedPosterName = UUID.randomUUID() + "_" + originalPosterName;
+			
+			String savedPosterName = originalPosterName;
 
 			// 경로에 이미지 업로드
 			InputStream inputStream = eventPoster.getInputStream();
