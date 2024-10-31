@@ -247,13 +247,8 @@ const ExStep1 = ({ information, changeInformation }) => {
             className={inputStyle}
             value={information.exhibitionName}
             onChange={(e) => changeInformation(e)}
-            required="팝업/전시 명은 필수값입니다."
-            //   {...register("exhibitionName", {
-            //     required: "exhibitionName is required",
-            //     validate: (value) =>
-            //       value  ? "no nico allowed" : true,
-            // })}
           />
+          
           <label>
             부제 <span className="text-red-500">*</span>
           </label>
@@ -569,16 +564,16 @@ const ExStep1 = ({ information, changeInformation }) => {
             );
           })}
         </div>
-      <div>
-        <input
-          name="reserve"
-          type="checkbox"
-          className="ml-10"
-          onChange={(e) => changeInformation(e)}
-          checked={information.reserve}
-        />
-        <label>예약 여부</label>
-      </div>
+        <div>
+          <input
+            name="reserve"
+            type="checkbox"
+            className="ml-10"
+            onChange={(e) => changeInformation(e)}
+            checked={information.reserve}
+          />
+          <label>예약 여부</label>
+        </div>
       </div>
     </div>
   );

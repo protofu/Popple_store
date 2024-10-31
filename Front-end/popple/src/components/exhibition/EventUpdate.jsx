@@ -77,7 +77,7 @@ export default function EventUpdate() {
     };
     setInfo((prev) => ({ ...prev, eventPoster: file }));
   };
-
+  
   const [eventData, setEventData] = useState({});
 
   //이벤트 정보 가져오자
