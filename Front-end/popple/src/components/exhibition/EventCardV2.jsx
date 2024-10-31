@@ -199,15 +199,15 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open }) {
         <div className="w-full mt-20">
           {loginUserNickname === eventDetail.usernickname && (
             <div className="flex justify-around">
+              <button className="border rounded-lg p-2" onClick={handleNavi}>
+                수정
+              </button>
+              <span></span>
               <button
                 className="border rounded-lg p-2"
                 onClick={() => handleDelete()}
               >
                 삭제
-              </button>
-              <span></span>
-              <button className="border rounded-lg p-2" onClick={handleNavi}>
-                수정
               </button>
             </div>
           )}

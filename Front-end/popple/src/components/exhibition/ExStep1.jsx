@@ -301,7 +301,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             {posterPreview ? (
               <img className="w-[250px] h-auto" src={posterPreview} alt="메인 포스터" />
             ) : (
-              <LuFilePlus className="text-xl sm:text-4xl md:text-5xl lg:text-9xl inline-block" />
+              <LuFilePlus className="w-full h-full" />
             )}
           </label>
         </div>
@@ -537,7 +537,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           </table>
         </div>
       </div>
-        <label className="ml-10">유의사항</label>
+        <label className="ml-7">유의사항</label>
         <div className="grid grid-cols-2">
         <div className="cursor-pointer grid grid-cols-4 gap-7">
           {Object.keys(information.constraints).map((key, idx) => {

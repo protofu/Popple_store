@@ -195,14 +195,16 @@ export default function ExhibitionRegistPage() {
             {step === 1 ? (
               // 1단계 하단
               <div className="flex justify-end">
+                { information.address &&  information.detailDescription?
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
                   onClick={() => setStep((step) => step + 1)}
                 >
                   다음
-                </button>
-              </div>
+                </button> : <>안돼</>
+            }
+            </div>
             ) : step === 2 ? (
               // 2단계 하단
               <div className="flex justify-between items-center">

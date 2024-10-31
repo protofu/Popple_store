@@ -27,7 +27,7 @@ export default function EventPage() {
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
   
-  // const exhiId = 1;
+  const exhiId = 2572;
   //추가될 때마다 
   useEffect(() => {
     //저장된 이벤트 가져오기
@@ -52,7 +52,7 @@ export default function EventPage() {
       <hr className="mt-2 mb-0 border-gray-500" />
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
-        {/* <ExStepComplete exhiId={exhiId}/> */}
+        <ExStepComplete exhiId={exhiId}/>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center">
           {state.map((item, index) => (
               <EventCardV2 
