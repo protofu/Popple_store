@@ -124,7 +124,7 @@ export default function DetailPage() {
   const closeModal = () => setShowReservationModal(false);
 
   const goToReservationListPage = () => {
-    navigate("/my-page");
+    navigate("/my-page", {state : {activeItem: "예약 목록"}});
   };
 
   // 날짜

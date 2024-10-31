@@ -80,6 +80,12 @@ export default function Reservation({ reservation, exhi, onClose }) {
           >
             <p className="text-center text-white text-[1.2rem]">예약확정</p>
           </div>
+          <div 
+            className={`bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
+            onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
+          >
+            <p className="text-center text-white text-[1.2rem]">돌아가기</p>
+          </div>
         </div>
       }
     </div>
