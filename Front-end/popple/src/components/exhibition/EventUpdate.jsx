@@ -3,14 +3,13 @@ import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../../components/exhibition/FileCarousel";
 import { eventAPI } from "../../api/services/Event";
 import { useNavigate } from "react-router-dom";
-import { data } from "autoprefixer";
+import Markdown from "../common/Markdown";
 export default function EventUpdate() {
   const fileMax = 5;
   // param으로 넘겨서
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const evId = queryParams.get("id");
- 
 
   //드래그앤 드랍 상태 관리
   const [isActive, setIsActive] = useState(false);
@@ -105,8 +104,7 @@ export default function EventUpdate() {
           eventImage: eventImage,
         });
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   //가져온 이벤트 정보 뿌리기
@@ -134,7 +132,7 @@ export default function EventUpdate() {
     startAt: "",
     endAt: "",
   });
-  
+
   const navigate = useNavigate();
   const changeInformation = (e) => {
     const { name, type } = e.target;
@@ -144,7 +142,7 @@ export default function EventUpdate() {
     if (name === "endAt" || name === "startAt") {
       const startAt = new Date(info.startAt);
       const endAt = new Date(name === "endAt" ? value : info.endAt);
-      
+
       if (endAt < startAt) {
         alert("종료일은 시작일보다 빠를 수 없습니다.");
         return;
@@ -205,10 +203,8 @@ export default function EventUpdate() {
         alert("이벤트가 수정되었습니다.");
         navigate("/");
       }
-      
     } catch (error) {
       alert("이벤트 수정에 실패하였습니다.");
-      
     }
     setInfo({});
   };
@@ -221,15 +217,15 @@ export default function EventUpdate() {
   //날짜 지정 (오늘날짜)
   const today = new Date().toISOString().split("T")[0];
 
-
+  console.log("인포", info);
   // 날짜값 변환해서 value값에 넣기 위한 함수
   const dateToInputValue = (dateArr) => {
     if (dateArr.length == 3) {
       const [y, m, d] = dateArr;
-      return y+"-"+m+"-"+d;
-    } return dateArr;
-    
-  }
+      return y + "-" + m + "-" + d;
+    }
+    return dateArr;
+  };
   return (
     <>
       <p className="text-lg mb-2 mt-10 ">팝업/전시 수정</p>
@@ -238,69 +234,71 @@ export default function EventUpdate() {
 
       <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
         <div className="grid grid-cols-2 gap-x-20 gap-y-10">
-          <label className="text-sm" htmlFor="1">
-            이벤트명 <span className="text-red-500">*</span>
-          </label>
-          <input
-            name="eventName"
-            value={info.eventName}
-            onChange={(e) => changeInformation(e)}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          <label className="text-sm" htmlFor="1">
-            요약설명 <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            name="summary"
-            onChange={(e) => changeInformation(e)}
-            value={info.summary}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          <label className="text-sm" htmlFor="1">
-            상세설명 <span className="text-red-500">*</span>
-          </label>
-          <input
-            name="description"
-            onChange={(e) => changeInformation(e)}
-            value={info.description}
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
-          />
-          {/* <div>
-            <Markdown
-              content={info.description}
-              contentChange={(e) => handleMarkDown("description", e)}
-            />
-          </div> */}
-          <div className="flex ">
-            <div className="flex flex-col mt-1">
-              <label className="text-sm" htmlFor="start">
-                이벤트 시작일<span className="text-red-500">*</span>
+          <div className="flex flex-col gap-10">
+            <div>
+              <label className="text-sm" htmlFor="1">
+                이벤트명 <span className="text-red-500">*</span>
               </label>
               <input
-                name="startAt"
-                type="date"
+                name="eventName"
+                value={info.eventName}
                 onChange={(e) => changeInformation(e)}
-                value={dateToInputValue(info.startAt)}
-                className="bg-gray-50 border rounded-lg p-2.5 text-xs"
-                required
-                placeholder="시작일"
-                min={`${today}`}
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
               />
             </div>
-            <span className="ml-7 mr-7 mt-7">~</span>
-            <div className="flex flex-col mt-1">
-              <label className="text-sm" htmlFor="end">
-                이벤트 종료일<span className="text-red-500">*</span>
+            <div>
+              <label className="text-sm" htmlFor="1">
+                요약설명 <span className="text-red-500">*</span>
               </label>
-              <input
-                name="endAt"
+              <textarea
+                name="summary"
                 onChange={(e) => changeInformation(e)}
-                value={dateToInputValue(info.endAt)}
-                type="date"
-                className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
-                required
-                placeholder="종료일"
-                min={`${today}`}
+                value={info.summary}
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2.5"
+              />
+            </div>
+            <div className="flex ">
+              <div className="flex flex-col mt-1">
+                <label className="text-sm" htmlFor="start">
+                  이벤트 시작일<span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="startAt"
+                  type="date"
+                  onChange={(e) => changeInformation(e)}
+                  value={dateToInputValue(info.startAt)}
+                  className="bg-gray-50 border rounded-lg p-2.5 text-xs"
+                  required
+                  placeholder="시작일"
+                  min={`${today}`}
+                />
+              </div>
+              <span className="ml-7 mr-7 mt-7">~</span>
+              <div className="flex flex-col mt-1">
+                <label className="text-sm" htmlFor="end">
+                  이벤트 종료일<span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="endAt"
+                  onChange={(e) => changeInformation(e)}
+                  value={dateToInputValue(info.endAt)}
+                  type="date"
+                  className="bg-gray-50 border rounded-lg inline p-2.5 text-xs"
+                  required
+                  placeholder="종료일"
+                  min={`${today}`}
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <label className="text-sm" htmlFor="1">
+              상세설명 <span className="text-red-500">*</span>
+            </label>
+            <div>
+              <Markdown
+                content={info.description}
+                contentChange={(e) => handleMarkDown("description", e)}
               />
             </div>
           </div>
@@ -363,9 +361,24 @@ export default function EventUpdate() {
               </div>
             </div>
           </div>
-          <button type="submit" className="border p-3" onClick={handleSubmit}>
-            완료
-          </button>
+        </div>
+        <div>
+          <hr className="w-full mt-10" />
+          <div className="flex justify-between">
+            <button
+              className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
+              onClick={() => navigate("/event")}
+            >
+              취소
+            </button>
+            <button
+              type="submit"
+              className="border p-3 mt-10 rounded-lg hover:bg-popple hover:text-white"
+              onClick={handleSubmit}
+            >
+              등록
+            </button>
+          </div>
         </div>
       </div>
     </>

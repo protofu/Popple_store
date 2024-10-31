@@ -94,6 +94,7 @@ public class EventService {
 
 	// 이벤트 수정
 	public EventResponse updateEvent(User user, List<MultipartFile> images, MultipartFile poster, EventRequest req) {
+		log.info("req : {}",req);
 		Event event = eventRepo.findById(req.getExId()).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		List<EventImage> prevImage = eventImageService.findAll();
 		EventPoster prevPoster = eventPosterService.findPoster(req.getExId());
@@ -102,6 +103,8 @@ public class EventService {
 			event.setSummary(req.getSummary());
 			event.setDescription(req.getDescription());
 			event.setEventName(req.getEventName());
+			event.setStartAt(req.getStartAt());
+			event.setEndAt(req.getEndAt());
 			
 			if (images != null) {
 				prevImage.forEach(i -> eventImageService.deleteImage(i.getId()));
@@ -113,7 +116,7 @@ public class EventService {
 				eventPosterService.savePoster(poster, event);
 			}
 		}
-		EventResponse res = EventResponse.toDTO(event);
+		EventResponse res = EventResponse.toDTO(event);	
 		return res;
 	}
 
@@ -122,7 +125,7 @@ public class EventService {
 		if(user.getId() == event.getExhibition().getUser().getId()) {
 			return true;
 		}else {
-			return true;
+			return false;
 		}
 		
 	}
