@@ -67,15 +67,52 @@ export default function MainPage() {
     }
   ];
 
+  // 현재 페이지에 따라 아이템 인덱스 계산
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = exData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(exData.length / itemsPerPage);
+
+  // 페이지 변경 함수
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  }
+
   // 팝업/전시 입력에 따른 목록 보여주기
   const getExhibitionByType = async () => {
     const res = await exhibitionAPI.getlist(isPop);
-    console.log(res.data);
-    setExData(res.data);
+    const today = new Date(); // 오늘 날짜 가져오기
+    // 종료된것은 제외
+    const filtered = res.data.filter(item => {
+        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+        return endAt > today; // 오늘보다 후인지 확인
+    });
+    setExData(filtered);
   };
 
   useEffect(() => {
+    const updateItemsPerPage = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setItemsPerPage(4);
+      } else if (width < 1024) {
+        setItemsPerPage(6);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+
     getExhibitionByType();
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage); // 리사이즈 이벤트 리스너 추가
+
+    return () => {
+      window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
+    };
   }, [isPop])
 
   return (
@@ -112,9 +149,22 @@ export default function MainPage() {
         )}
         </div>
         {/* 전시 팝업에 따른 변화 */}
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {exData.map((item, index) => (
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+          {currentItems.map((item, index) => (
             <PostCard key={index} id={item.id} img={`${postURL}${item.savedImage}`} title={item.exhibitionName} addr={item.address} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} styles={"w-full h-auto"} typeId={isPop}/>
+          ))}
+        </div>
+        <div className="flex justify-center my-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              className={`mx-2 p-2 border rounded ${
+                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+              }`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
           ))}
         </div>
       </div>

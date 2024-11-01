@@ -85,7 +85,7 @@ export default function PopUpPage() {
     };
     const getPopupList = async () => {
       try {
-        const res = await exhibitionAPI.getlist(1); // 실제 API 엔드포인트로 수정하세요.
+        const res = await exhibitionAPI.getlist(1);
         const today = new Date(); // 오늘 날짜 가져오기
         const filtered = res.data.filter(item => {
             const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
