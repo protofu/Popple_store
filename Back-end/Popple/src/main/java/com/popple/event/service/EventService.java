@@ -46,7 +46,7 @@ public class EventService {
 		// 이미지 객체를 DB에 저장
 		eventRepo.save(event);
 
-		// 이미지 저장
+		// 이미지가 있다면 저장
 		if(images != null) {
 			images.stream().map(image -> eventImageService.saveImage(image, event))
 			.collect(Collectors.toList());

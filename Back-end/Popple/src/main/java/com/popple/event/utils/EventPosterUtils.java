@@ -31,6 +31,7 @@ public class EventPosterUtils {
 			// 새로운 이미지명 만들어주기
 			
 			String savedPosterName = originalPosterName;
+//			String savedPosterName = UUID.randomUUID() + "_" + originalPosterName;			
 
 			// 경로에 이미지 업로드
 			InputStream inputStream = eventPoster.getInputStream();
