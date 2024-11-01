@@ -13,6 +13,7 @@ import PostCard from "../components/poster-card/PostCard";
 import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
 import { exhibitionAPI } from "../api/services/Exhibition";
+import MapModal from "../components/map-view/MapModal";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -25,6 +26,12 @@ export default function PopUpPage() {
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [popupData, setPopupData] = useState([]);
   const [visitCountData, setVisitCountData] = useState([]);
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleModalToggle = () => {
+    setModalOpen((prev) => !prev);
+  };
     
   const eventList = [{
     slogun: "DIALOGUE IN THE DARK",
@@ -116,11 +123,12 @@ export default function PopUpPage() {
 
   return (
     <div className="w-full mx-auto mt-4">
+      {/* 조회수 기준으로 캐러셀 표현 */}
       <div>
         <h1 className={textStyle}>가장 많이 본 POP-UP</h1>
         <PostCarousel items={visitCountData.slice(0,10)} max={10} />
       </div>
-      {/* 인기있는 POP-UP */}
+      {/* 인기있는 POP-UP - {인기테이블을 어떻게 할지?} */}
       <div className={titleStyle}> 
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>인기있는 POP-UP</h1>
@@ -144,14 +152,16 @@ export default function PopUpPage() {
       <div className={titleStyle}>
         <img src={popupIcon} alt="팝업 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>POP-UP 둘러보기</h1>
+        <span className="w-[80%] text-right text-[#5464f1]" onClick={handleModalToggle}>지도로 보기</span>
       </div>
+      {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
           {currentItems.map((item, index) => (
             <PostCard
               key={index}
               id={item.id}
-              img={`${posterURL}${item.savedImage}`} 
+              img={item.savedImage !== null ? `${posterURL}${item.savedImage}` : "/waiting_for_Image.png"} 
               title={item.exhibitionName} 
               addr={item.address} 
               duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
@@ -165,7 +175,7 @@ export default function PopUpPage() {
             <button
               key={index}
               className={`mx-2 p-2 border rounded ${
-                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                currentPage === index + 1 ? "bg-popple-light text-white" : "bg-white text-black"
               }`}
               onClick={() => handlePageChange(index + 1)}
             >

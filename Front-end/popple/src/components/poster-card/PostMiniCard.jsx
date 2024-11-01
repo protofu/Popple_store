@@ -3,8 +3,16 @@ import { SwiperSlide } from "swiper/react";
 
 export default function PostMiniCard({isActive, isPrev, isNext, data}) {
   const navigate = useNavigate();
+
   const handleClick = () => {
-    navigate(`/detail/${data.id}`)
+    let basePath;
+    if (location.pathname.includes('/pop-up')) {
+      basePath = '/pop-up/detail';
+    } else if (location.pathname.includes('/exhibition')) {
+      basePath = '/exhibition/detail';
+    }
+
+    navigate(`${basePath}/${data.id}`);
   };
 
   return (
@@ -16,7 +24,7 @@ export default function PostMiniCard({isActive, isPrev, isNext, data}) {
             : isPrev || isNext
             ? "scale-90"
             : "scale-75"
-        }`}
+        } cursor-pointer`}
         onClick={handleClick}
     >
       <img

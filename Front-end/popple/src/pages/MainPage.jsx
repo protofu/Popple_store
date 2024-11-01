@@ -159,7 +159,7 @@ export default function MainPage() {
             <button
               key={index}
               className={`mx-2 p-2 border rounded ${
-                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                currentPage === index + 1 ? "bg-popple-light text-white" : "bg-white text-black"
               }`}
               onClick={() => handlePageChange(index + 1)}
             >
