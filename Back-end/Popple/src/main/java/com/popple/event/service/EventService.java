@@ -49,26 +49,28 @@ public class EventService {
 		// 이미지 객체를 DB에 저장
 		eventRepo.save(event);
 
-		// 이미지 저장
-		images.stream().map(image -> eventImageService.saveImage(image, event))
-				.collect(Collectors.toList());
+		// 이미지가 있다면 저장
+		if(images != null) {
+			images.stream().map(image -> eventImageService.saveImage(image, event))
+			.collect(Collectors.toList());
+		}
+		
 		// 포스터 저장
 		eventPosterService.savePoster(poster, event);
 
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
-
 	// 이벤트 전체 조회
-	public List<EventResponse> getAllEvent() {
-		List<Event> eventList = eventRepo.findAll();// 모든 이벤트
-		// pList 반환
-//		return pList.stream().map(EventResponse::toDTO).toList();
-		return eventList.stream().filter(e -> !e.getEndAt().isBefore(LocalDate.now())).map(e -> {
-			EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
-			return EventResponse.toDTO(e, eventPoster.getSavedName());
-		}).toList();
-	}
+		public List<EventResponse> getAllEvent() {
+			List<Event> eventList = eventRepo.findAll();// 모든 이벤트
+			// pList 반환
+//			return pList.stream().map(EventResponse::toDTO).toList();
+			return eventList.stream().filter(e -> !e.getEndAt().isBefore(LocalDate.now())).map(e -> {
+				EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
+				return EventResponse.toDTO(e, eventPoster.getSavedName());
+			}).toList();
+		}
 
 	// 이벤트 상세 조회
 	public EventResponse getEvent(Long id) {
