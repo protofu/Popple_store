@@ -1,14 +1,4 @@
 import { useEffect, useState } from "react";
-
-import eventImg from "../assets/exhi_poster/ex1.png";
-import eventImg2 from "../assets/exhi_poster/ex2.png";
-import eventImg3 from "../assets/exhi_poster/ex3.png";
-import eventImg4 from "../assets/exhi_poster/ex4.png";
-import eventImg5 from "../assets/exhi_poster/ex5.png";
-import eventImg6 from "../assets/exhi_poster/ex6.png";
-import eventImg7 from "../assets/exhi_poster/ex7.png";
-import eventImg8 from "../assets/exhi_poster/ex8.png";
-
 import eventIcon from "../assets/icons/party.png";
 import exhiIcon from "../assets/icons/exhi-icon.png";
 import popularIcon from "../assets/icons/popular-icon.png";
@@ -18,6 +8,8 @@ import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
 import MapModal from "../components/map-view/MapModal";
 import { exhibitionAPI } from "../api/services/Exhibition";
+import { eventAPI } from "../api/services/Event";
+import EventDetailModal from "../components/event/EventDetailModal";
 
 
 
@@ -27,6 +19,7 @@ export default function ExhibitionPage() {
   
   const type = 2; // 전시
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   const handleModalToggle = () => {
     setModalOpen((prev) => !prev);
@@ -48,25 +41,33 @@ export default function ExhibitionPage() {
   const [itemsPerPage, setItemsPerPage] = useState(12);
 
   const [exhibitionData, setExhibitionData] = useState([]);
-  
+
   function dateToString(arr) {
     const [y,m,d] = arr;
     return y+"."+m+"."+d;
   }
 
+  // 조회수
+  const [visitCountData, setVisitCountData] = useState([]);
   // 전시 가져오기
   const getExhibitions = async () => {
     const res = await exhibitionAPI.getlist(type);
-    console.log(res.data);
-    setExhibitionData(res.data);
+    const today = new Date(); // 오늘 날짜 가져오기
+    const filtered = res.data.filter(item => {
+        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+        return endAt > today; // 오늘보다 후인지 확인
+    });
+    const visitCountRes = res.data.sort((a, b) => b.visitCount - a.visitCount);
+    setExhibitionData(filtered);
+    setVisitCountData(visitCountRes);
   };
 
   // 현재 페이지에 따라 아이템 인덱스 계산
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = popUp.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = exhibitionData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(popUp.length / itemsPerPage);
+  const totalPages = Math.ceil(exhibitionData.length / itemsPerPage);
 
   // 페이지 변경 함수
   const handlePageChange = (page) => {
@@ -94,6 +95,19 @@ export default function ExhibitionPage() {
     };
   }, []);
 
+  const [propEventId, setPropEventId] = useState(null);
+  // 이벤트 모달 오픈
+  const openEventModal = (id) => {
+    setPropEventId(id);
+    setIsEventModalOpen(true);
+  };
+
+  // 이벤트 모달 닫기
+  const CloseEventModal = () => {
+    setIsEventModalOpen(false);
+  };
+
+
   const titleStyle = "flex items-center w-full m-10 ml-0";
   const textStyle = "text-[28px] ml-3 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
@@ -118,9 +132,10 @@ export default function ExhibitionPage() {
       <div className="flex flex-wrap justify-center gap-4">
         {
           eventList.map((item, index) => (
-            <EventCard key={index} slogun={item.slogun} title={item.title} duration={item.duration} img={item.img} />
+            <EventCard key={index} id={item.id} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " +  dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={()=>openEventModal(item.id)} />
           ))
         }
+        {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
       </div>
       {/* EXHIBITION */}
       <div className={titleStyle}>
@@ -131,7 +146,7 @@ export default function ExhibitionPage() {
       {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>
       <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-          {exhibitionData.map((item, index) => (
+          {currentItems.map((item, index) => (
             <PostCard
               key={item.id}
               id={item.id}
