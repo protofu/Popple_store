@@ -109,6 +109,7 @@ export default function EventCardV2({
     setModalOpen(false);
   };
 
+  console.log("이벤트 디테일",eventDetail)
   return (
     <div>
       <div
