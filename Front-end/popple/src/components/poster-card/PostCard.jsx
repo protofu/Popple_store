@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import CateButton from "../common/CateButton";
 import { useNavigate } from "react-router-dom";
 
-export default function PostCard({ id, img, title, addr, duration, styles }) {
+export default function PostCard({ id, img, title, addr, duration, styles, typeId }) {
   const navigate = useNavigate();
 
   const handleNavigate = (id) => {
@@ -13,6 +13,12 @@ export default function PostCard({ id, img, title, addr, duration, styles }) {
       basePath = '/pop-up/detail';
     } else if (location.pathname.includes('/exhibition')) {
       basePath = '/exhibition/detail';
+    } else if (typeId !== null) {
+      if (typeId === 1) {
+        basePath = '/pop-up/detail';
+      } else if (typeId === 2) {
+        basePath = '/exhibition/detail';
+      }
     }
 
     // 동적으로 URL 생성
