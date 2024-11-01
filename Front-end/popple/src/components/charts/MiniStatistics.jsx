@@ -50,8 +50,8 @@ export default function MiniStatistics({ chart }) {
   // console.log(genderData.find(item => item.id === "male").value / );
 
   // 백분율 계산
-  const malePer = Math.round((genderData.find(item => item.id === "male").value) / humanCount * 100, 2);
-  const femalePer = Math.round((genderData.find(item => item.id === "female").value) / humanCount * 100, 2);
+  const malePer = humanCount === 0 ? humanCount : Math.round((genderData.find(item => item.id === "male").value) / humanCount * 100, 2);
+  const femalePer = humanCount === 0 ? humanCount : Math.round((genderData.find(item => item.id === "female").value) / humanCount * 100, 2);
   return (
     <div className="grid grid-cols-1 2xl:grid-cols-2 w-full h-[250px]">
       <div className="border-2 border-[#8900E17D] border-r-[1px] rounded-tl-lg rounded-bl-lg">
@@ -72,7 +72,7 @@ export default function MiniStatistics({ chart }) {
       </div>
       <div className="border-2 border-[#8900E17D] border-l-[1px] rounded-tr-lg rounded-br-lg">
         <h1 className="text-lg font-bold m-2 ml-4">연령</h1> 
-        <AgeChart chart={ageData} humanCount={humanCount} />
+        <AgeChart ageData={ageData} humanCount={humanCount} />
       </div>
       {/* <button className="text-white bg-popple hover:bg-popple-dark hover:text-popple-light text-lg hover:shadow-lg shadow-">버튼</button> */}
     </div>
