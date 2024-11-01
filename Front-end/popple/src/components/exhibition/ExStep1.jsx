@@ -35,7 +35,7 @@ const ExStep1 = ({ information, changeInformation }) => {
   const today = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
   ).toISOString().split("T")[0];
-  //시간을 지정해보자
+  
   
   const [address, setAddress] = useState({});
 
@@ -590,13 +590,13 @@ const ToggleConstraint = ({ name, constraints, changeInformation }) => {
     });
   };
   const isOkay = constraints[name];
-  const textStyle = isOkay ? "text-popple" : "text-gray-500";
+  const textStyle = isOkay ? "text-gray-500" : "text-popple" ;
   const renderIcon = () => {
     switch (name) {
       case "park":
         return {
-          icon: isOkay ? <LuParkingCircle /> : <LuParkingCircleOff />,
-          text: isOkay ? "주차 가능" : "주차 불가",
+          icon: isOkay ? <LuParkingCircle /> : <LuParkingCircleOff />  ,
+          text: isOkay ? "주차 가능" : "주차 불가" ,
         };
       case "camera":
         return {
