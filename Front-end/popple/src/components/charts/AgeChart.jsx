@@ -1,4 +1,5 @@
 import { ResponsiveBar } from "@nivo/bar";
+import { positionFromAngle } from "@nivo/core";
 import { useEffect } from "react";
 
 export default function AgeChart({ ageData, humanCount }) {
@@ -19,7 +20,7 @@ export default function AgeChart({ ageData, humanCount }) {
       } else if (item.id === "Fifties_above") {
         groupName = "50대~";
       }
-      result.push({ ageGroup: groupName, value: item.value });
+      result.push({ ageGroup: groupName, value: humanCount === 0 ? humanCount : Math.round((item.value) / humanCount * 100, 2), count: item.value });
       result.sort((a, b) => a.ageGroup.localeCompare(b.ageGroup));
     }); 
   }, [ageData]);
@@ -36,12 +37,12 @@ export default function AgeChart({ ageData, humanCount }) {
     <div className="w-full h-[200px] mx-auto">
       <ResponsiveBar
           data={result}
-          key={barChartData => barChartData.ageGroup.count}
+          key={barChartData => barChartData.ageGroup.value}
           indexBy={"ageGroup"}
           margin={{ top: 20, right: 100, bottom: 50, left: 0 }}
           padding={0.3}
-          maxValue={Math.floor(10)}
-          valueScale={{ type: 'linear' }}
+          maxValue={100}
+          valueScale={{ type: 'linear', max: 100 }}
           indexScale={{ type: 'band', round: true }}
           colors={(bar) => ageGroupColors[bar.data.ageGroup] || "#000"}
           tooltip={ point => {
@@ -51,21 +52,11 @@ export default function AgeChart({ ageData, humanCount }) {
                   </div>
               )
           }}
-          axisLeft={null}
-          enableTotals={true}
           enableLabel={false}
           enableGridY={false}
-          labelSkipWidth={12}
+          enableTotals={true}
           labelSkipHeight={12}
-          labelTextColor={{
-              from: 'color',
-              modifiers: [
-                  [
-                      'darker',
-                      1.6
-                  ]
-              ]
-          }}
+          valueFormat={(v) => v+"%"}
           legends={[
             {
                 dataFrom: 'indexes',

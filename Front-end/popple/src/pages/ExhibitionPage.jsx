@@ -32,107 +32,23 @@ export default function ExhibitionPage() {
     setModalOpen((prev) => !prev);
   };
 
+  // 팝업 관련 이벤트 가져오기
+  const [eventList, setEventList] = useState([]);
+  const getEvents = async () => {
+    const res = await eventAPI.getSpecificList(type);
+    const today = new Date(); // 오늘 날짜 가져오기
+    const filtered = res.data.filter(item => {
+        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+        return endAt > today; // 오늘보다 후인지 확인
+    });
+    setEventList(filtered);
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
 
   const [exhibitionData, setExhibitionData] = useState([]);
-  // 팝업 더미 데이터
-  const popUp = [
-    {
-      img: eventImg,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg2,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg3,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg4,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg5,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg6,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg7,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg8,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg2,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg3,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }, {
-      img: eventImg4,
-      title: "어둠속의대화",
-      addr: "백악관 B동 3층",
-      duration: "2024.10.11 ~ 2024.10.28",
-    }
-  ];
   
-  const eventList = [{
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg2
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg3
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg4
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg5
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg6
-  }];
-
   function dateToString(arr) {
     const [y,m,d] = arr;
     return y+"."+m+"."+d;
@@ -157,6 +73,7 @@ export default function ExhibitionPage() {
     setCurrentPage(page);
   }
   useEffect(() => {
+    getEvents();
     getExhibitions();
     const updateItemsPerPage = () => {
       const width = window.innerWidth;
