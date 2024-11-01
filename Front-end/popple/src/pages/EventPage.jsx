@@ -12,6 +12,7 @@ function dateToString(arr) {
   return y+"."+m+"."+d;
 }
 function reducer(state, action){
+  
   if(action.type === "getList"){
     return action.value;
   }else if(action.type === "deleteEvent"){
@@ -23,6 +24,7 @@ function reducer(state, action){
 
 
 export default function EventPage() {
+  const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
@@ -61,7 +63,7 @@ export default function EventPage() {
                 title={item.eventName}
                 usernickname={item.exhibition.user.nickname}
                 duration={dateToString(item.startAt) + " ~ "+ dateToString(item.endAt)} 
-                img={`http://localhost:8080/event_poster_image/${item.image}`}
+                img={`${eventPosterURL}${item.image}`}
               />
           ))}
         </div>

@@ -4,6 +4,8 @@ import { likeAPI } from "../../../src/api/services/Like";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function LikeList(params) {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
+  
   const [likeList, setLikeList] = useState([]);
   const [reloadLikeList, setReloadLikeList] = useState(true);
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ export default function LikeList(params) {
         >
           <div className="flex justify-center items-center m-2">
             <img 
-              src={`http://localhost:8080/poster/${item.posterSavedName}`}
+              src={`${posterURL}${item.posterSavedName}`}
               alt={item.exhi.exhibitionName} 
               className="aspect-[2.5/3] w-[160px] h-auto object-cover" 
             />
