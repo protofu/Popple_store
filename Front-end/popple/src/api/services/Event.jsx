@@ -7,5 +7,6 @@ export const eventAPI = {
   getExhibitionEvents: (id) => api.get(`/event/pop/${id}`),
   delete : (data) => api.delete(`/event/delete/${data}`),
   update : (data) => api.patch("/event/update",data),
-  isMine : (data) => api.get("/event/is", data)
+  isMine : (data) => api.get("/event/is", data),
+  getSpecificList : (id) => api.get(`/event/specific/${id}`),
 }

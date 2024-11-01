@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Vibrant from "node-vibrant";
 import PropTypes from "prop-types";
 
-export default function EventCard({ slogun, title, duration, img }) {
+export default function EventCard({ slogun, title, duration, img, onOpen, exId }) {
   const [palette, setPalette] = useState([]);
   const [textColor, setTextColor] = useState();
 
@@ -45,39 +45,9 @@ export default function EventCard({ slogun, title, duration, img }) {
     const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
 
     // 밝기가 128보다 크면 어두운 색상, 그렇지 않으면 밝은 색상을 반환
-    return brightness > 128 ? '#ffffff' : '#000000'; // 어두운 텍스트는 검정색, 밝은 텍스트는 흰색
+    return brightness > 220 ? '#ffffff' : '#000000'; // 어두운 텍스트는 검정색, 밝은 텍스트는 흰색
   }
 
-  // 헥사코드에서 RGB로 변환
-  // function hexToRgb(hex) {
-  //   // 헥사코드가 #로 시작하는 경우를 처리
-  //   if (hex.startsWith('#')) {
-  //     hex = hex.slice(1);
-  //   }
-
-  //   // 헥사코드가 6자리인 경우에만 처리
-  //   if (hex.length === 6) {
-  //     const r = parseInt(hex.slice(0, 2), 16);
-  //     const g = parseInt(hex.slice(2, 4), 16);
-  //     const b = parseInt(hex.slice(4, 6), 16);
-  //     return [r, g, b];
-  //   }
-
-  //   throw new Error('Invalid hex color format');
-  // }
-
-  // 보색을 반환하는 함수
-  // function getComplementaryColor(hex) {
-  //   const [r, g, b] = hexToRgb(hex);
-
-  //   // 보색 계산
-  //   const compR = 255 - r;
-  //   const compG = 255 - g;
-  //   const compB = 255 - b;
-
-  //   // 헥사코드로 반환
-  //   return rgbToHex(compR, compG, compB);
-  // }
 
   async function submit(imgUrl) {
     const image = new Image();
@@ -109,6 +79,7 @@ export default function EventCard({ slogun, title, duration, img }) {
     <div
       className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-full max-w-[345px] h-auto bg-black`}
       style={{ backgroundColor: palette }}
+      onClick={onOpen}
     >
       <img                        
         src={img}
@@ -121,18 +92,10 @@ export default function EventCard({ slogun, title, duration, img }) {
         }}
       />
       <div className="absolute inset-0 flex flex-col justify-center items-start px-2" style={{ color: textColor }}>
-        <p className="text-sm">{slogun}</p>
-        <h2 className="text-lg font-bold">{title}</h2>
-        <p className="text-sm">{duration}</p>
+        <p className="text-[12px] mb-1">{slogun}</p>
+        <h2 className="text-[16px] font-bold mb-1">{title}</h2>
+        <p className="text-[12px]">{duration}</p>
       </div>
     </div>
   );
 }
-
-// PropTypes 정의
-EventCard.propTypes = {
-  slogun: PropTypes.string.isRequired,   // 슬로건
-  title: PropTypes.string.isRequired,     // 제목
-  duration: PropTypes.string.isRequired,  // 기간
-  img: PropTypes.string.isRequired,       // 이미지 URL
-};

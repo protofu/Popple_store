@@ -23,6 +23,9 @@ import { exhibitionAPI } from "../api/services/Exhibition";
 
 export default function ExhibitionPage() {
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
+  const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
+  
+  const type = 2; // 전시
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleModalToggle = () => {
@@ -137,7 +140,7 @@ export default function ExhibitionPage() {
 
   // 전시 가져오기
   const getExhibitions = async () => {
-    const res = await exhibitionAPI.getlist(2);
+    const res = await exhibitionAPI.getlist(type);
     console.log(res.data);
     setExhibitionData(res.data);
   };

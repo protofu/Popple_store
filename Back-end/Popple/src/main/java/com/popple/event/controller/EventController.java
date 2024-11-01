@@ -54,6 +54,14 @@ public class EventController {
 		return ResponseEntity.ok(eventList);
 	}
 	
+	// 팝업/전시에 따른 이벤트 목록 조회
+	@Operation(summary = "이벤트 목록 조회", description = "이벤트 목록을 조회합니다.")
+	@GetMapping("/specific/{id}")
+	public ResponseEntity<List<EventResponse>> getAllEventByExhi(@PathVariable("id") Long exId) {
+		List<EventResponse> eventList = eventService.getAllEventByExhi(exId);
+		return ResponseEntity.ok(eventList);
+	}
+	
 	// 팝업의 이벤트 목록 조회
 	@Operation(summary = "팝업의 이벤트 목록 조회", description = "팝업의 이벤트 목록을 조회합니다.")
 	@GetMapping("/pop/{id}")

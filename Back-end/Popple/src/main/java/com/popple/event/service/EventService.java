@@ -18,6 +18,8 @@ import com.popple.event.respository.EventPosterRepository;
 import com.popple.event.respository.EventRepository;
 import com.popple.exhibition.entity.Exhibition;
 import com.popple.exhibition.repository.ExhibitionRepository;
+import com.popple.type.ExhiType;
+import com.popple.type.repository.ExhiTypeRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EventService {
 	private final EventRepository eventRepo;
 	private final ExhibitionRepository exhibitionRepository;
+	private final ExhiTypeRepository exhiTypeRepository;
 	private final EventPosterRepository eventPosterRepo;
 	private final EventImageService eventImageService;
 	private final EventPosterService eventPosterService;
@@ -135,6 +138,17 @@ public class EventService {
 	public List<EventResponse> getAllEventByExId(Long exId) {
 		List<Event> events = eventRepo.findAllByExhibitionId(exId);
 		return events.stream().map(EventResponse::toDTO).toList();
+	}
+
+	public List<EventResponse> getAllEventByExhi(Long typeId) {
+		ExhiType type = exhiTypeRepository.findById(typeId).orElseThrow(() -> new IllegalArgumentException("해당 타입이 없습니다."));
+		List<Event> eventList = eventRepo.findAll();
+		
+		return eventList.stream().filter(e -> type.equals(e.getExhibition().getType()))
+				.map(e -> {
+					EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
+					return EventResponse.toDTO(e, eventPoster.getSavedName());
+				}).toList();
 	}
 
 }

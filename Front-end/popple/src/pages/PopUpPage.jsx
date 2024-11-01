@@ -14,6 +14,8 @@ import PosterSlide from "../components/poster-card/PosterSlide";
 import EventCard from "../components/EventCard";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import MapModal from "../components/map-view/MapModal";
+import { eventAPI } from "../api/services/Event";
+import EventDetailModal from "../components/event/EventDetailModal";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -22,48 +24,44 @@ function dateToString(arr) {
 
 export default function PopUpPage() {
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
+  const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
+
+  const type = 1; // 팝업 1번
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [popupData, setPopupData] = useState([]);
   const [visitCountData, setVisitCountData] = useState([]);
-
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleModalToggle = () => {
     setModalOpen((prev) => !prev);
   };
-    
-  const eventList = [{
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg2
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg3
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg4
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg
-  }, {
-    slogun: "DIALOGUE IN THE DARK",
-    title: "어둠속의대화",
-    duration: "오픈런",
-    img: eventImg2
-  }];
+
+  // 팝업 관련 이벤트 가져오기
+  const [eventList, setEventList] = useState([]);
+  const getEvents = async () => {
+    const res = await eventAPI.getSpecificList(type);
+    const today = new Date(); // 오늘 날짜 가져오기
+    const filtered = res.data.filter(item => {
+        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+        return endAt > today; // 오늘보다 후인지 확인
+    });
+    setEventList(filtered);
+  };
+
+  const [propEventId, setPropEventId] = useState(null);
+  // 이벤트 모달 오픈
+  const openEventModal = (id) => {
+    setPropEventId(id);
+    setIsEventModalOpen(true);
+  };
+
+  // 이벤트 모달 닫기
+  const CloseEventModal = () => {
+    setIsEventModalOpen(false);
+  };
 
   // 현재 페이지에 따라 아이템 인덱스 계산
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -92,7 +90,7 @@ export default function PopUpPage() {
     };
     const getPopupList = async () => {
       try {
-        const res = await exhibitionAPI.getlist(1);
+        const res = await exhibitionAPI.getlist(type);
         const today = new Date(); // 오늘 날짜 가져오기
         const filtered = res.data.filter(item => {
             const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
@@ -100,13 +98,12 @@ export default function PopUpPage() {
         });
         const visitCountRes = res.data.sort((a, b) => b.visitCount - a.visitCount);
         setPopupData(filtered); // 상태에 필터링된 데이터 설정
-        console.log(visitCountRes);
         setVisitCountData(visitCountRes);
-        
       } catch (error) {
           console.error('Error fetching data:', error);
       }
     };
+    getEvents();
     getPopupList();
 
     updateItemsPerPage(); // 컴포넌트가 마운트될 때 실행
@@ -133,7 +130,6 @@ export default function PopUpPage() {
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>인기있는 POP-UP</h1>
       </div>
-      {/* 상위 10개만 전달 */}
       <PosterSlide items={popupData.slice(0, 10)}/>
 
       {/* EVENT */}
@@ -142,11 +138,16 @@ export default function PopUpPage() {
         <h1 className={textStyle}>EVENT</h1>
       </div>
       <div className="flex flex-wrap justify-center gap-4">
-        {
+        {eventList?.length > 0 ?
           eventList.map((item, index) => (
-            <EventCard key={index} slogun={item.slogun} title={item.title} duration={item.duration} img={item.img} />
-          ))
+            <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+          )) :
+          <div>
+            현재 진행중인 팝업 이벤트가 없어요 ㅠ
+          </div>
         }
+        {/* onClose, eventDetail, dispatch */}
+        {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
       </div>
       {/* POP-UP */}
       <div className={titleStyle}>
