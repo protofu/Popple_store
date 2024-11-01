@@ -133,10 +133,10 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
       return <img className="w-[250px] h-auto" src={preview} alt="포스터" />
     } else if (info.eventPoster) {
       {/* 수정할 때 나오는 부분 */}
-      return <img className={`w-5/6 h-5/6`} src={`http://localhost:8080/event_poster_image/${info.eventPoster}`} alt="포스터" />
+      return <img className="w-[250px] h-auto" src={`http://localhost:8080/event_poster_image/${info.eventPoster}`} alt="포스터" />
     } else {
       {/* 등록할 때 */}
-      return <LuFilePlus className="w-full h-full" />
+      return <LuFilePlus className="w-[250px] h-auto" />
     }
   }
   console.log(info)
