@@ -22,6 +22,7 @@ import EventRegister from "../pages/EventRegister";
 import ScrollToTop from "../components/common/ScrollToTop";
 import HelpCreate from "../pages/HelpCreate";
 import EventUpdate from "../components/exhibition/EventUpdate";
+import ExhibitionUpdatePage from "../components/exhibition/ExhibitionUpdatePage";
 
 
 
@@ -42,6 +43,7 @@ export default function Router() {
           <Route path="/pop-up/detail/:id" element={<DetailPage />} />
           {/* 팝업/전시 등록 페이지 */}
           <Route path="/regist" element={<ExhibitionRegistPage />} />
+          <Route path="/exhibition-update" element={<ExhibitionUpdatePage />}/>
           {/* 마이 페이지 */}
           <Route path="/my-page" element={<MyPage />} />
           {/* 고객센터, 이벤트 페이지 */}

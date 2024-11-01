@@ -143,6 +143,7 @@ export default function EventCardV2({
           open={handleModalOpen}
         />
       )}
+      
     </div>
   );
 }
@@ -155,8 +156,8 @@ EventCardV2.propTypes = {
   img: PropTypes.string.isRequired, // 이미지 URL
 };
 
-function EventDetailModal({ onClose, eventDetail, dispatch, open }) {
-  console.log(eventDetail);
+function EventDetailModal({ onClose, eventDetail, dispatch, open, }) {
+
   const { loginUserNickname } = useLoginUserStore();
   const navigate = useNavigate();
 

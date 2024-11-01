@@ -5,6 +5,7 @@ import ExStep2 from "../components/exhibition/ExStep2";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import ExStep3 from "../components/exhibition/ExStep3";
 import ExStepComplete from "../components/exhibition/ExStepComplete";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function ExhibitionRegistPage() {
   const [step, setStep] = useState(1);
@@ -57,14 +58,14 @@ export default function ExhibitionRegistPage() {
         const endAt = new Date(name === "endAt" ? value : information.endAt);
 
         if (endAt < startAt) {
-            alert("종료일은 시작일보다 빠를 수 없습니다.");
+            poppleAlert.alert("","종료일은 시작일보다 빠를 수 없습니다.");
             return ;
         }
     }
    
       if (name === "fee") {
           if (isNaN(value.replaceAll(",", ""))) {
-              alert("숫자만 입력 가능합니다.");
+              poppleAlert.alert("", "숫자만 입력 가능합니다.");
               return;
           }
           value = Number(value.replaceAll(",", "")).toLocaleString();
@@ -157,11 +158,22 @@ export default function ExhibitionRegistPage() {
         setStep(prev => prev + 1);
       }
     } catch (error) {
+      console.error(error)
     }
   };
-  const handleAlert = () => {
-    alert("필수사항이 작성되지 않았습니다.")
-    return;
+  console.log(information)
+  const goToNext = () => {
+    // 만약에 필수값이 모두 입력되었으면
+    const { exhibitionName, subTitle, startAt, endAt, poster, image, address } = information
+    const requiredValueCheck = exhibitionName && subTitle && startAt && endAt && poster && image && address;
+    const { monday, tuesday, wednesday, thursday, friday, saturday, sunday } = information.openTime;
+    const days = [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
+    const requiredDateCheck = days.every(day => (day.open && day.close) || day.holiday === true);
+    if (requiredValueCheck && requiredDateCheck) {
+      setStep((step) => step + 1);
+    } else {
+      poppleAlert.alert("", "필수값을 모두 입력해주세요.");
+    }
   }
 
   return (
@@ -201,20 +213,13 @@ export default function ExhibitionRegistPage() {
             {step === 1 ? (
               // 1단계 하단
               <div className="flex justify-end">
-                { information.address &&  information.poster && information.image && information.startAt && information.endAt && information.exhibitionName && information.typeId && information.subTitle && information.openTime.friday?
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={() => setStep((step) => step + 1)}
+                  onClick={() => goToNext()}
                 >
                   다음
-                </button> : 
-                <button
-                  className="border rounded-lg p-3 mt-10"
-                  onClick={handleAlert}>
-                  다음
                 </button>
-            }
             </div>
             ) : step === 2 ? (
               // 2단계 하단

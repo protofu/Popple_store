@@ -70,7 +70,8 @@ public class EventService {
 	// 이벤트 상세 조회
 	public EventResponse getEvent(Long id) {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
-		EventResponse res = EventResponse.toDTO(event);
+		EventPoster poster = eventPosterService.findPoster(id);
+		EventResponse res = EventResponse.toDTO(event, poster.getPosterName());
 		return res;
 	}
 

@@ -30,7 +30,6 @@ export default function ExStep3({ information }) {
   const startAt = dateToString(information.startAt);
   const endAt = dateToString(information.endAt);
 
-
   return (
     <div className="h-full">
       <h1 className="text-2xl m-10 font-bold">{information.exhibitionName}</h1>
