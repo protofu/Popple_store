@@ -37,13 +37,13 @@ export default function ExhibitionRegistPage() {
           sunday: { open: "", close: "", holiday: false },
       },
       constraints: {
-          park: false, // 주차 가능 여부
-          wifi: false, // 와이파이 가능 여부
-          camera: false, // 촬영 가능 여부
-          pet: false, // 반려동물 가능 여부
-          kids: false, // 유아동반 가능 여부
-          grade: false, // 미성년자 가능 여부
-          food: false, // 음식물 반입 가능 여부
+          park: true, // 주차 가능 여부
+          wifi: true, // 와이파이 가능 여부
+          camera: true, // 촬영 가능 여부
+          pet: true, // 반려동물 가능 여부
+          kids: true, // 유아동반 가능 여부
+          grade: true, // 미성년자 가능 여부
+          food: true, // 음식물 반입 가능 여부
       }
   });
   // 생성된 전시/팝업의 아이디 값

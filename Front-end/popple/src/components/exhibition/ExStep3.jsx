@@ -24,12 +24,11 @@ export default function ExStep3({ information }) {
 
   // 날짜
   function dateToString(arr) {
-    const [y,m,d] = arr;
-    return y+"."+m+"."+d;
+    return arr.replaceAll("-",".");
   }
   const startAt = dateToString(information.startAt);
   const endAt = dateToString(information.endAt);
-
+console.log(information.startAt)
   return (
     <div className="h-full">
       <h1 className="text-2xl m-10 font-bold">{information.exhibitionName}</h1>

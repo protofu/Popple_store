@@ -38,14 +38,15 @@ export default function EventPage() {
     }
     getEvent();
   }, []);
-  const exhiId=2571;
+  console.log(state)
+  // const exhiId=2571;
   return (
     <>
       <h1 className={textStyle}>Event</h1>
       <hr className="mt-2 mb-0 border-gray-500" />
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
-        <ExStepComplete exhiId={exhiId}/>
+        {/* <ExStepComplete exhiId={exhiId}/> */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center">
           {state.map((item, index) => (
               <EventCardV2 

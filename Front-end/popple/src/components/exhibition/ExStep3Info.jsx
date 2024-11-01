@@ -58,31 +58,31 @@ function IconBox({ information }) {;
     return (
       <div className="flex mt-5 gap-3">
         {/* {data.fee === "0" ? <LuParkingCircle /> : <LuParkingCircleOff />} */}
-        {!information.food && 
+        {!information.constraints.food && 
         <span className={spanStyle}>
           <div className={iconStyle}><MdNoFood className={innerIconStyle}/><span className={innerTextStyle}>음식물<br />반입금지</span></div>
         </span>}
-        {!information.grade &&  
+        {!information.constraints.grade &&  
         <span className={spanStyle}>
           <div className={iconStyle}><FaArrowUp19 className={innerIconStyle}/><span className={innerTextStyle}>청소년 관람 불가</span></div>
         </span>}
-        {!information.kids &&  
+        {!information.constraints.kids &&  
         <span className={spanStyle}>
           <div className={iconStyle}><FaUserSlash className={innerIconStyle}/><span className={innerTextStyle}>노키즈존</span></div>
         </span>}
-        {!information.wifi &&  
+        {!information.constraints.wifi &&  
         <span className={spanStyle}>
           <div className={iconStyle}><CiWifiOff className={innerIconStyle}/><span className={innerTextStyle}>와이파이 불가</span></div>
         </span>}
-        {!information.park &&  
+        {!information.constraints.park &&  
           <span className={spanStyle}>
             <div className={iconStyle}><LuParkingCircleOff className={innerIconStyle}/><span className={innerTextStyle}>주차 불가</span></div>
           </span>}
-        {information.pet &&  
+        {!information.constraints.pet &&  
         <span className={spanStyle}>
           <div className={iconStyle}><FaDog className={innerIconStyle}/><span className={innerTextStyle}>반려동물<br />동반가능</span></div>
         </span>}
-        {!information.camera &&  
+        {!information.constraints.camera &&  
         <span className={spanStyle}>
           <div className={iconStyle}><LuCameraOff className={innerIconStyle}/><span className={innerTextStyle}>카메라 가능</span></div>
         </span>}

@@ -99,7 +99,7 @@ export default function EventUpdate() {
     }
     setInfo({});
   };
-  
+  console.log("수정 데이터",info)
   return (
     <EventForm title={"이벤트 수정"} info={info} setInfo={setInfo} handleSubmit={handleSubmit} />
   );
