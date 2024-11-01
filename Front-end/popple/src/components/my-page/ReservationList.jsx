@@ -11,9 +11,7 @@ export default function ReservationList() {
   const [reservationIdToCancel, setReservationIdToCancel] = useState(null);
   const navigate = useNavigate();
 
-  const [errorMessage, setErrorMessage] = useState(""); // 오류 메시지 상태 추가
-const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 상태 추가
-
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleCancel = (id) => {
     setReservationIdToCancel(id);
@@ -34,25 +32,29 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
   const getMyReservationList = async () => {
     const res = await reservationAPI.getList();
     console.log("API 응답:", res);
-    // setReservations(Array.isArray(res.data) ? res.data : []);
 
     // 현재 시간에 따라서 나누기
     const current=[];
     const past=[];
     const currentDate = new Date();
+    const formattedToday = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()); // 현재 날짜로만 변환
+
+
 
     if (Array.isArray(res.data)) { 
       // ex용 지우면 data를 res로 변경!!!!
       res.data.forEach(reservation => { 
-        const reservationDate = new Date(reservation.reservationDate);
-        if (reservationDate >= currentDate) {
+        const reservationDateArray = reservation.reservationDate; // 예: [2024, 10, 31]
+      const reservationDate = new Date(reservationDateArray[0], reservationDateArray[1] - 1, reservationDateArray[2]); // 배열을 Date 객체로 변환
+        if (reservationDate >= formattedToday) {
           current.push(reservation);
         } else {
           past.push(reservation);
         }
       });
     }
-
+  current.sort((a, b) => new Date(a.reservationDate) - new Date(b.reservationDate));
+  past.sort((a, b) => new Date(b.reservationDate) - new Date(a.reservationDate));
   setReservations(current);
   setPastReservations(past);
 };
@@ -70,14 +72,9 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
         const res = await authAPI.checkPassword(requestData);
         if (res.status === 200) {
           await reservationAPI.cancel(reservationId);
-          setSuccessMessage("예약이 취소되었습니다.");
-          setTimeout(() => {
-            getMyReservationList();
-            onClose();
-          }, 2000); // 2초 후 모달 닫기
+          getMyReservationList();
+          onClose();
         }
-        // getMyReservationList();
-        // onClose();
       } catch (error) {
         setErrorMessage("비밀번호가 틀렸습니다."); 
         console.error("취소 실패:",  error.response ? error.response.data : error);
@@ -86,7 +83,7 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
 
     return (
       <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[250px] gap-5 border-2 border-[#8900E1] relative">
+        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[300px] gap-5 border-2 border-[#8900E1] relative">
           <button className="absolute top-2 right-2 text-[#8900E1] text-xl p-2" onClick={onClose}>
             ✖
           </button>
@@ -94,20 +91,19 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
             <h1 className="text-[20px] text-center">예약을 취소하시겠습니까?</h1>
             <h1 className="text-[20px] text-center">계정 비밀번호를 입력해주세요.</h1>
           </div>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            className="border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none w-full p-2"
-          />
-          {errorMessage && (
-  <p className="text-red-500 text-xs mt-1">{errorMessage}</p> // 오류 메시지 표시
-)}
-{successMessage && (
-  <p className="text-green-500 text-xs mt-1">{successMessage}</p> // 성공 메시지 표시
-)}
+          <div className="w-[80%] m-0">
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none w-full p-2"
+            />
+            {errorMessage && (
+              <p className="text-red-500 text-xs text-right">{errorMessage}</p> // 오류 메시지 표시
+            )}
+          </div>
           <div className="flex justify-center w-full">
-            <button className="bg-[#8900E1] text-white px-4 py-2 rounded" onClick={handleConfirm}>
+            <button className="bg-[#8900E1] text-white mt-1 px-4 py-2 rounded" onClick={handleConfirm}>
               확인
             </button>
           </div>
@@ -134,13 +130,13 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
           <tbody>
             {reservations.length === 0 ? (
               <tr>
-                <td colSpan="4" className="pt-3 pl-3">예약 내역이 없습니다.</td>
+                <td colSpan="4" className="pt-3 pl-5">예약 내역이 없습니다.</td>
               </tr>
             ) : (
               reservations.map(reservation => (
                 <tr key={reservation.id} onClick={() => handleRowClick(reservation.exhibitionId
                 )} // 행 클릭 시 디테일 페이지 이동
-                className="cursor-pointer hover:bg-gray-100" // 커서 스타일 및 hover 효과
+                className="cursor-pointer hover:bg-gray-100"
               >
                   <td className="border-b pl-5">{reservation.exhibitionName}</td>
                   <td className="border-b">{reservation.address}</td>
@@ -160,7 +156,11 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
       {showCancelModal && (
         <CancelModal 
           reservationId={reservationIdToCancel} 
-          onClose={() => setShowCancelModal(false)} 
+          onClose={() => {
+            setShowCancelModal(false)
+            setErrorMessage("");
+          }
+          }
         />
       )}
       <div className="mt-8 pb-12 mb-12">
@@ -169,24 +169,24 @@ const [successMessage, setSuccessMessage] = useState(""); // 성공 메시지 �
         <table className="w-full mt-3 text-left">
           <thead  >
             <tr >
-              <th className="border-b pl-5 w-2/5 pb-3">팝업/전시명</th>
-              <th className="border-b w-2/5 pb-3">주소</th>
-              <th className="border-b w-1/5 pb-3">예약일</th>
+              <th className="border-b pl-5 w-1/4 pb-3">팝업/전시명</th>
+              <th className="border-b w-1/2 pb-3 pl-8">주소</th>
+              <th className="border-b w-1/4 pb-3">예약일</th>
             </tr>
           </thead>
           <tbody>
             {pastReservations.length === 0 ? (
               <tr>
-                <td colSpan="4" className="pt-3 pl-3">지난 예약 내역이 없습니다.</td>
+                <td colSpan="4" className="pt-3 pl-5">지난 예약 내역이 없습니다.</td>
               </tr>
             ) : (
               pastReservations.map(reservation => (
                 <tr key={reservation.id} onClick={() => handleRowClick(reservation.exhibitionId
                 )} // 행 클릭 시 디테일 페이지 이동
-                className="cursor-pointer hover:bg-gray-100" // 커서 스타일 및 hover 효과
+                className="cursor-pointer hover:bg-gray-100"
               >
                   <td className="border-b pl-5 pt-2 pb-2 ">{reservation.exhibitionName}</td>
-                  <td className="border-b">{reservation.address}</td>
+                  <td className="border-b pl-8">{reservation.address}</td>
                   <td className="border-b">{formatDate(reservation.reservationDate)}</td>
 
                 </tr>
