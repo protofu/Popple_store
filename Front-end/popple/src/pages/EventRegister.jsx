@@ -234,7 +234,7 @@ export default function EventRegister() {
         <div className="grid grid-cols-2 gap-x-20 gap-y-10 my-10">
           <div>
             <label htmlFor="poster" className="text-sm">
-              포스터
+              포스터<span className="text-red-500">*</span>
             </label>
             <label className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}>
               <input
@@ -252,7 +252,7 @@ export default function EventRegister() {
             </label>
           </div>
           <div>
-            <label htmlFor="detailImage" className="text-sm">
+            <label htmlFor="image" className="text-sm">
               상세 이미지
             </label>
             <div className="h-full">
@@ -268,7 +268,7 @@ export default function EventRegister() {
               >
                 <input
                   type="file"
-                  id="detailImage"
+                  id="image"
                   className="hidden"
                   multiple
                   onChange={onUpload2}

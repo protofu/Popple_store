@@ -39,7 +39,7 @@ public class EventController {
 	@Operation(summary = "이벤트 추가", description = "이벤트를 생성합니다.")
 	@PostMapping("")
 	public ResponseEntity<EventResponse> createEvnet(@ModelAttribute EventRequest req,
-			@RequestParam(name = "eventImage") List<MultipartFile> images,
+			@RequestParam(name = "eventImage", required = false) List<MultipartFile> images,
 			@RequestParam(name = "eventPoster") MultipartFile poster) {
 		log.info("이벤트 추가 : {}", req);
 		EventResponse event = eventService.addEvent(req, images, poster);
