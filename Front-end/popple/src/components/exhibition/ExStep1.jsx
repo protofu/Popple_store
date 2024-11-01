@@ -34,10 +34,9 @@ const ExStep1 = ({ information, changeInformation }) => {
   //날짜 지정
   const today = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
-  )
-    .toISOString()
-    .split("T")[0];
-  // 주소 검색 결과 state
+  ).toISOString().split("T")[0];
+  //시간을 지정해보자
+  
   const [address, setAddress] = useState({});
 
   useEffect(() => {
@@ -481,6 +480,8 @@ const ExStep1 = ({ information, changeInformation }) => {
           <div className="flex justify-evenly">
             <label>오픈</label>
             <input
+             
+              id="openTime"
               type="time"
               name={`openTime.${week}.open`}
               className={`${inputStyle}`}

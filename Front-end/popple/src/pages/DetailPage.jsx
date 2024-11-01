@@ -23,6 +23,7 @@ function dateToString(arr) {
 }
 
 export default function DetailPage() {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const navigate = useNavigate();
   const curDate = new Date(); // 현재 날짜
   const [value, onChange] = useState(moment(curDate).format('YYYY-MM-DD'));
@@ -156,7 +157,7 @@ export default function DetailPage() {
           <div className="grid grid-cols-2">
             {/* 포스터 */}
             <div className="">
-              <img src={`http://localhost:8080/poster/${exhi.savedImage}`} alt="포스터 이미지" className="w-[70%] mx-auto" />
+              <img src={`${posterURL}${exhi.savedImage}`} alt="포스터 이미지" className="w-[70%] mx-auto" />
             </div>
             
             {/* 간략 내용 */}

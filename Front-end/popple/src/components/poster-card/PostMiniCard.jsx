@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { SwiperSlide } from "swiper/react";
 
 export default function PostMiniCard({isActive, isPrev, isNext, data}) {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -29,7 +30,7 @@ export default function PostMiniCard({isActive, isPrev, isNext, data}) {
     >
       <img
         className="h-auto object-cover max-h-[290px] max-w-[290px] rounded-lg"
-        src={`http://localhost:8080/poster/${data.savedImage}`}
+        src={`${posterURL}${data.savedImage}`}
         alt={`Slide ${data.exhibitionName}`}
       />
     </div>
