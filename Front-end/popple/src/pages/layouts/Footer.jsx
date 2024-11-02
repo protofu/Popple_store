@@ -14,7 +14,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="hidden sm:flex sm:flex-col-reverse lg:flex-row border-t bg-gray-200 min-h-[100px] px-[10%] py-12">
+    <footer className="hidden sm:flex sm:flex-col-reverse lg:flex-row border-t bg-gray-200 min-h-[100px] px-[10%] py-4">
       <section className="flex flex-col lg:items-center text-gray-400 mb-5 md:mb-0 lg:gap-16 whitespace-nowrap">
         <div className="text-center md:text-left">
           <p className="m-1 text-[13px]">Popeye</p>
