@@ -38,6 +38,9 @@ export default function Header() {
     console.log("로그아웃");
   }
 
+  const menuLiStyle = "list-none relative inline-block text-gray-800 font-bold cursor-pointer group p-1";
+  const span1Style = "relative z-10";
+  const span2Style = "absolute left-0 bottom-0 h-[2px] w-full bg-gray-800 transform scale-x-0 transition-transform duration-300 ease-in-out group-hover:scale-x-100";
   return (
     <header className="fixed h-16 top-0 w-full bg-white border-b border-gray-300 z-50">
       <div className="grid grid-cols-[110px_1fr_130px] sm:grid-cols-[110px_1fr_150px] md:grid-cols-[110px_1fr_280px] lg:grid-cols-[280px_1fr_280px] xl:px-48 w-full">
@@ -49,20 +52,39 @@ export default function Header() {
         <div className="flex pl-[10px] sm:pl-[80px] md:pl-[50px] lg:pl-0 gap-1 sm:gap-2 lg:gap-8 text-base md:text-xl justify-center items-center whitespace-nowrap">
           { loginUserRole === "ROLE_ADMIN" || loginUserRole === "ROLE_COMPANY" ? 
             <>
-              <li onClick={() => handleNavigation("/pop-up")} className="list-none cursor-pointer">
-                팝업
+            {/* ROLE_COMPANY 일때 */}
+              <li onClick={() => handleNavigation("/pop-up")} className={menuLiStyle}>
+                <span className={span1Style}>팝업</span>
+                <span className={span2Style}/>
               </li>
-              <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
-              <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
-              <li onClick={() => handleNavigation("/regist")} className="list-none cursor-pointer">팝업/전시등록</li>
+              <li onClick={() => handleNavigation("/exhibition")} className={menuLiStyle}>
+                <span className={span1Style}>전시회</span>
+                <span className={span2Style}/>
+              </li>
+              <li onClick={() => handleNavigation("/event")} className={menuLiStyle}>
+                <span className={span1Style}>이벤트</span>
+                <span className={span2Style}/>
+              </li>
+              <li onClick={() => handleNavigation("/regist")} className={menuLiStyle}>
+                <span className={span1Style}>팝업/전시등록</span>
+                <span className={span2Style}/>
+              </li>
             </>
             :
             <>
-              <li onClick={() => handleNavigation("/pop-up")} className="list-none cursor-pointer">
-                팝업
+            {/* ROLE_USER 일때 */}
+              <li onClick={() => handleNavigation("/pop-up")} className={menuLiStyle}>
+                <span className={span1Style}>팝업</span>
+                <span className={span2Style}/>
               </li>
-              <li onClick={() => handleNavigation("/exhibition")} className="list-none cursor-pointer">전시회</li>
-              <li onClick={() => handleNavigation("/event")} className="list-none cursor-pointer">EVENT</li>
+              <li onClick={() => handleNavigation("/exhibition")} className={menuLiStyle}>
+                <span className={span1Style}>전시회</span>
+                <span className={span2Style}/>
+              </li>
+              <li onClick={() => handleNavigation("/event")} className={menuLiStyle}>
+                <span className={span1Style}>이벤트</span>
+                <span className={span2Style}/>
+              </li>
             </>
           }
         </div>
