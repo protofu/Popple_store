@@ -45,7 +45,7 @@ export default function EventCard({ slogun, title, duration, img, onOpen, exId }
     const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
 
     // 밝기가 128보다 크면 어두운 색상, 그렇지 않으면 밝은 색상을 반환
-    return brightness > 220 ? '#ffffff' : '#000000'; // 어두운 텍스트는 검정색, 밝은 텍스트는 흰색
+    return brightness > 69 ? '#ffffff' : '#000000'; // 어두운 텍스트는 검정색, 밝은 텍스트는 흰색
   }
 
 
@@ -60,8 +60,8 @@ export default function EventCard({ slogun, title, duration, img, onOpen, exId }
         const [r, g, b] = value.rgb;
         hexPalette[key] = rgbToHex(r, g, b);
     }
-    const textc = getTextColor(hexPalette["LightVibrant"]);
-    setPalette(hexPalette["LightVibrant"]);
+    const textc = getTextColor(hexPalette["DarkMuted"]);
+    setPalette(hexPalette["DarkMuted"]);
     setTextColor(textc);
     // DarkMuted"#5c6454"
     // DarkVibrant"#76660f"

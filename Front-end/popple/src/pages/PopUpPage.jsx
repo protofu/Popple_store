@@ -16,6 +16,7 @@ import { exhibitionAPI } from "../api/services/Exhibition";
 import MapModal from "../components/map-view/MapModal";
 import { eventAPI } from "../api/services/Event";
 import EventDetailModal from "../components/event/EventDetailModal";
+import NoEventList from "../components/event/NoEventList";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -142,9 +143,7 @@ export default function PopUpPage() {
           eventList.map((item, index) => (
             <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
           )) :
-          <div>
-            현재 진행중인 팝업 이벤트가 없어요 ㅠ
-          </div>
+          <NoEventList text={"이벤트"} />
         }
         {/* onClose, eventDetail, dispatch */}
         {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}

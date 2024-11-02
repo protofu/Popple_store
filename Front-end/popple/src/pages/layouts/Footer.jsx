@@ -5,8 +5,8 @@ import Github from "../../assets/Github.png";
 export default function Footer() {
   const navigate = useNavigate();
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  const handleNavigation = (path, state) => {
+    navigate(path, state);
   };
 
   const handleExternalNavigation = (url) => {
@@ -42,42 +42,41 @@ export default function Footer() {
       <section className="flex flex-nowrap justify-between pb-12 lg:justify-end text-lg w-full gap-6">
         <div className="flex flex-col text-left">
           <ul>
-            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/")}>
               팝업/전시회
             </li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">팝업</li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">전시회</li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">지도로 보기</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/pop-up")}>팝업</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/exhibition")}>전시회</li>
           </ul>
         </div>
 
         <div className="flex flex-col text-left">
           <ul>
-            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/my-page")}>
               마이페이지
             </li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">정보수정</li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">나의리뷰</li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">예약목록</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/my-page", {state : {activeItem: "정보 수정"} })}>정보수정</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/my-page", {state : {activeItem: "방문 리뷰"} })}>나의리뷰</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/my-page", {state : {activeItem: "예약 목록"} })}>예약목록</li>
           </ul>
         </div>
 
         <div className="flex flex-col text-left">
           <ul>
-            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/event")}>
               이벤트
             </li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">이벤트</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/event")}>이벤트</li>
           </ul>
         </div>
 
         <div className="flex flex-col text-left">
           <ul>
-            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/login")}>
+            <li className="font-semibold text-[#524747] mb-2 cursor-pointer" onClick={() => handleNavigation("/help")}>
               고객센터
             </li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">FAQ</li>
-            <li className="text-gray-400 text-sm mb-1 cursor-pointer">1:1 문의하기</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/help")}>FAQ</li>
+            <li className="text-gray-400 text-sm mb-1 cursor-pointer" onClick={() => handleNavigation("/help")}>1:1 문의하기</li>
           </ul>
         </div>
       </section>
