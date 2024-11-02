@@ -145,7 +145,9 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  console.log(value);
+  console.log(exhi);
+  const endAtDate = new Date(exhi.endAt[0], exhi.endAt[1]-1, exhi.endAt[2]);
+
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />
@@ -209,6 +211,10 @@ export default function DetailPage() {
               calendarType="gregory"  // 그레고리를 통한 토요일 시작
               value={value} // 선택된 value값 (default 오늘)
               showNeighboringMonth={true} // 다음달 날짜도 보이게
+              // 활성화 날짜 지정
+              minDate={new Date()}
+              maxDate={endAtDate}
+              // 예약시 보일 스타일
               tileContent={({ date, view }) => {
                 let html = [];
                 if (reservedDate.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
