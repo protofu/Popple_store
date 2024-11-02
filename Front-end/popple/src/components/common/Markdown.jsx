@@ -7,6 +7,7 @@ export default function Markdown(props){
     className='w-full h-full'
     value={props.content}
     onChange={props.contentChange}
+    style={props.style}
     />
   )
 }

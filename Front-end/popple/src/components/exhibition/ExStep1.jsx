@@ -35,8 +35,8 @@ const ExStep1 = ({ information, changeInformation }) => {
   const today = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
   ).toISOString().split("T")[0];
-  
-  
+
+
   const [address, setAddress] = useState({});
 
   useEffect(() => {
@@ -228,6 +228,21 @@ const ExStep1 = ({ information, changeInformation }) => {
     });
   };
 
+  // 예약 드롭다운
+  const [reserveStatus, setReserveStatus] = useState(false);
+
+  const handleReserveChange = (e) => {
+    const selectedValue = e.target.value;
+    setReserveStatus(selectedValue);
+    changeInformation({
+      target: {
+        name: "reserve",
+        value: selectedValue === "true", // true/false로 변환
+      },
+    });
+  };
+
+
   return (
     <div>
       <div className="grid grid-cols-2 gap-x-32 w-full h-full">
@@ -247,7 +262,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             value={information.exhibitionName}
             onChange={(e) => changeInformation(e)}
           />
-          
+
           <label>
             부제 <span className="text-red-500">*</span>
           </label>
@@ -277,6 +292,17 @@ const ExStep1 = ({ information, changeInformation }) => {
             onChange={(e) => changeInformation(e)}
             disabled={information.free}
           />
+
+          <label>예약 여부</label>
+          <select
+            value={reserveStatus}
+            onChange={handleReserveChange}
+            className={`${inputStyle} w-full mb-10`}
+          >
+            <option value="true">가능</option>
+            <option value="false">불가능</option>
+          </select>
+
 
           <label>상세 설명</label>
           <div className={inputStyle}>
@@ -378,10 +404,11 @@ const ExStep1 = ({ information, changeInformation }) => {
           />
 
           <label>공지사항</label>
-          <div className={inputStyle}>
+          <div className={`${inputStyle} `}>
             <Markdown
               content={information.notice}
               contentChange={(e) => handleMarkDown("notice", e)}
+              style={{ height: '100%' }}
             />
           </div>
 
@@ -393,9 +420,8 @@ const ExStep1 = ({ information, changeInformation }) => {
           </label>
 
           <div
-            className={`${inputStyle} preview ${
-              isActive ? "active" : " "
-            } flex justify-center cursor-pointer h-48`}
+            className={`${inputStyle} preview ${isActive ? "active" : " "
+              } flex justify-center cursor-pointer h-48`}
             onDragEnter={handleDragStart}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
@@ -432,9 +458,8 @@ const ExStep1 = ({ information, changeInformation }) => {
             {daysOfWeek.map((day) => (
               <div
                 key={day.name}
-                className={`border-2 border-popple-light ${
-                  week === day.name ? "border-opacity-50" : "border-opacity-20"
-                } rounded-lg`}
+                className={`border-2 border-popple-light ${week === day.name ? "border-opacity-50" : "border-opacity-20"
+                  } rounded-lg`}
               >
                 <img
                   src={`/week/${day.name}.png`}
@@ -456,13 +481,12 @@ const ExStep1 = ({ information, changeInformation }) => {
           </button>
           <div className="flex justify-between">
             <span
-              className={`${
-                week === "sunday"
-                  ? "text-red-400"
-                  : week === "saturday"
+              className={`${week === "sunday"
+                ? "text-red-400"
+                : week === "saturday"
                   ? "text-blue-400"
                   : "text-black"
-              }`}
+                }`}
             >
               {week.toUpperCase()}
             </span>
@@ -480,11 +504,11 @@ const ExStep1 = ({ information, changeInformation }) => {
           <div className="flex justify-evenly">
             <label>오픈</label>
             <input
-             
+
               id="openTime"
               type="time"
               name={`openTime.${week}.open`}
-              className={`${inputStyle}`}
+              className={`${inputStyle} w-1/3 `}
               value={information.openTime[week].open}
               onChange={(e) => changeInformation(e)}
               disabled={information.openTime[week].holiday}
@@ -493,7 +517,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             <input
               type="time"
               name={`openTime.${week}.close`}
-              className={`${inputStyle}`}
+              className={`${inputStyle} w-1/3`}
               value={information.openTime[week].close}
               onChange={(e) => changeInformation(e)}
               disabled={information.openTime[week].holiday}
@@ -523,13 +547,12 @@ const ExStep1 = ({ information, changeInformation }) => {
                       className="font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       <span
-                        className={`${
-                          key === "sunday"
-                            ? "text-red-400"
-                            : key === "saturday"
+                        className={`${key === "sunday"
+                          ? "text-red-400"
+                          : key === "saturday"
                             ? "text-blue-400"
                             : "text-black"
-                        }`}
+                          }`}
                       >
                         {key.toUpperCase()}
                       </span>
@@ -565,16 +588,6 @@ const ExStep1 = ({ information, changeInformation }) => {
             );
           })}
         </div>
-        <div>
-          <input
-            name="reserve"
-            type="checkbox"
-            className="ml-10"
-            onChange={(e) => changeInformation(e)}
-            checked={information.reserve}
-          />
-          <label>예약 여부</label>
-        </div>
       </div>
     </div>
   );
@@ -590,13 +603,13 @@ const ToggleConstraint = ({ name, constraints, changeInformation }) => {
     });
   };
   const isOkay = constraints[name];
-  const textStyle = isOkay ? "text-gray-500" : "text-popple" ;
+  const textStyle = isOkay ? "text-gray-500" : "text-popple";
   const renderIcon = () => {
     switch (name) {
       case "park":
         return {
-          icon: isOkay ? <LuParkingCircle /> : <LuParkingCircleOff />  ,
-          text: isOkay ? "주차 가능" : "주차 불가" ,
+          icon: isOkay ? <LuParkingCircle /> : <LuParkingCircleOff />,
+          text: isOkay ? "주차 가능" : "주차 불가",
         };
       case "camera":
         return {
