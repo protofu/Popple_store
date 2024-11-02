@@ -293,7 +293,8 @@ const ExStep1 = ({ information, changeInformation }) => {
             disabled={information.free}
           />
 
-          <label>예약 여부</label>
+          <div>
+            <label>예약 여부</label> <span className="text-red-500">*</span></div>
           <select
             value={reserveStatus}
             onChange={handleReserveChange}
@@ -474,11 +475,12 @@ const ExStep1 = ({ information, changeInformation }) => {
 
         {/* 관람시간 지정 인풋 */}
         <div
-          className={`${inputStyle} my-auto p-5 gap-5 flex flex-col justify-around`}
-        >
-          <button type="button" className="border p-2" onClick={handleAllDay}>
-            일괄처리
-          </button>
+          className={`${inputStyle} my-auto p-5 gap-5 flex flex-col justify-around `}
+        ><div className="flex justify-center">
+            <button type="button" className="border p-2 bg-white hover:bg-popple rounded-lg hover:text-white w-full" onClick={handleAllDay} >
+              일괄처리
+            </button>
+          </div>
           <div className="flex justify-between">
             <span
               className={`${week === "sunday"
