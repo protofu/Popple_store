@@ -77,7 +77,7 @@ export default function EventCard({ slogun, title, duration, img, onOpen, exId }
 
   return (
     <div
-      className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-full max-w-[345px] h-auto bg-black`}
+      className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-full max-w-[345px] h-auto bg-black cursor-pointer`}
       style={{ backgroundColor: palette }}
       onClick={onOpen}
     >

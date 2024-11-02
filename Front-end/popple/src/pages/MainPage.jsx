@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { eventAPI } from "../api/services/Event";
 import NoEventList from "../components/event/NoEventList";
+import EventDetailModal from "../components/event/EventDetailModal";
 
 export default function MainPage() {
   const postURL = import.meta.env.VITE_EXHIBITION_POSTER;
@@ -41,6 +42,19 @@ export default function MainPage() {
         return endAt > today; // 오늘보다 후인지 확인
     });
     setEventList(filtered);
+  };
+
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [propEventId, setPropEventId] = useState(null);
+  // 이벤트 모달 오픈
+  const openEventModal = (id) => {
+    setPropEventId(id);
+    setIsEventModalOpen(true);
+  };
+
+  // 이벤트 모달 닫기
+  const CloseEventModal = () => {
+    setIsEventModalOpen(false);
   };
 
   // 현재 페이지에 따라 아이템 인덱스 계산
@@ -94,7 +108,7 @@ export default function MainPage() {
 
   return (
     <div className="flex flex-col items-center mt-4">
-      <div className={styles.cateButton}>
+      <div className={styles.cateButton}> 
         <CateButton text={"NEW"} />
       </div>
       {/* 포스터 캐러셀 */}
@@ -103,14 +117,15 @@ export default function MainPage() {
       </div>
       {/* 이벤트 섹션 */}
       <div className="mt-10">
-        <h1 className="text-center text-2xl mb-5">EVENT</h1>
+        <h1 className="text-center text-2xl mb-5 cursor-pointer" onClick={() => handleNavigate("/event")}>EVENT</h1>
         <div className="flex flex-wrap justify-center gap-4">
           {eventList?.length > 0 ?
-            eventList.map((item, index) => (
+            eventList.slice(0, 8).map((item, index) => (
               <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
             )) :
             <NoEventList />
           }
+          {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
         </div>
       </div>
       {/* 전시 혹은 이벤트 섹션 */}

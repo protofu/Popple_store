@@ -145,7 +145,7 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-
+  console.log(value);
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />
@@ -207,7 +207,7 @@ export default function DetailPage() {
               onChange={(date) => handleDateChange(date)}   // 날짜 변경시 저장
               formatDay={(local, date) => moment(date).format("D")} // 요일 형식 변환
               calendarType="gregory"  // 그레고리를 통한 토요일 시작
-              value={reservedDate ? reservedDate[0] : value} // 선택된 value값 (default 오늘)
+              value={value} // 선택된 value값 (default 오늘)
               showNeighboringMonth={true} // 다음달 날짜도 보이게
               tileContent={({ date, view }) => {
                 let html = [];
@@ -219,9 +219,9 @@ export default function DetailPage() {
               
             /> 
             <div className="flex flex-col justify-center items-center text-gray-500 mt-4">
-              <h1 className="m-2 text-popple-dark">{reservedDate ? "예약된 날짜": "선택된 날짜"}</h1>
+              <h1 className="m-2 text-popple-dark">{reservedDate?.length > 0 ? "예약된 날짜": "선택된 날짜"}</h1>
               <div className="w-full text-center border-2 rounded-lg py-1">
-                {reservedDate ? (
+                {reservedDate?.length > 0 ? (
                   moment(reservedDate[0]).format("YYYY년 MM월 DD일")
                 ) : (
                   value && moment(value).format("YYYY년 MM월 DD일")

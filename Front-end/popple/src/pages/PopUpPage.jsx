@@ -140,7 +140,7 @@ export default function PopUpPage() {
       </div>
       <div className="flex flex-wrap justify-center gap-4">
         {eventList?.length > 0 ?
-          eventList.map((item, index) => (
+          eventList.slice(0, 8).map((item, index) => (
             <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
           )) :
           <NoEventList text={"이벤트"} />
