@@ -7,6 +7,7 @@ import { LiaEditSolid } from "react-icons/lia";
 import { IoTrashOutline } from "react-icons/io5";
 import { FiPieChart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import Statistics from "./Statistics";
 
 export default function PopupList() {
   const navigate = useNavigate();
@@ -74,56 +75,83 @@ export default function PopupList() {
 
   const trStyle = "grid grid-cols-[4fr_2fr_0.8fr_0.8fr_0.8fr_0.8fr] border-b my-auto";
   const thStyle = "my-auto";
-  return (
-    <div className="">
-      <div className="mt-8 pb-12 mb-12">
-        <h2 className="text-[16px]">팝업/전시 목록, 총 <span className="font-bold text-[24px] text-popple-light">{popupList.length}</span>개의 팝업/전시가 있습니다.</h2>
-        <hr  className=" border-gray-500"/>
-        <table className="w-full mt-3 text-left">
-          <thead>
-            <tr className={`${trStyle} border-gray-500 h-10`}>
-              <th className="text-center">팝업/전시명</th>
-              <th>상태</th>
-              <th className="text-center">예약</th>
-              <th className="text-center">통계</th>
-              <th className="text-center">수정</th>
-              <th className="text-center">삭제</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((event) => {
-              const { value, color } = getStatus(event.startAt, event.endAt);
-              console.log(value);
-              return (
-                <tr key={event.id} className={trStyle}>
-                  <td className={`${thStyle} h-12 flex items-center`} title={event.exhibitionName} >
-                    <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
-                  </td>
-                  <td className={`${thStyle} ${color}`}>{value}</td>
-                  <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px]" /></td>
-                  <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px]" /></td>
-                  <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px]" /></td>
-                  <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px]" /></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {/* 페이지네이션 버튼 10개가 넘지 않으면 페이지네이션 버튼 안보임*/}
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-4">
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-                className={`mx-1 px-2 py-1 rounded ${currentPage === index + 1 ? "bg-popple-light text-white" : "bg-gray-300 text-black"}`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        )}
+
+  const [selectedComponent, setSelectedComponent] = useState(null); // 선택된 컴포넌트 상태 추가
+
+  // 아이콘 클릭 핸들러
+  const handleIconClick = (action, eventId) => {
+    if (action === 'statistics') {
+      setSelectedComponent(<Statistics eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+    }
+    // } else if (action === 'edit') {
+    //   setSelectedComponent(<Edit eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+    // } else if (action === 'delete') {
+    //   setSelectedComponent(<Delete eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+    // }
+  };
+
+  const renderContent = () => {
+    if (selectedComponent) {
+      return selectedComponent; // 선택된 컴포넌트가 있으면 렌더링
+    }
+
+    return (
+      <div className="">
+        <div className="mt-8 pb-12 mb-12">
+          <h2 className="text-[16px]">팝업/전시 목록, 총 <span className="font-bold text-[24px] text-popple-light">{popupList.length}</span>개의 팝업/전시가 있습니다.</h2>
+          <hr  className=" border-gray-500"/>
+          <table className="w-full mt-3 text-left">
+            <thead>
+              <tr className={`${trStyle} border-gray-500 h-10`}>
+                <th className="text-center">팝업/전시명</th>
+                <th>상태</th>
+                <th className="text-center">예약</th>
+                <th className="text-center">통계</th>
+                <th className="text-center">수정</th>
+                <th className="text-center">삭제</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((event) => {
+                const { value, color } = getStatus(event.startAt, event.endAt);
+                console.log(value);
+                return (
+                  <tr key={event.id} className={trStyle}>
+                    <td className={`${thStyle} h-12 flex items-center`} title={event.exhibitionName} >
+                      <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
+                    </td>
+                    <td className={`${thStyle} ${color}`}>{value}</td>
+                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer"/></td>
+                    <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
+                    <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" /></td>
+                    <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" /></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {/* 페이지네이션 버튼 10개가 넘지 않으면 페이지네이션 버튼 안보임*/}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4">
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 px-2 py-1 rounded ${currentPage === index + 1 ? "bg-popple-light text-white" : "bg-gray-300 text-black"}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div>
+      {renderContent()}
     </div>
   );
 };
