@@ -4,7 +4,8 @@ import { useLoginUserStore } from '../stores/LoginUserState';
 import LikeList from '../components/my-page/LikeList';
 import ReservationList from '../components/my-page/ReservationList';
 import MyReview from '../components/my-page/MyReview';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import PopupList from '../components/company/PopupList';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -62,7 +63,7 @@ export default function MyPage() {
     "방문 리뷰": <MyReview />,
     "정보 수정": renderPasswordInput(),
     "탈퇴": renderPasswordInput(),
-    "팝업/전시 목록": '팝업/전시 목록 관련 내용 (기업)',
+    "팝업/전시 목록": <PopupList />,
     "전체 방문 통계": '전체 방문 통계 관련 내용 (기업)',
   };
 
