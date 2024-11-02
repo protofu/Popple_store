@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import CateButton from "../components/common/CateButton";
-import styles from "./styles/MainPage.module.css";
 import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
 import { useEffect, useState } from "react";
@@ -107,13 +105,11 @@ export default function MainPage() {
   }, [isPop])
 
   return (
-    <div className="flex flex-col items-center mt-4">
-      <div className={styles.cateButton}> 
-        <CateButton text={"NEW"} />
-      </div>
-      {/* 포스터 캐러셀 */}
-      <div className={styles.carouselContainer}>
+    <div className="flex flex-col items-center">
+      {/* 메인 이미지 */}
+      <div className="my-auto w-full ">
         {/* <PostCarousel /> */}
+        <img src="/images/mainpage.jpg" alt="메인페이지 이미지" className="h-[800px]" />
       </div>
       {/* 이벤트 섹션 */}
       <div className="mt-10">
