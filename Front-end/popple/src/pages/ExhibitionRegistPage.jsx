@@ -156,8 +156,10 @@ export default function ExhibitionRegistPage() {
         setExhiId(res.data.id);
         setInformation({});
         setStep(prev => prev + 1);
+        poppleAlert.alert("등록 성공")
       }
     } catch (error) {
+      poppleAlert.alert("등록 실패")
       console.error(error)
     }
   };
@@ -200,7 +202,7 @@ export default function ExhibitionRegistPage() {
             />
           )}
           {step === 4 && (
-            <ExStepComplete exhiId={exhiId} />
+            <ExStepComplete information={information}/>
           )}
 
           {/* <pre className="bg-gray-100 p-4 rounded-lg">
@@ -251,7 +253,7 @@ export default function ExhibitionRegistPage() {
                 <button
                   type="submit"
                   className="border rounded-lg p-3 mt-10"
-                  onClick={registerExhibition }
+                  onClick={ registerExhibition }
                 >
                   등록
                 </button>
