@@ -8,6 +8,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { FiPieChart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Statistics from "./Statistics";
+import ReservationList from "../company/ReservationList";
 
 export default function PopupList() {
   const navigate = useNavigate();
@@ -80,7 +81,9 @@ export default function PopupList() {
 
   // 아이콘 클릭 핸들러
   const handleIconClick = (action, eventId) => {
-    if (action === 'statistics') {
+    if (action === 'reservation') {
+      setSelectedComponent(<ReservationList eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+    } else if (action === 'statistics') {
       setSelectedComponent(<Statistics eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     }
     // } else if (action === 'edit') {
@@ -114,14 +117,13 @@ export default function PopupList() {
             <tbody>
               {currentItems.map((event) => {
                 const { value, color } = getStatus(event.startAt, event.endAt);
-                console.log(value);
                 return (
                   <tr key={event.id} className={trStyle}>
                     <td className={`${thStyle} h-12 flex items-center`} title={event.exhibitionName} >
                       <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
                     </td>
                     <td className={`${thStyle} ${color}`}>{value}</td>
-                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer"/></td>
+                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id)}/></td>
                     <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
                     <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" /></td>
                     <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" /></td>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { likeAPI } from "../../../src/api/services/Like";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 
-export default function LikeList(params) {
+export default function LikeList() {
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   
   const [likeList, setLikeList] = useState([]);
@@ -13,7 +13,6 @@ export default function LikeList(params) {
     const getLikeList = async () => {
       try {
         const response = await likeAPI.getMyLikeList();
-        console.log(response.data);
         setLikeList(response.data);
       } catch (error) {
         console.error("실패", error);
