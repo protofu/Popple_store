@@ -405,7 +405,7 @@ const ExStep1 = ({ information, changeInformation }) => {
           />
 
           <label>공지사항</label>
-          <div className={`${inputStyle} `}>
+          <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 mb-10 h-full">
             <Markdown
               content={information.notice}
               contentChange={(e) => handleMarkDown("notice", e)}
