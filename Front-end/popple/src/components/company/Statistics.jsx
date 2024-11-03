@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { visitAPI } from "../../api/services/Visit";
 import AgeChart from "../charts/AgeChart";
 import GenderChart from "../charts/GenderChart";
+import TimeChart from "../charts/TimeChart";
+import WeekChart from "../charts/WeekChart";
 
 export default function Statistics({ eventId, onClose  }) {
   const [chartData, setChartData] = useState({ 
@@ -57,6 +59,8 @@ export default function Statistics({ eventId, onClose  }) {
   ) {
     return <div>로딩중</div>;
   }
+
+  console.log(chartData.weekData);
   
   return (
     <div className="flex flex-col w-full gap-2">
@@ -77,11 +81,11 @@ export default function Statistics({ eventId, onClose  }) {
       <div className="grid grid-cols-2 gap-2">
         {/* timeChart */}
         <div className="border-2 rounded-2xl  ">
-          시간별 차트가 들어올 자리
+         <TimeChart timeData={chartData.timeData} humanCount={chartData.humanCount} />
         </div>
         {/* weekChart */}
         <div className="border-2 rounded-2xl  ">
-          요일별 차트가 들어올 자리
+          <WeekChart weekData={chartData.weekData} humanCount={chartData.humanCount} />
         </div>
       </div>
       <div className="flex justify-end">
