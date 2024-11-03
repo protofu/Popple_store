@@ -10,6 +10,7 @@ import lombok.Data;
 public class ReserverResponse {
 	private Long id;
 	private String reserverName;
+	private String email;
 	private LocalDate reserveTime;
 	private boolean isAttend;
 }

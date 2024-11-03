@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { reservationAPI } from "../../api/services/Reservation";
 import { FaUserCheck } from "react-icons/fa";
 import { GiCrossMark } from "react-icons/gi";
+import SimpleInfoBox from "./SimpleInfoBox";
 
-export default function ReservationList({ eventId, onClose }) {
+export default function ReservationList({ event, eventId, onClose }) {
   // 예약자 명단
   const [reserverList, setReserverList] = useState([]);
 
@@ -29,6 +30,7 @@ export default function ReservationList({ eventId, onClose }) {
     setCurrentPage(pageNumber);
   };
 
+  // 예약 방문 상태 반환 함수
   function getStatus(attend) {
     if (attend) {
       return { value: <FaUserCheck />, color: 'text-green-500' }; // true일 때 초록색 참석
@@ -37,21 +39,35 @@ export default function ReservationList({ eventId, onClose }) {
     }
   }
 
+  // 날짜 포멧 변경 함수
+  function dateToString(arr) {
+    const [y,m,d] = arr;
+    return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+
   const trStyle = "grid grid-cols-[0.5fr_1.5fr_1.5fr_1fr_1fr] border-b my-auto";
   const thStyle = "my-auto";
 
   return (
     <div>
+      <SimpleInfoBox info={event} />
       <div className="mt-8 pb-12 mb-12">
-          {/* <h2 className="text-[16px]">팝업/전시 목록, 총 <span className="font-bold text-[24px] text-popple-light">{popupList.length}</span>개의 팝업/전시가 있습니다.</h2> */}
+          <h2 className="flex justify-between items-center text-[16px]">
+            <div className="inline">
+              총 <span className="font-bold text-[24px] text-popple-light">{currentItems.length}</span>개의 예약이 있습니다.
+            </div>
+            <span className="text-[#727171]">
+              <FaUserCheck className="inline text-green-500" /> : 방문 완료, <GiCrossMark className="inline text-red-400" /> : 방문 전
+            </span>  
+          </h2>
           <hr  className=" border-gray-500"/>
           <table className="w-full mt-3 text-left">
             <thead>
-              <tr className={`${trStyle} border-gray-500 h-10`}>
+              <tr className={`${trStyle} border-gray-500 h-12`}>
                 <th className="text-center">No.</th>
                 <th className="text-center">예약자명</th>
                 <th className="text-center">이메일</th>
-                <th className="text-center">예약 시간</th>
+                <th className="text-center">예약 일자</th>
                 <th className="text-center">상태</th>
               </tr>
             </thead>
@@ -59,12 +75,12 @@ export default function ReservationList({ eventId, onClose }) {
               {currentItems.map((reserve, index) => {
                 const { value, color } = getStatus(reserve.attend);
                 return (
-                  <tr key={reserve.id} className={trStyle}>
-                    <td className={`${thStyle} h-12 flex items-center`}>{index+1}</td>
+                  <tr key={reserve.id} className={`${trStyle} h-8`}>
+                    <td className={`${thStyle} m-auto`}>{index+1}</td>
                     <td className={`${thStyle} m-auto`}>{reserve.reserverName}</td>
-                    <td className={`${thStyle} m-auto`}></td>
-                    <td className={`${thStyle} m-auto`}></td>
-                    <td className={`${thStyle} ${color} text-center`}>{value}</td>
+                    <td className={`${thStyle} m-auto`}>{reserve.email}</td>
+                    <td className={`${thStyle} m-auto`}>{dateToString(reserve.reserveTime)}</td>
+                    <td className={`${thStyle} ${color} m-auto`}>{value}</td>
                   </tr>
                 );
               })}

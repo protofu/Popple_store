@@ -26,7 +26,7 @@ export default function PopupList() {
         const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
         return endAt > today; // 오늘보다 후인지 확인
     });
-    setPopupList(filtered);
+    setPopupList(res.data);
   }
   useEffect(() => {
     getMyPopupList();
@@ -44,8 +44,13 @@ export default function PopupList() {
   // 날짜를 받아서 알맞게 가공해서 반환하는 함수
   function getStatus(start, end) {
     const today = new Date();
-    const startAt = new Date(start[0], start[1] - 1, start[2]); // 연도, 월(0부터 시작), 일
+    today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간을 00:00:00으로 설정
+  
+    const startAt = new Date(start[0], start[1] - 1, start[2]);
+    startAt.setHours(0, 0, 0, 0); // 시작 날짜의 시간을 00:00:00으로 설정
+  
     const endAt = new Date(end[0], end[1] - 1, end[2]);
+    endAt.setHours(23, 59, 59, 999); // 종료 날짜의 시간을 23:59:59로 설정
   
     if (today < startAt) {
       // 오픈 전 상태
@@ -80,9 +85,9 @@ export default function PopupList() {
   const [selectedComponent, setSelectedComponent] = useState(null); // 선택된 컴포넌트 상태 추가
 
   // 아이콘 클릭 핸들러
-  const handleIconClick = (action, eventId) => {
+  const handleIconClick = (action, eventId, event) => {
     if (action === 'reservation') {
-      setSelectedComponent(<ReservationList eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+      setSelectedComponent(<ReservationList event={event} eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     } else if (action === 'statistics') {
       setSelectedComponent(<Statistics eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     }
@@ -92,7 +97,7 @@ export default function PopupList() {
     //   setSelectedComponent(<Delete eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     // }
   };
-
+  
   const renderContent = () => {
     if (selectedComponent) {
       return selectedComponent; // 선택된 컴포넌트가 있으면 렌더링
@@ -123,7 +128,7 @@ export default function PopupList() {
                       <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
                     </td>
                     <td className={`${thStyle} ${color}`}>{value}</td>
-                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id)}/></td>
+                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id, event)}/></td>
                     <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
                     <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" /></td>
                     <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" /></td>
