@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 export default function Markdown(props){
   return(
     <MDEditor 
-    className='w-full h-full'
+    className='w-auto h-auto'
     value={props.content}
     onChange={props.contentChange}
+    height="100%"
     />
   )
 }

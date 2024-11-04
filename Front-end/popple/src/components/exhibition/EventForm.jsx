@@ -158,8 +158,8 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
       <div className="mt-2">이벤트 정보</div>
 
       <div className="flex flex-col w-5/6 mx-auto gap-5 mt-16">
-        <div className="grid grid-cols-2 gap-x-20 gap-y-10">
-          <div className="flex flex-col gap-10">
+        <div className="grid grid-cols-2 gap-x-32 gap-y-10">
+          <div className="flex flex-col gap-16">
             <div>
               <label className="text-sm" htmlFor="1">
                 이벤트명 <span className="text-red-500">*</span>
@@ -218,9 +218,9 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
           </div>
           <div>
             <label className="text-sm" htmlFor="1">
-              상세설명 <span className="text-red-500">*</span>
+              상세 설명 <span className="text-red-500">*</span>
             </label>
-            <div>
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 mb-10 h-[400px]">
               <Markdown
                 content={info.description}
                 contentChange={(e) => handleMarkDown("description", e)}

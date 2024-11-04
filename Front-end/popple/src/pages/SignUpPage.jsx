@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { authAPI } from "../api/services/Auth";
 import { useNavigate } from "react-router-dom";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
   const inputStyle =
@@ -142,13 +143,21 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
     try {
       data.birth = data.birth.toISOString().split("T")[0];
       const res = await authAPI.create(data);
-      alert("가입 성공");
+      console.log(res.data)
+      poppleAlert.alert("","가입 성공");
       navigate("/login");
+      
     } catch (error) {
-      alert("가입 실패" + error.message);
+      poppleAlert.alert("","가입 실패");
     }
   };
+  const watchAllFields = watch(); // 모든 입력 필드의 현재 값을 추적
 
+useEffect(() => {
+    console.log(watchAllFields);
+}, [watchAllFields]); // watchAllFields가 변경될 때마다 콘솔에 출력
+
+  
   return (
     <form
       onSubmit={oAuth ? handleSubmit(onOAuthSubmit) : handleSubmit(onSubmit)}
@@ -174,8 +183,11 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
                     <input
                       type={f.type}
                       id={g.label}
-                      value={g.value}
                       {...register(f.name, { required: true })}
+                      checked={watch(f.name) === g.value}
+                      onChange={() => {setValue(f.name, g.value);
+                      }}
+                      
                     />
                     <label htmlFor={g.label} className="ml-2 mr-4">
                       {g.label}

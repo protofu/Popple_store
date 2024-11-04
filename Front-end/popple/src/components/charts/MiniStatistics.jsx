@@ -28,12 +28,10 @@ export default function MiniStatistics() {
       try {
         const genderResponse = await visitAPI.genderStatistic(id);
         const ageResponse = await visitAPI.ageStatistic(id);
-        console.log(ageResponse.data.stats);
 
         setHumanCount(genderResponse.data.stats.female + genderResponse.data.stats.male);
         setGenderData(formatData(genderResponse.data.stats));
-        setAgeData(formatData(ageResponse.data.stats))
-        console.log(formatData(ageResponse.data.stats));     
+        setAgeData(formatData(ageResponse.data.stats)) 
       } catch (error) {
         console.error("Error fetching gender data:", error);
       } finally {

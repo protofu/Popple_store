@@ -3,6 +3,7 @@ import { reviewAPI } from "../../api/services/Review";
 import ReviewItem from "../review/ReviewItem";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { authAPI } from "../../api/services/Auth";
+import NoList from "../common/NoList";
 
 export default function MyReview() {
   const [reviews, setReviews] = useState([]);
@@ -191,7 +192,7 @@ export default function MyReview() {
           </div>
         ))
       ) : (
-        "작성된 리뷰가 없습니다."
+        <NoList text={"작성된 리뷰가 없습니다."} />
       )}
        {showDeleteModal && <DeleteModal />}
       {/* {showEditModal && <EditModal />} */}

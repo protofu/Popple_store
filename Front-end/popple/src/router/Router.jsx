@@ -23,6 +23,7 @@ import ScrollToTop from "../components/common/ScrollToTop";
 import HelpCreate from "../pages/HelpCreate";
 import EventUpdate from "../components/exhibition/EventUpdate";
 import ExhibitionUpdatePage from "../components/exhibition/ExhibitionUpdatePage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 
 
@@ -65,6 +66,11 @@ export default function Router() {
           <Route path="/policy/:id" element={<PolicyPage />} />
           <Route path="/company-signup" element={<CompanySignUpPage/>}/>
           <Route path="/qr-code" element={<QRPage/>}/>
+        </Route>
+
+        {/* 404 페이지 */}
+        <Route element={<Layout />}>
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </div>
