@@ -1,10 +1,10 @@
 package com.popple.auth.domain.request;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@Builder
+@RequiredArgsConstructor
 public class UserEditRequest {
 	private String password;
 	private String nickname;

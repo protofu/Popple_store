@@ -62,6 +62,7 @@ public class OAuthService {
 		// 남자 true | 여자 false
 		boolean gender = false;
 		LocalDate birth = null;
+		boolean isDeleted = false;
 		
 		log.info(oAuthUserNode.toString());
 		// 카카오라면 추가로 email을 받기
@@ -73,15 +74,20 @@ public class OAuthService {
 			email = oAuthUserNode.get("email").asText();
 			name = oAuthUserNode.get("name").asText();
 		}
+		// 이미 가입된 회원인지 확인
 		Optional<UserAuth> userAuth = userAuthRepository.findByAuthKeyAndProvider(key, provider);
-		if (userAuth.isPresent()) {
+		// 이미 가입된 회원이지만 탈퇴한 회원일 경우
+		if (userAuth.isPresent() && userAuth.get().getUser().getDeletedAt() != null) {
+			isDeleted = true;
+		// 이미 가입된 회원이고 탈퇴하지 않은 회원일 경우
+		} else if (userAuth.isPresent() && userAuth.get().getUser().getDeletedAt() == null) {
 			email = userAuth.get().getUser().getEmail();
 			name = userAuth.get().getUser().getName();
 			nickname= userAuth.get().getUser().getNickname();
 			gender= userAuth.get().getUser().isGender();
 			birth= userAuth.get().getUser().getBirth();
 		}
-		return new OAuthUserInfo(key, email, name, nickname, gender, birth, provider);
+		return new OAuthUserInfo(key, email, name, nickname, gender, birth, provider, isDeleted);
 	}
 
 	private String getAccessToken(String code, String provider) {
@@ -161,5 +167,13 @@ public class OAuthService {
 		tokenUtils.setRefreshTokenCookie(res, tokenMap.get("refreshToken"));
 		// BODY에 추가(access)
 		return tokenMap.get("accessToken");
+	}
+
+	public void oAuthUserReset(OAuthUserInfo oAuthUserInfo) {
+		Optional<UserAuth> userAuth = userAuthRepository.findByAuthKeyAndProvider(oAuthUserInfo.getKey(), oAuthUserInfo.getProvider());
+		if (userAuth.isPresent()) {
+			userAuthRepository.delete(userAuth.get());
+			userRepository.delete(userAuth.get().getUser());
+		}
 	}
 }

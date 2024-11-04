@@ -15,6 +15,7 @@ public class SignUpResponse {
 	private String nickname;
 	private String name;
 	private LocalDate birth;
+	private boolean gender;
 	
 	public static SignUpResponse toDTO(User user) {
 		return SignUpResponse.builder()
@@ -23,6 +24,7 @@ public class SignUpResponse {
 				.name(user.getName())
 				.nickname(user.getNickname())
 				.birth(user.getBirth())
+				.gender(user.isGender())
 				.build();
 	}
 }
