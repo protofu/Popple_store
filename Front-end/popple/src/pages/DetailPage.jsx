@@ -16,6 +16,7 @@ import KakaoShareButton from "../components/common/KakaoShareButton";
 import CateButton from "../components/common/CateButton";
 import { reservationAPI } from "../api/services/Reservation";
 import DetailsEvent from "../components/exhi-details/DetailsEvent";
+import { useLoginStore } from "../stores/LoginState";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -23,6 +24,7 @@ function dateToString(arr) {
 }
 
 export default function DetailPage() {
+  const { isLoggedIn, setIsLoggedIn } = useLoginStore(state => state);
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const navigate = useNavigate();
   const curDate = new Date(); // 현재 날짜
@@ -58,7 +60,6 @@ export default function DetailPage() {
     setIsLiked(prev => !prev);
   }
   
-
   useEffect(() => {
     // 내가 좋아요를 눌렀나요?
     const likeData = async () => {
@@ -70,8 +71,11 @@ export default function DetailPage() {
       const res = await likeAPI.howManyLikes(id);
       setLikeCount(res.data);
     };
-    getLikeCount();
-    likeData();
+
+    if (isLoggedIn) {
+      getLikeCount();
+      likeData();
+    }
   }, [id]);
 
   // json데이터 담을 state
