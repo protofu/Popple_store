@@ -4,8 +4,11 @@ import { useLoginUserStore } from '../stores/LoginUserState';
 import LikeList from '../components/my-page/LikeList';
 import ReservationList from '../components/my-page/ReservationList';
 import MyReview from '../components/my-page/MyReview';
-import { useLocation } from 'react-router-dom';
-import PopupList from '../components/company/PopupList';
+import { useLocation, useParams } from 'react-router-dom';
+import ChangeInfo from '../components/my-page/ChangeInfo';
+import { poppleAlert } from '../utils/PoppleAlert';
+import { authAPI } from '../api/services/Auth';
+import { removeCookie } from '../utils/CookieUtils';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -15,8 +18,7 @@ export default function MyPage() {
   const { state }= useLocation();
   const { loginUserRole } = useLoginUserStore(state => state);
   const [activeItem, setActiveItem] = useState(state?.activeItem || "찜");
-  const [password, setPassword] = useState('');
-
+  
   useEffect(() => {
     // 역할에 따라 초기값 설정
     if (loginUserRole === "ROLE_COMPANY") {
@@ -27,28 +29,41 @@ export default function MyPage() {
       localStorage.setItem('activeItem', activeItem);
     };
   }, [loginUserRole]);
-
+  
   const handleItemSelect = (item) => {
     setActiveItem(item);
     localStorage.setItem('activeItem', item);
   };
+  
+  const [resingConfirm, setResignConfirm] = useState("");
 
-  const handleConfirm = () => {
-    console.log("비밀번호:", password);
-    setPassword('');
-  };
-
-  const renderPasswordInput = () => (
+  const handleConfirm = async () => {
+    if (resingConfirm === "모든 내용을 동의하고 탈퇴하겠습니다") {
+      try {
+        await authAPI.delete();
+        await poppleAlert.alert("탈퇴가 완료되었습니다.");
+        removeCookie("accessToken");
+        window.location.href = "/";
+      } catch (error) {
+        removeCookie("accessToken");
+        window.location.href = "/";
+      }
+    } else {
+      poppleAlert.alert("", "입력하신 문구가 일치하지 않습니다.");
+    }
+  }
+  const resignRender = () => (
     <div className="flex flex-col items-center">
       <div className="text-center mb-3 mt-3">
-        <p className="font-bold text-[18px]">보안 인증이 필요합니다.</p>
-        <p className="font-bold text-[18px]">비밀번호를 입력하세요.</p>
+        <p className="font-bold text-[18px] mb-2">정말로 탈퇴하시겠습니까?</p>
+        <p className="text-[18px] mb-8">탈퇴 후에는 계정과 <strong>모든 데이터가 삭제</strong>되며, 복구할 수 없습니다.</p>
+        <p className="text-[18px]">탈퇴를 진행하려면 <span className='text-red-500'>'모든 내용을 동의하고 탈퇴하겠습니다'</span>라는 문구를 입력해 주세요.</p>
       </div>
       <input 
-        type="password" 
-        placeholder="비밀번호 입력" 
-        value={password} 
-        onChange={(e) => setPassword(e.target.value)} 
+        type="text" 
+        placeholder="모든 내용을 동의하고 탈퇴하겠습니다" 
+        value={resingConfirm} 
+        onChange={(e) => setResignConfirm(e.target.value)} 
         className={inputStyle} 
       />
       <button onClick={handleConfirm} className="bg-[#8900E1] text-white rounded-lg p-3 mt-3">
@@ -61,9 +76,9 @@ export default function MyPage() {
     "찜": <LikeList />,
     "예약 목록": <ReservationList />,
     "방문 리뷰": <MyReview />,
-    "정보 수정": renderPasswordInput(),
-    "탈퇴": renderPasswordInput(),
-    "팝업/전시 목록": <PopupList />,
+    "정보 수정": <ChangeInfo />,
+    "탈퇴": resignRender(),
+    "팝업/전시 목록": '팝업/전시 목록 관련 내용 (기업)',
     "전체 방문 통계": '전체 방문 통계 관련 내용 (기업)',
   };
 

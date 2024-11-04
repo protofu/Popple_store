@@ -29,6 +29,7 @@ public class OAuthController {
 	public ResponseEntity<?> OauthSignIn(@RequestParam("code") final String code, HttpServletResponse res, @PathVariable("provider") final String provider) {
 		log.info("[OauthSignIn] code 정보 : {}", code);
 		OAuthUserInfo oAuthUserInfo = oAuthService.oAuthUser(code, provider);
+		
 		// 이미 가입된 회원이면 로그인 처리
 		if (oAuthUserInfo.isAbleToLogin()) {
 			return oAuthLogin(oAuthUserInfo, res); // -> TOKEN 반환
@@ -41,6 +42,10 @@ public class OAuthController {
 	public ResponseEntity<?> oAuthLogin(@RequestBody OAuthUserInfo oAuthUserInfo, HttpServletResponse res) {
 		log.info(oAuthUserInfo.toString());
 		try {
+			// 새로 가입하려는 경우, 기존의 회원 정보를 삭제하고 새로 가입
+			if (oAuthUserInfo.isDeleted()) {
+				oAuthService.oAuthUserReset(oAuthUserInfo);
+			}
 			if (oAuthUserInfo.isAbleToLogin()) {
 				String accessToken = oAuthService.oAuthSignUpAndLogin(oAuthUserInfo, res);
 				LoginResponse loginResponse = LoginResponse

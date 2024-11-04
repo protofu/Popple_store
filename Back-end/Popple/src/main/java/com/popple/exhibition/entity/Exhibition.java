@@ -61,6 +61,10 @@ public class Exhibition {
 	//전시주소
 	@Column(nullable = false)
 	private String address;
+
+	//전시 상세주소
+	@Column(nullable = true)
+	private String detailAddress;
 	
 	//공지사항
 	@Column(nullable = true)

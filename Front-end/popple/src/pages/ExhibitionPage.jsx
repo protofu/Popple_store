@@ -143,7 +143,7 @@ export default function ExhibitionPage() {
       <div className={titleStyle}>
         <img src={exhiIcon} alt="전시회 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>전시회 둘러보기</h1>
-        <span className="w-[80%] text-right text-[#5464f1]" onClick={handleModalToggle}>지도로 보기</span>
+        <span className="w-[80%] text-right text-[#5464f1] cursor-pointer" onClick={handleModalToggle}>지도로 보기</span>
       </div>
       {isModalOpen && <MapModal onClose={handleModalToggle} />}
       <div>

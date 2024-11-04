@@ -4,6 +4,8 @@ import { oauthAPI } from "../api/services/OAuth";
 import AuthLayout from "./layouts/AuthLayout";
 import SignUpPage from "./SignUpPage";
 import { setCookie } from "../utils/CookieUtils";
+import SweetAlert2 from "react-sweetalert2";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 
 export default function OAuthLoginPage() {
@@ -23,8 +25,16 @@ export default function OAuthLoginPage() {
       console.log("res 데이터" + res.data);
       if (res.data.accessToken) {
         setCookie("accessToken", res.data.accessToken, { path: "/"});
-        console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
+        // console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
         window.location.href="/";
+        return;
+      } else if (res.data.deleted) {
+        // "탈퇴한 회원입니다. 새로 가입하시겠습니까?"
+        poppleAlert.check("탈퇴한 회원입니다.", "새로 가입하시겠습니까?", () => {
+          setAuthData(res.data);
+        }, () => {
+          window.location.href="/";
+        });
         return;
       }
       setAuthData(res.data);
@@ -55,7 +65,8 @@ export default function OAuthLoginPage() {
         birth: data.birth,
       });
       if (res.status == 200) {
-        alert("이메일 인증 후 로그인 성공" + res.data.accessToken);
+        // alert("이메일 인증 후 로그인 성공" + res.data.accessToken);
+        setCookie("accessToken", res.data.accessToken, { path: "/"});
         window.location.href="/";
       }
     } catch (err) {
@@ -64,8 +75,8 @@ export default function OAuthLoginPage() {
     }
   };
 
-  if (authData && !authData.ableToLogoin) {
-    
+  console.log(authData);
+  if (authData && !authData.ableToLogin) {
     return (
       <AuthLayout>
         <SignUpPage oAuth={true} authData={authData} onOAuthSubmit={onSubmit}/>

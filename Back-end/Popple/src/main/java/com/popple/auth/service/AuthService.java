@@ -3,13 +3,16 @@ package com.popple.auth.service;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.popple.auth.domain.request.SignUpRequest;
 import com.popple.auth.domain.request.UserDeleteRequest;
 import com.popple.auth.domain.request.UserEditRequest;
+import com.popple.auth.domain.response.LoginResponse;
 import com.popple.auth.domain.response.SignUpResponse;
 import com.popple.auth.entity.User;
 import com.popple.auth.repository.UserRepository;
@@ -42,7 +45,8 @@ public class AuthService {
 	}
 
 	// 회원 수정
-	public SignUpResponse updateUser(User user, UserEditRequest userEditRequest) {
+	@Transactional
+	public Map<String, String> updateUser(User user, UserEditRequest userEditRequest) {
 		User updateUser = userRepository.findById(user.getId())
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없음"));
 		if (user.getId() == updateUser.getId()) {
@@ -53,10 +57,13 @@ public class AuthService {
 			if (userEditRequest.getNickname() != null) {
 				updateUser.setNickname(userEditRequest.getNickname());
 			}
-			userRepository.save(updateUser);
-		}
-
-		return SignUpResponse.toDTO(updateUser);
+			Map<String, String> tokenMap = tokenUtils.generateToken(updateUser);
+			// DB에 기록(refresh)
+			updateUser.setRefreshToken(tokenMap.get("refreshToken"));
+			updateUser = userRepository.save(updateUser);
+			return tokenMap;
+		}		
+		return null;
 	}
 
 	// 이메일 중복 체크
@@ -69,18 +76,14 @@ public class AuthService {
 	}
 
 	// 회원탈퇴
-	public void deleteUser(UserDeleteRequest userDeleteRequest) {
-		User user = userRepository.findByEmailAndDeletedAtIsNull(userDeleteRequest.getEmail())
-				.orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
-
-		// user가 null이라면 찾을 수 없다는 에러 메세지 던지기
+	public void deleteUser(User user) {
 		if (user == null) {
 			throw new UsernameNotFoundException("유저를 찾을 수 없음");
 		}
-		// 입력한 password를 암호화된 password와 비교 후 틀리면 에러 던지기
-		if (!bCryptPasswordEncoder.matches(user.getPassword(), userDeleteRequest.getPassword())) {
-			throw new RuntimeException("이메일 또는 비밀번호가 틀렸습니다");
-		}
+		// // 입력한 password를 암호화된 password와 비교 후 틀리면 에러 던지기
+		// if (!bCryptPasswordEncoder.matches(user.getPassword(), userDeleteRequest.getPassword())) {
+		// 	throw new RuntimeException("이메일 또는 비밀번호가 틀렸습니다");
+		// }
 		// deletedAt을 현재 시간으로 설정 후 업데이트
 		user.setDeletedAt(LocalDateTime.now());
 		userRepository.save(user);

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,7 +61,7 @@ public class AuthController {
 	//특정 회원 조회
 	@Operation(summary = "특정 회원 조회", description = "특정 회원 정보를 반환합니다.")
 	@GetMapping("/{id}")
-	public ResponseEntity<SignUpResponse> getUser(Long id){
+	public ResponseEntity<SignUpResponse> getUser(@PathVariable("id") Long id){
 		SignUpResponse res = authService.getUser(id);
 		return ResponseEntity.ok(res);
 	}
@@ -76,10 +77,10 @@ public class AuthController {
 
 	//회원 탈퇴
 	@Operation(summary = "회원탈퇴", description = "회원탈퇴를 진행합니다.")
-	@PatchMapping("/delete/{id}")
-	public ResponseEntity<?> deleteUser(@RequestBody UserDeleteRequest userDeleteRequest){
-		authService.deleteUser(userDeleteRequest);
-		if(!userDeleteRequest.getEmail().isEmpty()) {
+	@PatchMapping("/delete")
+	public ResponseEntity<?> deleteUser(@AuthenticationPrincipal User user){
+		if(user != null) {
+			authService.deleteUser(user);
 			return ResponseEntity.ok(null);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없음");
@@ -88,11 +89,17 @@ public class AuthController {
 	
 	//회원 정보 수정
 	@Operation(summary = "회원수정", description = "회원수정을 진행합니다.")
-	@PatchMapping("/update/{id}")
-	public ResponseEntity<SignUpResponse> updateUser(@AuthenticationPrincipal User user,@RequestBody UserEditRequest userEditRequest){
-		SignUpResponse updateUser = authService.updateUser(user, userEditRequest);
-		return ResponseEntity.ok(updateUser);
-		
+	@PatchMapping("/update")
+	public ResponseEntity<LoginResponse> updateUser(HttpServletResponse res, @AuthenticationPrincipal User user, @RequestBody UserEditRequest userEditRequest){
+		Map<String, String> tokenMap = authService.updateUser(user, userEditRequest);
+		// 회원 수정 시 토큰 재발급 진행
+		if(tokenMap == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		} else {
+			// HEADER에 추가(refresh)
+			tokenUtils.setRefreshTokenCookie(res, tokenMap.get("refreshToken"));
+			return ResponseEntity.ok(LoginResponse.builder().accessToken(tokenMap.get("accessToken")).build());
+		}
 	}
 	
 	//토큰 재발급

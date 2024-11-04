@@ -14,10 +14,10 @@ public class OAuthUserInfo {
 	String email;
 	String name; 
 	String nickname;
-	boolean gender = false;
+	boolean gender;
 	LocalDate birth;
-	
 	String provider;
+	boolean isDeleted;
 	
 	public boolean isAbleToLogin() {
 		if (this.getKey() != null && this.getEmail() != null

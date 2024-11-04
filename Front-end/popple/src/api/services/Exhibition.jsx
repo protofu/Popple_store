@@ -8,4 +8,5 @@ export const exhibitionAPI = {
   get : (id) => api.get(`/exhibition/detail/${id}`),
   my : (data) => api.get("/exhibition/my-exhibition",data),
   gettype : (data) => api.get("exhibition-type",data),
+  search: (data) => api.get("/exhibition/search", { params: {keyword: data }}),
 }

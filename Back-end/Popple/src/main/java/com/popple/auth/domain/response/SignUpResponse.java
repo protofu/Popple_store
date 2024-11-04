@@ -25,6 +25,7 @@ public class SignUpResponse {
 				.gender(user.isGender())
 				.nickname(user.getNickname())
 				.birth(user.getBirth())
+				.gender(user.isGender())
 				.build();
 	}
 }

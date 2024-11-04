@@ -17,6 +17,7 @@ import CateButton from "../components/common/CateButton";
 import { reservationAPI } from "../api/services/Reservation";
 import DetailsEvent from "../components/exhi-details/DetailsEvent";
 import ExhibitionPage from "./ExhibitionPage";
+import { useLoginStore } from "../stores/LoginState";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -24,6 +25,7 @@ function dateToString(arr) {
 }
 
 export default function DetailPage() {
+  const { isLoggedIn, setIsLoggedIn } = useLoginStore(state => state);
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const navigate = useNavigate();
   const curDate = new Date(); // 현재 날짜
@@ -59,7 +61,6 @@ export default function DetailPage() {
     setIsLiked(prev => !prev);
   }
   
-
   useEffect(() => {
     // 내가 좋아요를 눌렀나요?
     const likeData = async () => {
@@ -71,8 +72,11 @@ export default function DetailPage() {
       const res = await likeAPI.howManyLikes(id);
       setLikeCount(res.data);
     };
-    getLikeCount();
-    likeData();
+
+    if (isLoggedIn) {
+      getLikeCount();
+      likeData();
+    }
   }, [id]);
 
   // json데이터 담을 state
@@ -100,9 +104,10 @@ export default function DetailPage() {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
         const resDetail = await exhibitionAPI.get(id);
-        const resChartData = await axios.get('/jsons/visitors.json');
+        // const resChartData = await axios.get('/jsons/visitors.json');
+        // console.log(resChartData.data);
         setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
-        setChartData(resChartData.data);
+        // setChartData(resChartData.data);
       } catch (error) {
         console.error('Error fetching JSON data:', error);
       }
@@ -115,9 +120,9 @@ export default function DetailPage() {
     return <div>Loading...</div>; // 데이터 로딩 중 표시
   }
 
-  if (!chartData) {
-    return <div>Loading...</div>; // 데이터 로딩 중 표시
-  }
+  // if (!chartData) {
+  //   return <div>Loading...</div>; // 데이터 로딩 중 표시
+  // }
 
   const handleDateChange = (date) => {
     onChange(date);
@@ -201,7 +206,7 @@ export default function DetailPage() {
             </div>
           </div>
           <div className="mt-4">
-            {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}
+            {selectTab === "이용정보" && <UseInfo data={exhi} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
             {selectTab === "EVENT" && <DetailsEvent />}
           </div>
@@ -222,7 +227,7 @@ export default function DetailPage() {
               // 예약시 보일 스타일
               tileContent={({ date, view }) => {
                 let html = [];
-                if (reservedDate.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
+                if (reservedDate?.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
                   html.push(<div key={moment(date).format("YYYY-MM-DD")} className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
                 }
                 return html;
