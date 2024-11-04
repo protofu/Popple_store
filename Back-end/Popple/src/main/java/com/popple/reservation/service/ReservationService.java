@@ -76,6 +76,7 @@ public class ReservationService {
 				.id(reservation.getId())
 				.reserverName(reservation.getUser().getName())
 				.reserveTime(reservation.getReservationDate())
+				.email(reservation.getUser().getEmail())
 				.isAttend(reservation.isAttend())
 				.build()).collect(Collectors.toList());
 	}
@@ -125,16 +126,17 @@ public class ReservationService {
 	}
 
 	// 특정 팝업에 대한 나의 예약 가져오기
-	public List<ReservationResponse> getMyReservationByExId(Long exId, User user) {
+	public List<ReserverResponse> getMyReservationByExId(Long exId, User user) {
 		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("찾는 팝업/전시가 없습니다."));
 		List<Reservation> reservationList = reservationRepository.findByExhibitionAndUser(exhibition, user);
 		
 		return reservationList.stream().map(r -> {
-			return ReservationResponse.builder()
+			return ReserverResponse.builder()
 						.id(r.getExhibition().getId())
-						.reservationDate(r.getReservationDate()) // 예약 날짜가 없음을 명시
+						.reserverName(r.getUser().getName())
+						.reserveTime(r.getReservationDate()) // 예약 날짜가 없음을 명시
 						.isAttend(r.isAttend())
-						.isDeleted(r.getDeletedAt() != null)
+						.email(r.getUser().getEmail())
 						.build();
 		}).toList();
 	}

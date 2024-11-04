@@ -10,6 +10,7 @@ import MapModal from "../components/map-view/MapModal";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import { eventAPI } from "../api/services/Event";
 import EventDetailModal from "../components/event/EventDetailModal";
+import NoEventList from "../components/event/NoEventList";
 
 
 
@@ -130,10 +131,11 @@ export default function ExhibitionPage() {
         <h1 className={textStyle}>EVENT</h1>
       </div>
       <div className="flex flex-wrap justify-center gap-4">
-        {
-          eventList.map((item, index) => (
-            <EventCard key={index} id={item.id} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " +  dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={()=>openEventModal(item.id)} />
-          ))
+        {eventList?.length > 0 ?
+          eventList.slice(0, 8).map((item, index) => (
+            <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+          )) :
+          <NoEventList text={"이벤트"}/>
         }
         {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
       </div>

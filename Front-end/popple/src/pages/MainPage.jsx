@@ -1,18 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import CateButton from "../components/common/CateButton";
-import PostCarousel from "../components/poster-card/PostCarousel";
-import styles from "./styles/MainPage.module.css";
 import EventCard from "../components/EventCard";
-import eventImg from "../assets/img1.png";
-import eventImg2 from "../assets/img2.png";
-import eventImg3 from "../assets/img3.png";
-import eventImg4 from "../assets/img4.png";
 import PostCard from "../components/poster-card/PostCard";
 import { useEffect, useState } from "react";
 import { exhibitionAPI } from "../api/services/Exhibition";
+import { eventAPI } from "../api/services/Event";
+import NoEventList from "../components/event/NoEventList";
+import EventDetailModal from "../components/event/EventDetailModal";
 
 export default function MainPage() {
   const postURL = import.meta.env.VITE_EXHIBITION_POSTER;
+  const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
   // 초기 상태는 팝업(true)을 보여주도록 설정
   const [isPop, setIsPop] = useState(1);
   // 팝업/전시 배열
@@ -33,39 +30,30 @@ export default function MainPage() {
     setIsPop(1);
   };
 
-  const example = [
-    {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg
-    }, {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg2
-    }, {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg3
-    }, {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg4
-    }, {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg
-    }, {
-      slogun: "DIALOGUE IN THE DARK",
-      title: "어둠속의대화",
-      duration: "오픈런",
-      img: eventImg2
-    }
-  ];
+  // 팝업 관련 이벤트 가져오기
+  const [eventList, setEventList] = useState([]);
+  const getEvents = async () => {
+    const res = await eventAPI.getAll();
+    const today = new Date(); // 오늘 날짜 가져오기
+    const filtered = res.data.filter(item => {
+        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+        return endAt > today; // 오늘보다 후인지 확인
+    });
+    setEventList(filtered);
+  };
+
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [propEventId, setPropEventId] = useState(null);
+  // 이벤트 모달 오픈
+  const openEventModal = (id) => {
+    setPropEventId(id);
+    setIsEventModalOpen(true);
+  };
+
+  // 이벤트 모달 닫기
+  const CloseEventModal = () => {
+    setIsEventModalOpen(false);
+  };
 
   // 현재 페이지에 따라 아이템 인덱스 계산
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,6 +83,7 @@ export default function MainPage() {
   };
 
   useEffect(() => {
+    getEvents();
     const updateItemsPerPage = () => {
       const width = window.innerWidth;
       if (width < 640) {
@@ -116,21 +105,23 @@ export default function MainPage() {
   }, [isPop])
 
   return (
-    <div className="flex flex-col items-center mt-4">
-      <div className={styles.cateButton}>
-        <CateButton text={"NEW"} />
-      </div>
-      {/* 포스터 캐러셀 */}
-      <div className={styles.carouselContainer}>
+    <div className="flex flex-col items-center">
+      {/* 메인 이미지 */}
+      <div className="my-auto w-full ">
         {/* <PostCarousel /> */}
+        <img src="/images/mainpage.jpg" alt="메인페이지 이미지" className="h-[800px]" />
       </div>
       {/* 이벤트 섹션 */}
       <div className="mt-10">
-        <h1 className="text-center text-2xl mb-5">EVENT</h1>
+        <h1 className="text-center text-2xl mb-5 cursor-pointer" onClick={() => handleNavigate("/event")}>EVENT</h1>
         <div className="flex flex-wrap justify-center gap-4">
-          {example.map((item, index) => (
-              <EventCard key={index} slogun={item.slogun} title={item.title} duration={item.duration} img={item.img}/>
-          ))}
+          {eventList?.length > 0 ?
+            eventList.slice(0, 8).map((item, index) => (
+              <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+            )) :
+            <NoEventList />
+          }
+          {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
         </div>
       </div>
       {/* 전시 혹은 이벤트 섹션 */}

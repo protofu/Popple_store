@@ -1,0 +1,53 @@
+.assist_section_illust {
+  position: relative;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.assist_404_text {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #4a4a4a;
+  margin-bottom: 1rem;
+}
+
+.assist_404_figure {
+  display: inline-block;
+  animation: float 6s ease-in-out infinite;
+}
+
+.assist_404_image {
+  width: 16rem; /* Adjust width to your preference */
+  height: auto;
+  opacity: 0.9;
+}
+
+.assist_404_note {
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  background-color: #fcb8d2;
+  opacity: 0.5;
+  border-radius: 50%;
+}
+
+.assist_404_note_primary {
+  width: 3rem;
+  height: 5rem;
+  background-image: url(../images/sub/contact/contact-process-question-note-01.svg);
+}
+
+.assist_404_note_secondary {
+  top: 4rem;
+  right: 2.5rem;
+  transform: translate3d(-5px, -10px, 0) rotate(-4deg);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

@@ -7,5 +7,5 @@ export const exhibitionAPI = {
   getlist : (id) => api.get(`/exhibition/${id}`),
   get : (id) => api.get(`/exhibition/detail/${id}`),
   my : (data) => api.get("/exhibition/my-exhibition",data),
-  gettype : (data) => api.get("exhibition-type",data)
+  gettype : (data) => api.get("exhibition-type",data),
 }

@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 export default function ExhibitionCard({ img }) {
   return (
-    <div className="relative w-full h-[500px]">
+    <div className="relative w-full h-[600px]">
       {/* 배경 이미지와 투명도 설정 */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30"
