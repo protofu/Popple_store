@@ -6,7 +6,7 @@ import SearchByLocation from "./SearchByLocation";
 import { exhibitionAPI } from "../../api/services/Exhibition";
 
 export default function MapModal({ onClose }) {
-  const [locations, setLocations] = useState([]);
+  const [exhibitions, setExhibitions] = useState([]);
   //latitude and longitude
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
@@ -42,27 +42,18 @@ export default function MapModal({ onClose }) {
   // 전시팝업 타입 선택시 상태 설정
   const [type, setType] = useState(0);
 
-  // 키워드로 검색한 결과 가져오기
-  const handleLocationUpdate = (newLocations) => {
-    // console.log(newLocations);
-    // setLocations(newLocations); // Set the fetched locations
-  };
-
-  // console.log(locations);
-  // 장소로 찾기
+  // 찾기
   const handleLocationSearch = async () => {
     // inputKeyword로 팝업/전시 검색
     const res = await exhibitionAPI.search(inputKeyword);
-    console.log(res.data);  
-    setLocations(res.data);
+    setExhibitions(res.data);
   };
 
   // onClick
-  const handleClick = (result) => {
-    setLongitude(result.x); 
-    setLatitude(result.y);
+  const handleClick = (exhibition) => {
+    setLongitude(Number(exhibition.location[0])); 
+    setLatitude(Number(exhibition.location[1]));
   };
-
 
   // 해야할 것
   // 3. 마커 색상 변경하기
@@ -88,9 +79,9 @@ export default function MapModal({ onClose }) {
           <h2 className="text-lg font-bold text-center flex-1">지도 보기</h2> {/* 중앙 정렬을 위한 flex-1 추가 */}
         </div>
         {/* 본문 */}
-        <div className="flex flex-1">
+        <div className="flex flex-1 h-[80vh]">
           {/* 왼쪽 컨테이너 */}
-          <div className="w-[20%] p-2 m-3">
+          <div className="w-[20%] p-2 m-3 overflow-scroll overflow-x-hidden">
             {/* 종류 선택 버튼 */}
             <div className="grid grid-cols-3 mb-3">
               <div className={`${typeButtionStyle} border-r-[1px] rounded-l-lg ${type === 0 ? "border-popple-light border-2 bg-popple-light text-white" : "border-[#b6b6b6]"}`} onClick={() => setType(0)}>전체</div>
@@ -108,27 +99,30 @@ export default function MapModal({ onClose }) {
                     type="text"
                     value={inputKeyword}
                     onChange={(e) => setInputKeyword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLocationSearch()}
                     placeholder="검색할 키워드를 입력하세요"
                     className="keyword-input rounded--r-[0.75rem] p-2 w-full border border-1 border-r-0"
                 />
                 <button id="searchBtn" className="search-button min-w-fit px-3 rounded-r-[0.75rem] text-white bg-popple-light" onClick={() => handleLocationSearch()}>검색</button>
               </div>
             </div>
-            <div className="search-result flex flex-col">
-            {
-              locations?.map((location, key) => (
-                <div>
-                  <div>{location.title}</div>
-                  <div>{location.address}</div>
-                  <div>{location.savedImage}</div>
+            <div className="search-result flex flex-col gap-2 p-4">
+              {exhibitions?.map((exhibition, key) => (
+                <div 
+                  key={key}
+                  onClick={() => handleClick(exhibition)}
+                  className="cursor-pointer rounded-lg shadow-lg p-4 bg-white hover:bg-gray-100 transition duration-200"
+                >
+                  <div className="text-lg font-semibold text-gray-800 mb-2">{exhibition.exhibitionName}</div>
+                  <div className="text-gray-600 mb-1">{exhibition.address} {exhibition.detailAddress}</div>
+                  {/* <img src={exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} /> */}
                 </div>
-              ))
-            }
+              ))}
             </div>
           </div>
           {/* 오른쪽 컨테이너 */}
-          <div className="flex-1"> 
-            <MapView latitude={latitude} longitude={longitude} poppleLocations={locations} keyword={keyword} onResultsUpdate={handleLocationUpdate} />
+          <div className="flex-1 m-3"> 
+            <MapView latitude={latitude} longitude={longitude} poppleLocations={exhibitions} keyword={keyword} />
           </div>  
         </div>
       </div>

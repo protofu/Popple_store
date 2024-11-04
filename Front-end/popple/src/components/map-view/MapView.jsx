@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 
-export default function MapView({ latitude, longitude, keyword, poppleLocations, onResultsUpdate }) {
-    const [results, setResults] = useState([]);
-    console.log(keyword);
-    
+export default function MapView({ latitude, longitude, poppleLocations }) {
+
     useEffect(() => {
         if (!window.kakao) {
             const script = document.createElement('script');
@@ -32,12 +30,7 @@ export default function MapView({ latitude, longitude, keyword, poppleLocations,
                     level: 3
                 };
                 const map = new window.kakao.maps.Map(container, options);
-
                 const location = poppleLocations[0]?.location;
-                if (location && location.length === 2) {
-                    const firstPlacePosition = new kakao.maps.LatLng(Number(location[1]), Number(location[0]));
-                    map.setCenter(firstPlacePosition);
-                }
                 
                 for (let i = 0; i < poppleLocations.length; i ++) {
                     const location = poppleLocations[i].location;
