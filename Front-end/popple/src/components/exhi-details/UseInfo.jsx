@@ -17,7 +17,7 @@ const escapeHtml = (text) => {
   return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
 
-export default function UseInfo({ data, chart }) {
+export default function UseInfo({ data }) {
   const imageURL = import.meta.env.VITE_EXHIBITION_IMAGE;
   const h1Style = "font-bold text-[1.25rem]";
   const innerInfo = "m-6";
@@ -34,7 +34,7 @@ export default function UseInfo({ data, chart }) {
     { title: "관람정보", content: <img src={`${imageURL}${data.descriptionImage}`} alt="설명 이미지" /> },
     { title: "공지사항", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
     { title: "상세정보", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
-    { title: "방문통계", content: <MiniStatistics chart={chart} /> },
+    { title: "방문통계", content: <MiniStatistics /> },
   ];
   // 방문 통계
   // 남여 비율은 백엔드에서 계산하여 % 값만 front로 던져줌

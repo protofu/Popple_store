@@ -103,9 +103,10 @@ export default function DetailPage() {
       try {
         // axios로 public 폴더에 있는 JSON 파일 불러오기
         const resDetail = await exhibitionAPI.get(id);
-        const resChartData = await axios.get('/jsons/visitors.json');
+        // const resChartData = await axios.get('/jsons/visitors.json');
+        // console.log(resChartData.data);
         setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
-        setChartData(resChartData.data);
+        // setChartData(resChartData.data);
       } catch (error) {
         console.error('Error fetching JSON data:', error);
       }
@@ -118,9 +119,9 @@ export default function DetailPage() {
     return <div>Loading...</div>; // 데이터 로딩 중 표시
   }
 
-  if (!chartData) {
-    return <div>Loading...</div>; // 데이터 로딩 중 표시
-  }
+  // if (!chartData) {
+  //   return <div>Loading...</div>; // 데이터 로딩 중 표시
+  // }
 
   const handleDateChange = (date) => {
     onChange(date);
@@ -198,7 +199,7 @@ export default function DetailPage() {
             </div>
           </div>
           <div className="mt-4">
-            {selectTab === "이용정보" && <UseInfo data={exhi} chart={chartData} />}
+            {selectTab === "이용정보" && <UseInfo data={exhi} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
             {selectTab === "EVENT" && <DetailsEvent />}
           </div>

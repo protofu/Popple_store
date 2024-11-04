@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { visitAPI } from "../../api/services/Visit";
 import { useParams } from "react-router-dom";
 
-export default function MiniStatistics({ chart }) {
+export default function MiniStatistics() {
   // 전체 길이 (사람수)
   const [humanCount, setHumanCount] = useState(0);
   const { id } = useParams();
