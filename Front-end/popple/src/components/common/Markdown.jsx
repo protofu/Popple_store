@@ -7,6 +7,7 @@ export default function Markdown(props){
     className='w-auto h-auto'
     value={props.content}
     onChange={props.contentChange}
+    height="100%"
     />
   )
 }
