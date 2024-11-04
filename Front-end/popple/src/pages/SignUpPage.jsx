@@ -184,8 +184,10 @@ useEffect(() => {
                       type={f.type}
                       id={g.label}
                       {...register(f.name, { required: true })}
+                      checked={watch(f.name) === g.value}
                       onChange={() => {setValue(f.name, g.value);
                       }}
+                      
                     />
                     <label htmlFor={g.label} className="ml-2 mr-4">
                       {g.label}
