@@ -80,11 +80,11 @@ function IconBox({ information }) {;
           </span>}
         {!information.constraints.pet &&  
         <span className={spanStyle}>
-          <div className={iconStyle}><FaDog className={innerIconStyle}/><span className={innerTextStyle}>반려동물<br />동반가능</span></div>
+          <div className={iconStyle}><FaUserSlash className={innerIconStyle}/><span className={innerTextStyle}>반려동물<br />동반 불가</span></div>
         </span>}
         {!information.constraints.camera &&  
         <span className={spanStyle}>
-          <div className={iconStyle}><LuCameraOff className={innerIconStyle}/><span className={innerTextStyle}>카메라 가능</span></div>
+          <div className={iconStyle}><LuCameraOff className={innerIconStyle}/><span className={innerTextStyle}>카메라 불가</span></div>
         </span>}
         {information.fee === "0" &&  
         <span className={spanStyle}>
