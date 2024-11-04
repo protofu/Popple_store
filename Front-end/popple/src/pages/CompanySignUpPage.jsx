@@ -17,6 +17,7 @@ export default function CompanySignUpPage() {
     formState: { errors },
     handleSubmit,
     watch,
+    setValue
   } = useForm();
 
   //주소 상태 관리
@@ -26,11 +27,8 @@ export default function CompanySignUpPage() {
   });
 
   useEffect(() => {
-    // 주소 선택 시 정보 변경
-    if (address.roadAddress) {
-      setAddress(address.roadAddress);
-    }
-  }, [address]);
+    setValue('address', address.roadAddress)
+  }, [address, setValue]);
 
   //드롭다운 값 관리
   const [drop, setDrop] = useState("");
