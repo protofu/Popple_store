@@ -15,12 +15,14 @@ public class SignUpResponse {
 	private String nickname;
 	private String name;
 	private LocalDate birth;
+	private boolean gender;
 	
 	public static SignUpResponse toDTO(User user) {
 		return SignUpResponse.builder()
 				.id(user.getId())
 				.email(user.getEmail())
 				.name(user.getName())
+				.gender(user.isGender())
 				.nickname(user.getNickname())
 				.birth(user.getBirth())
 				.build();

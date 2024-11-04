@@ -185,6 +185,7 @@ useEffect(() => {
                       id={g.label}
                       {...register(f.name, { required: true })}
                       checked={watch(f.name) === g.value}
+                      value={g.value}
                       onChange={() => {setValue(f.name, g.value);
                       }}
                       

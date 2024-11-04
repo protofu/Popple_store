@@ -16,7 +16,7 @@ public class SignUpRequest {
 	private String nickname;
 	private String password;
 	private String name;
-	
+	private boolean gender;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birth;
 	
@@ -27,7 +27,7 @@ public class SignUpRequest {
 				.password(password)
 				.nickname(nickname)
 				.birth(birth)
-				.gender(false)
+				.gender(gender)
 				.role(RoleEnum.ROLE_USER)
 				.build();
 	}
