@@ -113,7 +113,8 @@ export default function ExhibitionRegistPage() {
       formData.append("exhibitionName", information.exhibitionName);
       formData.append("subTitle", information.subTitle);
       formData.append("detailDescription", information.detailDescription);
-      formData.append("address", information.address + " " + information.detailAddress);
+      formData.append("address", information.address);
+      formData.append("detailAddress", information.detailAddress);
       formData.append("notice", information.notice);
       formData.append("terms", information.terms);
       formData.append("homepageLink", information.homepageLink);

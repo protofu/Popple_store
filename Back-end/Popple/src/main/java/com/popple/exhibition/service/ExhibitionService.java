@@ -4,9 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.popple.auth.entity.User;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
@@ -80,7 +86,7 @@ public class ExhibitionService {
 	    posters.stream().map(poster -> posterService.savePoster(poster, exhibition)).collect(Collectors.toList());
 
 	    // ExhibitionResponse 생성
-	    ExhibitionResponse response = convertToExhibitionResponse(exhibition);
+	    ExhibitionResponse response = convertToExhibitionResponse(exhibition, null);
 	    
 	    return response; // 응답 반환
 	}
@@ -169,9 +175,7 @@ public class ExhibitionService {
 		
 		return exhibitions.stream()
 				.map(e -> {
-					Optional<String> savedName = posterRepository.findFirstByExhibition(e.getId());
-					Optional<String> descriptionImage = imageRepository.findFirstByExhibition(e.getId());
-					return entityToResponse(e, savedName.get(), descriptionImage.get());
+					return convertToExhibitionResponse(e, null);
 				})
 //				.map(this::entityToResponse)
 				.collect(Collectors.toList());
@@ -186,9 +190,7 @@ public class ExhibitionService {
 		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환	
 		return exhibitions.stream()
 				.map(e -> {
-					String savedName = posterRepository.findFirstByExhibition(e.getId()).orElse(null);
-					String descriptionImage = imageRepository.findFirstByExhibition(e.getId()).orElse(null);
-					return entityToResponse(e, savedName, descriptionImage);
+					return convertToExhibitionResponse(e, null);
 				})
 				.collect(Collectors.toList());
 	}
@@ -198,7 +200,7 @@ public class ExhibitionService {
 		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업 혹은 전시가 존재하지 않습니다."));
 		exhibition.setVisitCount(exhibition.getVisitCount()+1);
 		Exhibition savedExhibition = exhibitionRepository.save(exhibition);
-		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(savedExhibition);
+		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(savedExhibition, null);
 		return exhibitionResponse;
 	}
 
@@ -207,7 +209,7 @@ public class ExhibitionService {
 		// User로 모든 팝업/전시 찾고
 		List<Exhibition> myExhibitions = exhibitionRepository.findAllByUser(user);
 		// 엔티티를 리스폰스로 변환 후
-		List<ExhibitionResponse> myExhibitionsResponse = myExhibitions.stream().map(this::convertToExhibitionResponse).collect(Collectors.toList());
+		List<ExhibitionResponse> myExhibitionsResponse = myExhibitions.stream().map(e -> convertToExhibitionResponse(e, null)).collect(Collectors.toList());
 		// 반환
 		return myExhibitionsResponse;
 	}
@@ -215,66 +217,55 @@ public class ExhibitionService {
 	// 키워드 검색
 	public List<ExhibitionResponse> searchByKeyword(String keyword) {
 		List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
-		return exList.stream().map(this::convertToExhibitionResponse).collect(Collectors.toList());
+		return exList.stream().map(e -> {
+			return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
+		}).collect(Collectors.toList());
+	}
+	
+
+	private List<String> fetchLocationFromKakao(String address) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + address;
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "KakaoAK " + "d9429f36679e29e07113c0688628ddcc"); // Use secure key retrieval
+			HttpEntity entity = new HttpEntity(headers);
+	
+			String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+			JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+			
+			if (jsonObject.getAsJsonArray("documents").size() > 0) {
+				JsonObject doc = jsonObject.getAsJsonArray("documents").get(0).getAsJsonObject();
+				return List.of(doc.get("x").getAsString(), doc.get("y").getAsString());
+			}
+		} catch (Exception ex) {
+			log.error("주소 변환 에러: {}", ex.getMessage());
+		}
+		return null;
 	}
 	
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
-    public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition) {
-    	String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
-    	String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
-        return ExhibitionResponse.builder()
-                .id(exhibition.getId())
-                .typeId(exhibition.getType().getId())
-                .exhibitionName(exhibition.getExhibitionName())
-                .subTitle(exhibition.getSubTitle())
-                .detailDescription(exhibition.getDetailDescription())
-                .address(exhibition.getAddress())
-                .notice(exhibition.getNotice())
-                .terms(exhibition.getTerms())
-                .grade(exhibition.isGrade())
-                .fee(exhibition.getFee())
-                .homepageLink(exhibition.getHomepageLink())
-                .instagramLink(exhibition.getInstagramLink())
-                .park(exhibition.isPark())
-                .free(exhibition.isFree())
-                .pet(exhibition.isPet())
-                .food(exhibition.isFood())
-                .wifi(exhibition.isWifi())
-                .camera(exhibition.isCamera())
-                .kids(exhibition.isKids())
-                .sunday(exhibition.getSunday())
-                .monday(exhibition.getMonday())
-                .tuesday(exhibition.getTuesday())
-                .wednesday(exhibition.getWednesday())
-                .thursday(exhibition.getThursday())
-                .friday(exhibition.getFriday())
-                .saturday(exhibition.getSaturday())
-                .startAt(exhibition.getStartAt())
-                .endAt(exhibition.getEndAt())
-                .savedImage(savedImage)
-                .reserve(exhibition.isReserve())
-                .descriptionImage(descriptionImage)
-                .build();
-    }
-
-	// [조회에서 사용] Exhibition -> Response로 변환 메서드
-	// {{{{ 이미지 넣어야해 }}}}
-	private ExhibitionResponse entityToResponse(Exhibition exhibition, String savedImage, String descriptionImage) {
+	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, String descriptionImage, List<String> location) {
 		return ExhibitionResponse.builder()
 				.id(exhibition.getId())
 				.typeId(exhibition.getType().getId())
 				.exhibitionName(exhibition.getExhibitionName())
 				.address(exhibition.getAddress())
+				.detailAddress(exhibition.getDetailAddress())
 				.startAt(exhibition.getStartAt())
 				.endAt(exhibition.getEndAt())
 				.savedImage(savedImage)
 				.visitCount(exhibition.getVisitCount())
 				.reserve(exhibition.isReserve())
 				.descriptionImage(descriptionImage)
+				.location(location)
 				.build();
 	}
 
-	
 
-    
+	public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
+		String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
+		String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
+		return buildExhibitionResponse(exhibition, savedImage, descriptionImage, location);
+	}
 }

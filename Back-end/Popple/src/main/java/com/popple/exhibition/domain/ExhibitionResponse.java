@@ -2,6 +2,7 @@ package com.popple.exhibition.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class ExhibitionResponse {
     private String subTitle;
     private String detailDescription;
     private String address;
+    private String detailAddress;
     private String notice;
     private String terms;
     private boolean grade;
@@ -44,4 +46,5 @@ public class ExhibitionResponse {
     private String descriptionImage;
     private int visitCount;
     private boolean reserve;
+    private List<String> location;
 }

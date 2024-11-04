@@ -15,6 +15,7 @@ public class ExhibitionRequest {
 	private String subTitle;
 	private String detailDescription;
 	private String address;
+	private String detailAddress;
 	private String notice;
 	private String terms;
 	private boolean grade;
