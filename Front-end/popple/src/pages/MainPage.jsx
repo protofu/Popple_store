@@ -107,7 +107,7 @@ export default function MainPage() {
   return (
     <div className="flex flex-col items-center">
       {/* 메인 이미지 */}
-      <div className="my-auto w-full ">
+      <div className="my-auto w-full flex justify-center">
         {/* <PostCarousel /> */}
         <img src="/images/mainpage.jpg" alt="메인페이지 이미지" className="h-[800px]" />
       </div>
