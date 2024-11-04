@@ -134,8 +134,8 @@ export default function ExhibitionUpdatePage() {
     reader.readAsDataURL(file);
     reader.onload = () => {
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
+      setInfo((prev) => ({ ...prev, savedImage: file }));
     };
-    setInfo((prev) => ({ ...prev, savedImage: file }));
   };
 
   const handleGet = async () => {
@@ -291,7 +291,7 @@ export default function ExhibitionUpdatePage() {
 
       // 서버로 전송
       const res = await exhibitionAPI.update(formData);
-
+      console.log("레데",res.data)
       if (res.status === 200) {
         poppleAlert.alert("", "수정 성공");
       }

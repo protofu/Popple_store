@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { companyAuthAPI } from "../api/services/CompanyAuth";
 import PostCode from "../components/common/PostCode";
 import Dropdown from "../components/exhibition/Dropdown";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function CompanySignUpPage() {
   const inputStyle =
@@ -146,10 +147,10 @@ export default function CompanySignUpPage() {
     try {
       data.sector = drop;
       const res = await companyAuthAPI.create(data);
-      alert("가입 성공");
+      poppleAlert.alert("","가입 성공");
       navigate("/login");
     } catch (error) {
-      alert("가입 실패" + error.data || error.message);
+      poppleAlert.alert("","가입 실패");
     }
   };
 

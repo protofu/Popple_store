@@ -290,9 +290,9 @@ public class ExhibitionService {
 				posterService.savePoster(poster, ex);
 			}
 		}
-		exhibitionRepository.save(ex);
+		Exhibition save = exhibitionRepository.save(ex);
 		
-		return convertToExhibitionResponse(ex);
+		return null;//수정할 것
 	}
 
 
