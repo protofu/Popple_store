@@ -25,7 +25,7 @@ export default function OAuthLoginPage() {
       console.log("res 데이터" + res.data);
       if (res.data.accessToken) {
         setCookie("accessToken", res.data.accessToken, { path: "/"});
-        console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
+        // console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
         window.location.href="/";
         return;
       } else if (res.data.deleted) {
@@ -65,7 +65,8 @@ export default function OAuthLoginPage() {
         birth: data.birth,
       });
       if (res.status == 200) {
-        alert("이메일 인증 후 로그인 성공" + res.data.accessToken);
+        // alert("이메일 인증 후 로그인 성공" + res.data.accessToken);
+        setCookie("accessToken", res.data.accessToken, { path: "/"});
         window.location.href="/";
       }
     } catch (err) {
