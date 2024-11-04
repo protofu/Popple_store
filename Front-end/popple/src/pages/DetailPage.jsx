@@ -215,7 +215,7 @@ export default function DetailPage() {
               showNeighboringMonth={true} // 다음달 날짜도 보이게
               tileContent={({ date, view }) => {
                 let html = [];
-                if (reservedDate.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
+                if (reservedDate?.find(x => x === moment(date).format("YYYY-MM-DD"))) {;
                   html.push(<div key={moment(date).format("YYYY-MM-DD")} className="bg-popple-light text-white rounded-md text-[10px]">예약</div>)
                 }
                 return html;
