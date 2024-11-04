@@ -151,12 +151,6 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
       poppleAlert.alert("","가입 실패");
     }
   };
-  const watchAllFields = watch(); // 모든 입력 필드의 현재 값을 추적
-
-useEffect(() => {
-    console.log(watchAllFields);
-}, [watchAllFields]); // watchAllFields가 변경될 때마다 콘솔에 출력
-
   
   return (
     <form

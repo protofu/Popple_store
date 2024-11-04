@@ -264,7 +264,8 @@ export default function ExhibitionUpdatePage() {
       formData.append("exhibitionName", info.exhibitionName);
       formData.append("subTitle", info.subTitle);
       formData.append("detailDescription", info.detailDescription);
-      formData.append("address", info.address + " " + info.detailAddress);
+      formData.append("address", info.address);
+      formData.append("detailAddress", info.detailAddress)
       formData.append("notice", info.notice);
       formData.append("terms", info.terms);
       formData.append("homepageLink", info.homepageLink);
