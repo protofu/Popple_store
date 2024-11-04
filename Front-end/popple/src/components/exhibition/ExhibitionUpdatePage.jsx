@@ -281,7 +281,7 @@ export default function ExhibitionUpdatePage() {
       formData.append("endAt", info.endAt);
 
       // 이미지 파일 추가
-      info.image.forEach((img, index) => {
+      info.descriptionImage.forEach((img, index) => {
         formData.append(`image`, img);
       });
 

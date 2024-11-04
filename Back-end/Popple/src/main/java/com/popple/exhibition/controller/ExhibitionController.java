@@ -82,18 +82,7 @@ public class ExhibitionController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(exhibition);
 	}
 	
-	// 수정
-	// @Operation(summary = "팝업/전시 수정", description = "특정 팝업/전시를 수정합니다.")
-	// @PatchMapping("")
-	// public ResponseEntity<ExhibitionResponse> updatePopUp(
-	// 		Long id, 
-	// 		ExhibitionRequest exhibitionRequest,
-	// 		@RequestParam(name="image") List<MultipartFile> images, 
-	// 		@RequestParam(name="poster") List<MultipartFile> posters, 
-	// 		@AuthenticationPrincipal User user) throws IOException {
-	// 	ExhibitionResponse exhibition = exService.updateExhibition(id, exhibitionRequest, images, posters, user);
-	// 	return ResponseEntity.ok(exhibition);
-	// }
+
 	
 	// 삭제
 	@Operation(summary = "팝업/전시 삭제", description = "특정 팝업/전시를 삭제합니다.")
@@ -164,5 +153,30 @@ public class ExhibitionController {
 		}
 		return null;
 	}
+	// 수정
+	// @Operation(summary = "팝업/전시 수정", description = "특정 팝업/전시를 수정합니다.")
+	// @PatchMapping("")
+	// public ResponseEntity<ExhibitionResponse> updatePopUp(
+	// 		Long id, 
+	// 		ExhibitionRequest exhibitionRequest,
+	// 		@RequestParam(name="image") List<MultipartFile> images, 
+	// 		@RequestParam(name="poster") List<MultipartFile> posters, 
+	// 		@AuthenticationPrincipal User user) throws IOException {
+	// 	ExhibitionResponse exhibition = exService.updateExhibition(id, exhibitionRequest, images, posters, user);
+	// 	return ResponseEntity.ok(exhibition);
+	// }
+	
+	// 팝업 전시 수정
+	 @Operation(summary = "팝업/전시 수정", description = "특정 팝업/전시를 수정합니다.")
+	 @PatchMapping("")
+	 public ResponseEntity<ExhibitionResponse> updateExhibition(
+			 @ModelAttribute ExhibitionRequest req,
+			 @AuthenticationPrincipal User user,
+			 @RequestParam(name="image", required = false) List<MultipartFile> images, 
+			 @RequestParam(name="poster") MultipartFile poster ){
+		 ExhibitionResponse exhi = exService.updateExhi(user, req, images, poster);
+		 return ResponseEntity.ok(exhi);
+	 }
+	 
 }
 
