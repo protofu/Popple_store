@@ -16,6 +16,7 @@ import KakaoShareButton from "../components/common/KakaoShareButton";
 import CateButton from "../components/common/CateButton";
 import { reservationAPI } from "../api/services/Reservation";
 import DetailsEvent from "../components/exhi-details/DetailsEvent";
+import ExhibitionPage from "./ExhibitionPage";
 
 function dateToString(arr) {
   const [y,m,d] = arr;
@@ -90,7 +91,7 @@ export default function DetailPage() {
       console.error("링크 복사에 실패했습니다.", error);
     }
   };
-
+  
   // 예시 데이터
   useEffect(() => {
     getMyReservation();
@@ -147,6 +148,7 @@ export default function DetailPage() {
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
   console.log(exhi);
   const endAtDate = new Date(exhi.endAt[0], exhi.endAt[1]-1, exhi.endAt[2]);
+  
 
   return (
     <div className="mt-10 h-full">
@@ -161,6 +163,9 @@ export default function DetailPage() {
             <div className="">
               <img src={`${posterURL}${exhi.savedImage}`} alt="포스터 이미지" className="w-[70%] mx-auto" />
             </div>
+            <button onClick={()=>navigate(`/exhibition-update?id=${exhi.id}`)}>수정</button>
+            
+            
             
             {/* 간략 내용 */}
             <div className="grid grid-cols-3 my-auto gap-14">
