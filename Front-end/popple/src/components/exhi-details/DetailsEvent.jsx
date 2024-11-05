@@ -6,11 +6,9 @@ import NoEventList from "../event/NoEventList";
 import EventDetailModal from "../event/EventDetailModal";
 import { useLoginUserStore } from "../../stores/LoginUserState";
 
-export default function DetailsEvent({ navigate, usernickname }) {
+export default function DetailsEvent({ navigate, usernickname, loginusernickname }) {
   const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
   const { id } = useParams();
-
-  const { loginUserNickname } = useLoginUserStore();
 
   // 팝업 관련 이벤트 가져오기
   const [eventList, setEventList] = useState([]);
@@ -64,7 +62,7 @@ export default function DetailsEvent({ navigate, usernickname }) {
         }
         {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
       </div>
-      {loginUserNickname === usernickname && (
+      {loginusernickname === usernickname && (
          <button className="m-6 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-popple to-pink-500 group-hover:from-popple group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-popple-dark w-48"
          onClick={()=>navigate(`/event-regist?id=${id}`)}>
            <span className="w-full relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">

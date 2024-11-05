@@ -72,7 +72,7 @@ export default function ExStep3({ information }) {
                 {information.fee !== '0' ? (
                   <span>{information.fee} 원 </span>
                 ) : (
-                  <span className="font-bold">무료</span>
+                  <span className="font-bold">입장료 무료</span>
                 )}
               </h1>
               {/* <label htmlFor="location" className={infoGridStyle}>

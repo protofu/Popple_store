@@ -49,6 +49,9 @@ export default function DetailPage() {
     );
   };
 
+  //로그인한 유저
+  const {loginUserNickname} = useLoginUserStore();
+
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
 
@@ -276,7 +279,7 @@ export default function DetailPage() {
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
-            {selectTab === "EVENT" && <DetailsEvent navigate={navigate} usernickname={exhi.nickname}/>}
+            {selectTab === "EVENT" && <DetailsEvent navigate={navigate} usernickname={exhi.nickname} loginusernickname={loginUserNickname}/>}
           </div>
         </div>
         {/* 캘린더 */}
