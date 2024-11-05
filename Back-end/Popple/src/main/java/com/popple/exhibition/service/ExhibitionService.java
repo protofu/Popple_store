@@ -1,7 +1,8 @@
 package com.popple.exhibition.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,8 @@ import com.popple.auth.entity.User;
 import com.popple.exhibition.domain.ExhibitionRequest;
 import com.popple.exhibition.domain.ExhibitionResponse;
 import com.popple.exhibition.entity.Exhibition;
+import com.popple.exhibition.entity.Image;
+import com.popple.exhibition.entity.Poster;
 import com.popple.exhibition.repository.ExhibitionRepository;
 import com.popple.exhibition.repository.ImageRepository;
 import com.popple.exhibition.repository.PosterRepository;
@@ -51,6 +54,7 @@ public class ExhibitionService {
 	            .subTitle(req.getSubTitle())
 	            .detailDescription(req.getDetailDescription())
 	            .address(req.getAddress())
+	            .detailAddress(req.getDetailAddress())
 	            .notice(req.getNotice())
 	            .terms(req.getTerms())
 	            .grade(req.isGrade())
@@ -75,7 +79,6 @@ public class ExhibitionService {
 	            .endAt(req.getEndAt())
 	            .reserve(req.isReserve())
 	            .build();
-	    
 	    
 	    // Exhibition 객체를 데이터베이스에 저장
 	    exhibitionRepository.save(exhibition);
@@ -105,73 +108,12 @@ public class ExhibitionService {
 	            .isDeleted(exhibition.isDeleted())
 	            .build();
 	}
-
-	// 팝업/전시 수정
-//	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, List<MultipartFile> images, List<MultipartFile> posters, User user) throws IOException {
-//		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
-//		
-//		// 현재 사용자가 작성자가 맞는지 확인
-//		if (!exhibition.getUser().getId().equals(user.getId())) {
-//			throw new AccessDeniedException("본인이 만든 팝업/전시만 수정할 수 있습니다.");
-//		}
-//		
-//		// 이미지들을 삭제
-//		List<Image> prevImages = exhibition.getImages();
-//		prevImages.forEach(image -> imageService.deleteImage(image.getId()));
-//		
-//		// 새로운 이미지들을 저장
-//		List<Image> savedImages = images.stream().map(image -> imageService.saveImage(image)).collect(Collectors.toList());
-//		
-//		// 포스터들을 삭제
-//		List<Poster> prevPosters = exhibition.getPosters();
-//		prevPosters.forEach(poster -> posterService.deletePoster(poster.getId()));
-//		
-//		// 새로운 포스터들을 저장
-//		List<Poster> savedPosters = posters.stream().map(poster -> posterService.savePoster(poster)).collect(Collectors.toList());
-//		
-//		// 바뀐 타입 불러오기
-//		ExhiType changeType = exhiTypeRepository.findById(exhibitionRequest.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 분류를 찾을 수 없습니다."));
-//		
-//		// Exhibition 객체를 요청 데이터로 업데이트
-//	    exhibition.setType(changeType);
-//	    exhibition.setExhibitionName(exhibitionRequest.getExhibitionName());
-//	    exhibition.setSubTitle(exhibitionRequest.getSubTitle());
-//	    exhibition.setDetailDescription(exhibitionRequest.getDetailDescription());
-//	    exhibition.setAddress(exhibitionRequest.getAddress());
-//	    exhibition.setNotice(exhibitionRequest.getNotice());
-//	    exhibition.setTerms(exhibitionRequest.getTerms());
-//	    exhibition.setGrade(exhibitionRequest.isGrade());
-//	    exhibition.setFee(exhibitionRequest.getFee());
-//	    exhibition.setHomepageLink(exhibitionRequest.getHomepageLink());
-//	    exhibition.setInstagramLink(exhibitionRequest.getInstagramLink());
-//	    exhibition.setPark(exhibitionRequest.isPark());
-//	    exhibition.setFree(exhibitionRequest.isFree());
-//	    exhibition.setPet(exhibitionRequest.isPet());
-//	    exhibition.setFood(exhibitionRequest.isFood());
-//	    exhibition.setWifi(exhibitionRequest.isWifi());
-//	    exhibition.setCamera(exhibitionRequest.isCamera());
-//	    exhibition.setKids(exhibitionRequest.isKids());
-//	    exhibition.setSunday(exhibitionRequest.getSunday());
-//	    exhibition.setMonday(exhibitionRequest.getMonday());
-//	    exhibition.setTuesday(exhibitionRequest.getTuesday());
-//	    exhibition.setWednesday(exhibitionRequest.getWednesday());
-//	    exhibition.setThursday(exhibitionRequest.getThursday());
-//	    exhibition.setFriday(exhibitionRequest.getFriday());
-//	    exhibition.setSaturday(exhibitionRequest.getSaturday());
-//	    exhibition.setStartAt(exhibitionRequest.getStartAt());
-//	    exhibition.setEndAt(exhibitionRequest.getEndAt());
-////	    exhibition.setImages(savedImages);
-////	    exhibition.setPosters(savedPosters);
-//		
-//		exhibitionRepository.save(exhibition);
-//	    
-//		return convertToExhibitionResponse(exhibition);
-//	}
-	
 	
 	// 팝업/전시 전체 조회 - 모든 전시를 조회
 	public List<ExhibitionResponse> getAllExhibition() {
-		List<Exhibition> exhibitions = exhibitionRepository.findAll();
+		// 종료되지 않은 (오늘 날짜가 지나지 않은) 전시만 조회
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfter(today);
 		
 		return exhibitions.stream()
 				.map(e -> {
@@ -180,12 +122,24 @@ public class ExhibitionService {
 //				.map(this::entityToResponse)
 				.collect(Collectors.toList());
 	}
-	
+
+	// 팝업 또는 전시 전체 조회 - 타입에 따라 팝업 또는 전시를 인기순 조회
+	public List<ExhibitionResponse> getAllPopularExhibition(Long typeId) {
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findExhibitionsOrderedByPopularityAndEndAtAfter(typeId, today);
+		return exhibitions.stream()
+		.map(e -> {
+			return convertToExhibitionResponse(e, null);
+		})
+		.collect(Collectors.toList());
+	}
+
 	// 팝업/전시 선택 전체 조회
 	public List<ExhibitionResponse> getAllExhibition(Long id) {
 		log.info("타입으로 리스트 조회 : {}", id);
 		ExhiType type = exhiTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 타입 요청입니다."));
-		List<Exhibition> exhibitions = exhibitionRepository.findAllByType(type);
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfterAndType(today, type);
 
 		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환	
 		return exhibitions.stream()
@@ -216,19 +170,47 @@ public class ExhibitionService {
 	
 	// 키워드 검색
 	public List<ExhibitionResponse> searchByKeyword(String keyword, Long typeId) {
-		// List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+		LocalDate today = LocalDate.now();
 		if (typeId == 0) {
-			List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+			List<Exhibition> exList = exhibitionRepository.findByKeywordAndEndAtAfter(keyword, today);
 			return exList.stream().map(e -> {
 				return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 			}).collect(Collectors.toList());
 		}
-		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeId(keyword, typeId);
+		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeIdAndEndAtAfter(keyword, typeId, today);
 		return exList.stream().map(e -> {
 			return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 		}).collect(Collectors.toList());
 	}
 	
+	public ExhibitionResponse updateExhi(User user, ExhibitionRequest req, List<MultipartFile> images,
+			MultipartFile poster) {
+		Exhibition ex = exhibitionRepository.findById(req.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
+		List<Image> prevImage = imageService.findAll();
+		Poster prevPoster = posterService.findPoster(req.getExhiId());
+		if(ex.getUser().getId() == user.getId()) {
+			ex.setDetailDescription(req.getDetailDescription());
+			ex.setAddress(req.getAddress());
+			ex.setStartAt(req.getStartAt());
+			ex.setEndAt(req.getEndAt());
+			ex.setExhibitionName(req.getExhibitionName());
+			ex.setInstagramLink(req.getInstagramLink());
+			ex.setHomepageLink(req.getHomepageLink());
+			ex.setSubTitle(req.getSubTitle());
+			ex.setReserve(req.isReserve());
+			ex.setNotice(req.getNotice());
+			
+			if(images != null) {
+				prevImage.forEach(i -> imageService.deleteImage(i.getId()));
+				images.stream().map(image -> imageService.saveImage(image, ex)).collect(Collectors.toList());
+			}
+			if(poster != null) {
+				posterService.deletePoster(prevPoster.getId());
+				posterService.savePoster(poster, ex);
+			}
+		}
+		return null;
+	}
 
 	private List<String> fetchLocationFromKakao(String address) {
 		try {
@@ -254,23 +236,44 @@ public class ExhibitionService {
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
 	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, String descriptionImage, List<String> location) {
 		return ExhibitionResponse.builder()
-				.id(exhibition.getId())
-				.typeId(exhibition.getType().getId())
-				.exhibitionName(exhibition.getExhibitionName())
-				.address(exhibition.getAddress())
-				.detailAddress(exhibition.getDetailAddress())
-				.startAt(exhibition.getStartAt())
-				.endAt(exhibition.getEndAt())
-				.savedImage(savedImage)
-				.visitCount(exhibition.getVisitCount())
-				.reserve(exhibition.isReserve())
-				.descriptionImage(descriptionImage)
-				.location(location)
-				.build();
+		.id(exhibition.getId())
+		.typeId(exhibition.getType().getId())
+		.exhibitionName(exhibition.getExhibitionName())
+		.subTitle(exhibition.getSubTitle())
+		.detailDescription(exhibition.getDetailDescription())
+		.address(exhibition.getAddress())
+		.detailAddress(exhibition.getDetailAddress())
+		.notice(exhibition.getNotice())
+		.terms(exhibition.getTerms())
+		.grade(exhibition.isGrade())
+		.fee(exhibition.getFee())
+		.homepageLink(exhibition.getHomepageLink())
+		.instagramLink(exhibition.getInstagramLink())
+		.park(exhibition.isPark())
+		.free(exhibition.isFree())
+		.pet(exhibition.isPet())
+		.food(exhibition.isFood())
+		.wifi(exhibition.isWifi())
+		.camera(exhibition.isCamera())
+		.kids(exhibition.isKids())
+		.sunday(exhibition.getSunday())
+		.monday(exhibition.getMonday())
+		.tuesday(exhibition.getTuesday())
+		.wednesday(exhibition.getWednesday())
+		.thursday(exhibition.getThursday())
+		.friday(exhibition.getFriday())
+		.saturday(exhibition.getSaturday())
+		.startAt(exhibition.getStartAt())
+		.endAt(exhibition.getEndAt())
+		.savedImage(savedImage)
+		.visitCount(exhibition.getVisitCount())
+		.reserve(exhibition.isReserve())
+		.descriptionImage(descriptionImage)
+		.location(location)
+		.build();
 	}
-
-
-	public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
+	
+	private ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
 		String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
 		String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
 		return buildExhibitionResponse(exhibition, savedImage, descriptionImage, location);

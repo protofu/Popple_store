@@ -1,5 +1,6 @@
 package com.popple.exhibition.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,11 +16,22 @@ import com.popple.type.ExhiType;
 public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
 
 	List<Exhibition> findAllByUser(User user);
+	
+	@Query("SELECT e FROM Exhibition e WHERE (e.exhibitionName LIKE %:keyword% OR e.address LIKE %:keyword%) AND e.endAt >= :today")
+	List<Exhibition> findByKeywordAndEndAtAfter(@Param("keyword") String keyword, @Param("today") LocalDate today);
 
-	List<Exhibition> findByExhibitionNameContainsOrAddressContains(String keyword, String keyword2);
+    @Query("SELECT e FROM Exhibition e WHERE (e.exhibitionName LIKE %:keyword% OR e.address LIKE %:keyword%) AND e.type.id = :typeId AND e.endAt >= :today")
+	List<Exhibition> findByKeywordAndTypeIdAndEndAtAfter(@Param("keyword") String keyword, @Param("typeId") Long typeId, @Param("today") LocalDate today);
 
-	List<Exhibition> findAllByType(ExhiType type);
+    List<Exhibition> findByEndAtAfter(LocalDate today);
 
-    @Query("SELECT e FROM Exhibition e WHERE (e.exhibitionName LIKE %:keyword% OR e.address LIKE %:keyword%) AND e.type.id = :typeId")
-	List<Exhibition> findByKeywordAndTypeId(@Param("keyword") String keyword, @Param("typeId") Long typeId);
+    List<Exhibition> findByEndAtAfterAndType(LocalDate today, ExhiType type);
+
+	@Query("SELECT e FROM Exhibition e " +
+       "LEFT JOIN Like l ON e = l.exhibition " +
+       "LEFT JOIN Review r ON e = r.exhibition " +
+	   "WHERE e.type.id = :typeId AND e.endAt >= :today " +
+       "GROUP BY e.id " +
+       "ORDER BY (e.visitCount + COUNT(DISTINCT l.id) + COUNT(DISTINCT r.id)) DESC")
+    List<Exhibition> findExhibitionsOrderedByPopularityAndEndAtAfter(@Param("typeId") Long typeId, @Param("today") LocalDate today);
 }

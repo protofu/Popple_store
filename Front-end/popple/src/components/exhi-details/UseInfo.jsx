@@ -31,10 +31,10 @@ export default function UseInfo({ data }) {
   }
 
   const sections = [
-    { title: "관람정보", content: <img src={`${imageURL}${data.descriptionImage}`} alt="설명 이미지" /> },
-    { title: "공지사항", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
-    { title: "상세정보", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
-    { title: "방문통계", content: <MiniStatistics /> },
+    { title: "관람정보", key: "descriptionImage", content: <img src={`${imageURL}${data.descriptionImage}`} alt="설명 이미지" /> },
+    { title: "공지사항", key: "notice", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
+    { title: "상세정보", key: "detailDescription", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
+    { title: "방문통계", key: "statistics", content: <MiniStatistics /> },
   ];
   // 방문 통계
   // 남여 비율은 백엔드에서 계산하여 % 값만 front로 던져줌
@@ -47,7 +47,7 @@ export default function UseInfo({ data }) {
         <IconBox data={data}/>
       </div>
       {sections.map((section, index) => (
-        section.content !== "" && (
+        (data[section.key] !== "" && data[section.key] !== null)  && (
           <div key={index}>
             <h1 className={h1Style}>{section.title}</h1>
             <div className={innerInfo}>{section.content}</div>
@@ -87,7 +87,7 @@ function IconBox({ data }) {;
         <span className={spanStyle}>
           <div className={iconStyle}><LuParkingCircleOff className={innerIconStyle}/><span className={innerTextStyle}>주차 불가</span></div>
         </span>}
-      {data.pet &&  
+      {!data.pet &&  
       <span className={spanStyle}>
         <div className={iconStyle}><FaDog className={innerIconStyle}/><span className={innerTextStyle}>반려동물<br />동반가능</span></div>
       </span>}

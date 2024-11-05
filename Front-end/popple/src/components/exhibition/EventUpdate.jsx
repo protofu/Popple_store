@@ -32,8 +32,8 @@ export default function EventUpdate() {
           eventName: eventName,
           summary: summary,
           description: description,
-          startAt: moment(startAt).format('YYYY-MM-DD'),
-          endAt: moment(endAt).format('YYYY-MM-DD'),
+          startAt: moment(new Date(startAt[0], startAt[1] - 1, startAt[2])).format('YYYY-MM-DD'),
+          endAt: moment(new Date(endAt[0], endAt[1] - 1, endAt[2])).format('YYYY-MM-DD'),
           eventPoster:image,
         });
       }

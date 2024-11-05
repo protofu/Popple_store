@@ -91,14 +91,11 @@ export default function PopUpPage() {
     };
     const getPopupList = async () => {
       try {
-        const res = await exhibitionAPI.getlist(type);
-        const today = new Date(); // 오늘 날짜 가져오기
-        const filtered = res.data.filter(item => {
-            const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
-            return endAt > today; // 오늘보다 후인지 확인
-        });
+        // 인기 있는 팝업은 visitCount와 like 개수와 review 개수를 합산하여 가져온다.
+        const res = await exhibitionAPI.getPopularList(type);
+        console.log(res.data);
+        setPopupData(res.data); // 상태에 필터링된 데이터 설정
         const visitCountRes = res.data.sort((a, b) => b.visitCount - a.visitCount);
-        setPopupData(filtered); // 상태에 필터링된 데이터 설정
         setVisitCountData(visitCountRes);
       } catch (error) {
           console.error('Error fetching data:', error);

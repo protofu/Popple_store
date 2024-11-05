@@ -45,7 +45,10 @@ export default function MiniStatistics() {
   if (loading) {
     return <div>로딩 중...</div>;
   }
-  // console.log(genderData.find(item => item.id === "male").value / );
+  // 방문자가 없을 경우
+  if (humanCount === 0) {
+    return <div>방문자가 없습니다.</div>; 
+  }
 
   // 백분율 계산
   const malePer = humanCount === 0 ? humanCount : Math.round((genderData.find(item => item.id === "male").value) / humanCount * 100, 2);

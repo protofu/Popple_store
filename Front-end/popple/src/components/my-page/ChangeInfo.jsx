@@ -6,7 +6,6 @@ import { getCookie, setCookie } from "../../utils/CookieUtils";
 import { useForm } from "react-hook-form";
 import { poppleAlert } from "../../utils/PoppleAlert";
 import moment from "moment";
-import { useLoginUserStore } from "../../stores/LoginUserState";
 import { companyAuthAPI } from "../../api/services/CompanyAuth";
 
 const ChangeInfo = () => {

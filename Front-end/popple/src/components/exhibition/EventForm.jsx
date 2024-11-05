@@ -231,7 +231,7 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
         <div className="grid grid-cols-2 gap-x-20 gap-y-10 my-10">
           <div>
             <label htmlFor="eventPoster" className="text-sm">
-              포스터
+              포스터 <span className="text-red-500">*</span>
             </label>
             <label className=" p-5 h-fit w-fit  bg-white rounded-lg border flex flex-col justify-center items-center cursor-pointer">
               <input
@@ -246,7 +246,7 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
           </div>
           <div>
             <label htmlFor="eventImage" className="text-sm">
-              상세 이미지
+              상세 이미지 <span className="text-red-500">*</span>
             </label>
             <div className="h-full">
               <label

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { companyAuthAPI } from "../api/services/CompanyAuth";
 import PostCode from "../components/common/PostCode";
 import Dropdown from "../components/exhibition/Dropdown";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function CompanySignUpPage() {
   const inputStyle =
@@ -17,21 +18,18 @@ export default function CompanySignUpPage() {
     formState: { errors },
     handleSubmit,
     watch,
+    setValue
   } = useForm();
+
   //주소 상태 관리
   const [address, setAddress] = useState({
-    address:"",
-    value:""
+    jibunAddress: "",
+    roadAddress: "",
   });
 
   useEffect(() => {
-    // 주소 선택 시 정보 변경
-    if (address.roadAddress) {
-      setAddress(address.roadAddress)
-        
-    }
-  }, [address]);
-
+    setValue('address', address.roadAddress)
+  }, [address, setValue]);
 
   //드롭다운 값 관리
   const [drop, setDrop] = useState("");
@@ -39,7 +37,6 @@ export default function CompanySignUpPage() {
     setDrop(e.target.value);
   };
 
-  console.log("주소",address)
   //기업 정보 입력 필드 - 1
   const [companyField, setCompanyField] = useState([
     {
@@ -145,18 +142,23 @@ export default function CompanySignUpPage() {
       },
     },
   ]);
-  
 
   const onSubmit = async (data) => {
     try {
       data.sector = drop;
       const res = await companyAuthAPI.create(data);
-      alert("가입 성공");
+      poppleAlert.alert("","가입 성공");
       navigate("/login");
     } catch (error) {
-      alert("가입 실패" + error.data || error.message);
+      poppleAlert.alert("","가입 실패");
     }
   };
+
+  const watch1 = watch();
+  useEffect(() => {
+    console.log(watch1);
+  }, [watch1]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className="mt-[30px] text-center mb-10 text-2xl"> 기업 정보입력</h1>
@@ -246,11 +248,11 @@ export default function CompanySignUpPage() {
                             className="w-[232px] h-[50px] border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2"
                             placeholder={a.placeholder}
                             required={true}
-                            value={address.roadAddress} // 주소 값을 상태로 설정
-                            onChange={(e) => setAddress({ ...address, name: e.target.value })} // 상태 업데이트
+                            value={address.roadAddress} // 도로명 주소로 업데이트
+                            readOnly // 필요시 제거 가능
                           />
                           <PostCode
-                            className="border p-2 rounded-lg"
+                            className="border p-2 rounded-lg inline-block w-1/6 ml-2"
                             value="검색"
                             setAddress={setAddress}
                           />
