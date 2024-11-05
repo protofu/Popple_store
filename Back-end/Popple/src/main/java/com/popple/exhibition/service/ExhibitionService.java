@@ -185,6 +185,16 @@ public class ExhibitionService {
 				.collect(Collectors.toList());
 	}
 	
+	public List<ExhibitionResponse> getAllPopularExhibition(Long typeId) {
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findExhibitionsOrderedByPopularityAndEndAtAfter(typeId, today);
+		return exhibitions.stream()
+		.map(e -> {
+			return convertToExhibitionResponse(e, null);
+		})
+		.collect(Collectors.toList());
+	}
+
 	// 팝업/전시 선택 전체 조회
 	public List<ExhibitionResponse> getAllExhibition(Long id) {
 		log.info("타입으로 리스트 조회 : {}", id);
@@ -297,10 +307,10 @@ public class ExhibitionService {
 		.build();
 	}
 
-
-	public ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
+	private ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
 		String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
 		String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
 		return buildExhibitionResponse(exhibition, savedImage, descriptionImage, location);
 	}
+
 }

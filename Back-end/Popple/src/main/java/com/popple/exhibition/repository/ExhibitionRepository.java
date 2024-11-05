@@ -26,4 +26,12 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     List<Exhibition> findByEndAtAfter(LocalDate today);
 
     List<Exhibition> findByEndAtAfterAndType(LocalDate today, ExhiType type);
+
+	@Query("SELECT e FROM Exhibition e " +
+       "LEFT JOIN Like l ON e = l.exhibition " +
+       "LEFT JOIN Review r ON e = r.exhibition " +
+	   "WHERE e.type.id = :typeId AND e.endAt >= :today " +
+       "GROUP BY e.id " +
+       "ORDER BY (e.visitCount + COUNT(DISTINCT l.id) + COUNT(DISTINCT r.id)) DESC")
+    List<Exhibition> findExhibitionsOrderedByPopularityAndEndAtAfter(@Param("typeId") Long typeId, @Param("today") LocalDate today);
 }

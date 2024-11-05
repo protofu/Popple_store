@@ -14,26 +14,7 @@ function dateToString(arr) {
 
 export default function PosterSlide({ items }) {
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
-  const [size, setSize] = useState(window.innerWidth);
-  const [slidesPerView, setSlidesPerView] = useState(6);
-  useEffect(() => {
-    window.addEventListener('resize', () => setSize(window.innerWidth));
-    return () => window.removeEventListener('resize', () => setSize(window.innerWidth));
-  }, []);
-  
-  useEffect(() => {
-    if (size >= 1650) {
-      setSlidesPerView(items?.length >= 6 ? 6 : items?.length)
-    } else if (size >= 1400) {
-      setSlidesPerView(items?.length >= 5 ? 5 : items?.length)
-    } else if (size >= 850) {
-      setSlidesPerView(items?.length >= 4 ? 4 : items?.length)
-    } else if (size >= 660) {
-      setSlidesPerView(items?.length >= 3 ? 3 : items?.length)
-    } else {
-      setSlidesPerView(items?.length >= 2 ? 2 : items?.length)
-    }
-  }, [size, items]);
+
   return (
     // div flex로 묶고 버튼 왼쪽 오른쪽 두고
     // 네비게이션에 nextEl: ".arrow-left", prevEl:".arrow-right"
@@ -42,9 +23,9 @@ export default function PosterSlide({ items }) {
       <div className="flex justify-center items-center w-[calc(100%-100px)]">
         { items?.length > 0 &&
           <Swiper
-            loop
-            slidesPerView={slidesPerView}
-            spaceBetween={10}
+            loop={true} // 무한 슬라이드
+            width={200}
+            spaceBetween={20}
             centeredSlides={false}
             navigation={{ prevEl: ".arrow-left", nextEl:".arrow-right" }}
             pagination={{
@@ -62,7 +43,7 @@ export default function PosterSlide({ items }) {
                   title={item.exhibitionName} 
                   addr={item.address} 
                   duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)}
-                  styles={"w-full h-auto"}
+                  // styles={"w-full h-auto"}
                 />
               </SwiperSlide>
             ))}

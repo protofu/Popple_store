@@ -1,11 +1,14 @@
+import { useEffect, useState } from "react";
+import { CiSquareChevDown, CiSquareChevUp } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import { Autoplay, EffectCoverflow, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { eventAPI } from "../api/services/Event";
+import { exhibitionAPI } from "../api/services/Exhibition";
+import EventDetailModal from "../components/event/EventDetailModal";
+import NoEventList from "../components/event/NoEventList";
 import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
-import { useEffect, useState } from "react";
-import { exhibitionAPI } from "../api/services/Exhibition";
-import { eventAPI } from "../api/services/Event";
-import NoEventList from "../components/event/NoEventList";
-import EventDetailModal from "../components/event/EventDetailModal";
 
 export default function MainPage() {
   const postURL = import.meta.env.VITE_EXHIBITION_POSTER;
@@ -107,10 +110,41 @@ export default function MainPage() {
   return (
     <div className="flex flex-col items-center">
       {/* 메인 이미지 */}
-      <div className="my-auto w-full ">
-        {/* <PostCarousel /> */}
-        <img src="/images/mainpage.jpg" alt="메인페이지 이미지" className="h-[800px]" />
+      <div className="flex w-full relative items-center">
+        <div className="absolute z-50 right-0 flex flex-col gap-6 mr-3">
+          <button className="arrow-up cursor-pointer text-4xl z-50"><CiSquareChevUp /></button>
+          <button className="arrow-down cursor-pointer text-4xl z-50"><CiSquareChevDown /></button>
+        </div>
+        <div className="my-auto w-full">
+          {/* <PostCarousel /> */}
+          <Swiper
+            className="w-full h-[40vh] block"
+            direction="vertical"
+            loop={true}
+            autoplay={{ delay: 2000 }}
+            speed={1000}
+            effect="coverflow"
+            coverflowEffect={{rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: true}}
+            spaceBetween={0}
+            slidesPerView={1}
+            navigation={{ prevEl: ".arrow-up", nextEl:".arrow-down" }}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={(swiper) => console.log(swiper)}
+            modules={[Autoplay, EffectCoverflow, Navigation]}
+          >
+            <SwiperSlide className="cursor-pointer">
+              <div className="h-full bg-gradient-to-b from-popple-light to-popple-dark">A 내용</div>            
+            </SwiperSlide>
+            <SwiperSlide className="cursor-pointer">
+            <div className="h-full bg-gradient-to-b from-popple to-purple-300">A 내용</div>  
+            </SwiperSlide>
+            <SwiperSlide className="cursor-pointer">
+            <div className="h-full bg-gradient-to-b from-purple-400 to-purple-200">A 내용</div>  
+            </SwiperSlide>
+          </Swiper>
+        </div>
       </div>
+      
       {/* 이벤트 섹션 */}
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5 cursor-pointer" onClick={() => handleNavigate("/event")}>EVENT</h1>

@@ -5,6 +5,7 @@ export const exhibitionAPI = {
   update : (data) => api.patch("/exhibition",data),
   delete : (data) => api.patch("/exhibition/delete", data),
   getlist : (id) => api.get(`/exhibition/${id}`),
+  getPopularList : (id) => api.get(`/exhibition/popular/${id}`),
   get : (id) => api.get(`/exhibition/detail/${id}`),
   my : (data) => api.get("/exhibition/my-exhibition",data),
   gettype : (data) => api.get("exhibition-type",data),

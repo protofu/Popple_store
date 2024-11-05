@@ -104,6 +104,14 @@ public class ExhibitionController {
 	}
 
 	// 전제 조회
+	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 인기순(조회수, 찜, 리뷰 합계) 반환합니다.")
+	@GetMapping("/popular/{id}")
+	public ResponseEntity<List<ExhibitionResponse>> getAllPopularExhibition(@PathVariable(value = "id", required = false) Long typeId){
+		List<ExhibitionResponse> exhibitionList = exService.getAllPopularExhibition(typeId);
+		return ResponseEntity.ok(exhibitionList);
+	}
+
+	// 전체 조회
 	@Operation(summary = "팝업/전시 목록", description = "팝업/전시 목록을 반환합니다.")
 	@GetMapping("/{id}")
 	public ResponseEntity<List<ExhibitionResponse>> getAllExhibition(@PathVariable(value = "id", required = false) Long id){
