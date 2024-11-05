@@ -215,8 +215,15 @@ public class ExhibitionService {
 	}
 	
 	// 키워드 검색
-	public List<ExhibitionResponse> searchByKeyword(String keyword) {
-		List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+	public List<ExhibitionResponse> searchByKeyword(String keyword, Long typeId) {
+		// List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+		if (typeId == 0) {
+			List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+			return exList.stream().map(e -> {
+				return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
+			}).collect(Collectors.toList());
+		}
+		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeId(keyword, typeId);
 		return exList.stream().map(e -> {
 			return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 		}).collect(Collectors.toList());
