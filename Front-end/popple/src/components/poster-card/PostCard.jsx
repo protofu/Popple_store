@@ -26,10 +26,10 @@ export default function PostCard({ id, img, title, addr, duration, styles, typeI
   };
 
   return (
-    <div className={`${styles} cursor-pointer`} onClick={() => handleNavigate(id)}>
+    <div className={`${styles} flex flex-col items-center cursor-pointer`} onClick={() => handleNavigate(id)}>
       <img src={img ? `${img}` : '/waiting_for_Image.png'} className="min-h-[275px] max-w-[200px] rounded-lg shadow-xl" alt="포스터이미지" />
-      <div className="relative mt-2 max-w-[200px]">
-        <p className="font-bold text-[1rem] my-1 min-h-[50px]">{title}</p>
+      <div className="relative mt-4 max-w-[200px]">
+        <p className="font-bold text-[1rem] min-h-[50px]">{title}</p>
         <p className="text-[0.8rem] text-[#4e4e4e]">{addr}</p>
         <p className="text-[0.8rem] text-[#8b8888]">{duration}</p>
       </div>
