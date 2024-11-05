@@ -244,6 +244,37 @@ export default function ExhibitionUpdatePage() {
       return <LuFilePlus className="w-[250px] h-auto" />;
     }
   };
+  
+  
+  const renderImage = () => {
+    if (preview2) {
+      {
+        /* 이미지 업로드하면 변경되는 부분 */
+      }
+      return <FileCarousel preview2={preview2} deleteImg={deleteImg} />;
+    } else if (info.descriptionImage) {
+      {
+        /* 수정할 때 나오는 부분 */
+      }
+      return (
+        <img
+          className="w-[100px] h-auto"
+          src={`http://localhost:8080/image/${info.descriptionImage}`}
+          alt="설명 이미지"
+        />
+      );
+    } else {
+      {
+        /* 등록할 때 */
+      }
+      return (<div className="flex flex-col rounded-lg justify-center text-center items-center">
+      <p className="font-medium text-lg my-5 mb-2.5">
+        클릭 혹은 파일을 이곳에 드랍
+      </p>
+      <p className="m-0 text-sm">파일당 최대 3MB</p>
+    </div>);
+    }
+  };
 
   // 예약 드롭다운
   const [reserveStatus, setReserveStatus] = useState(false);
@@ -494,16 +525,7 @@ export default function ExhibitionUpdatePage() {
                     onChange={onImageArrUpload}
                     accept="image/*"
                   />
-                  {preview2.length > 0 ? (
-                    <FileCarousel preview2={preview2} deleteImg={deleteImg} />
-                  ) : (
-                    <div className="flex flex-col rounded-lg justify-center text-center items-center">
-                      <p className="font-medium text-lg my-5 mb-2.5">
-                        클릭 혹은 파일을 이곳에 드랍
-                      </p>
-                      <p className="m-0 text-sm">파일당 최대 3MB</p>
-                    </div>
-                  )}
+                  {renderImage()}
                 </div>
               </div>
             </div>

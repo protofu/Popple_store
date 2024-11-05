@@ -2,7 +2,7 @@ export default function NoEventList({ text }) {
   return (
     <div className="relative text-center p-6">
       <h2 className="text-xl font-bold text-gray-600 mb-4">
-        현재 진행중인 {text}이/가 없어요...
+        현재 진행중인 {text}가 없어요...
       </h2>
       <figure className="inline-block animate-float">
         <img
