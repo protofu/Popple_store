@@ -113,7 +113,7 @@ export default function EventCardV2({
   return (
     <div>
       <div
-        className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-[345px] h-auto max-w-[345px] bg-black  hover:cursor-pointer`}
+        className={`relative flex rounded-[12px] overflow-hidden aspect-[320/87] w-[345px] h-auto max-w-[345px] bg-black  hover:cursor-pointer transition-transform transform hover:scale-105`}
         style={{ backgroundColor: palette }}
         onClick={handleModalOpen}
       >
