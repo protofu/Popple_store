@@ -228,6 +228,7 @@ public class ExhibitionService {
     			.location(location)
     			.savedImage(savedImage)
     			.descriptionImage(descriptionImage)
+    			.nickname(exhibition.getUser().getNickname())
     			.build();
 	}
 	// 팝업/전시 수정

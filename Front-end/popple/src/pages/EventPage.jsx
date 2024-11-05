@@ -39,7 +39,6 @@ export default function EventPage() {
     getEvent();
   }, []);
   console.log(state)
-  // const exhiId=2571;
   return (
     <>
       <h1 className={textStyle}>Event</h1>

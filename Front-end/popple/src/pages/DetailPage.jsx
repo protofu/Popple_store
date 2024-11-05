@@ -18,6 +18,7 @@ import { reservationAPI } from "../api/services/Reservation";
 import DetailsEvent from "../components/exhi-details/DetailsEvent";
 import ExhibitionPage from "./ExhibitionPage";
 import { useLoginStore } from "../stores/LoginState";
+import { useLoginUserStore } from "../stores/LoginUserState";
 
 function dateToString(arr) {
   const [y, m, d] = arr;
@@ -154,7 +155,7 @@ export default function DetailPage() {
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
   console.log(exhi);
   const endAtDate = new Date(exhi.endAt[0], exhi.endAt[1] - 1, exhi.endAt[2]);
-
+  
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />
@@ -275,7 +276,7 @@ export default function DetailPage() {
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} />}
             {selectTab === "리뷰" && <ReviewInDetail />}
-            {selectTab === "EVENT" && <DetailsEvent navigate={navigate} />}
+            {selectTab === "EVENT" && <DetailsEvent navigate={navigate} usernickname={exhi.nickname}/>}
           </div>
         </div>
         {/* 캘린더 */}

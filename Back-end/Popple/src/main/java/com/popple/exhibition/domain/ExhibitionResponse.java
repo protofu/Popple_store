@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.popple.exhibition.entity.Exhibition;
-
 import lombok.Builder;
 import lombok.Data;
 
@@ -49,5 +47,6 @@ public class ExhibitionResponse {
     private int visitCount;
     private boolean reserve;
     private List<String> location;
+    private String nickname;
    
 }
