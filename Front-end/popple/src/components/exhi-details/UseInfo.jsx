@@ -14,7 +14,7 @@ import { TbCurrencyDollarOff } from "react-icons/tb";
 import MDEditor from "@uiw/react-md-editor";
 
 const escapeHtml = (text) => {
-  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return text?.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
 
 export default function UseInfo({ data }) {
@@ -27,7 +27,7 @@ export default function UseInfo({ data }) {
     const emojiRegex = /((?![\u{23}-\u1F6F3]([^\u{FE0F}]|$))\p{Emoji}(?:(?!\u{200D})\p{EComp}|(?=\u{200D})\u{200D}\p{Emoji})*)/gu;
     
     // 이모지 앞뒤로 공백 추가
-    return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(emojiRegex, ' $1 ');
+    return text?.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(emojiRegex, ' $1 ');
   }
 
   const sections = [
