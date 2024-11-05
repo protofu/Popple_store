@@ -9,6 +9,8 @@ import ChangeInfo from '../components/my-page/ChangeInfo';
 import { poppleAlert } from '../utils/PoppleAlert';
 import { authAPI } from '../api/services/Auth';
 import { removeCookie } from '../utils/CookieUtils';
+import PopupList from '../components/company/PopupList';
+import Statistics from '../components/company/Statistics';
 
 export default function MyPage() {
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
@@ -78,8 +80,8 @@ export default function MyPage() {
     "방문 리뷰": <MyReview />,
     "정보 수정": <ChangeInfo />,
     "탈퇴": resignRender(),
-    "팝업/전시 목록": '팝업/전시 목록 관련 내용 (기업)',
-    "전체 방문 통계": '전체 방문 통계 관련 내용 (기업)',
+    "팝업/전시 목록": <PopupList/>,
+    "전체 방문 통계": <Statistics/>,
   };
 
   const renderContent = () => {

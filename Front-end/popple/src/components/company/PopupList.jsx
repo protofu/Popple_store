@@ -32,6 +32,8 @@ export default function PopupList() {
     getMyPopupList();
   }, [])
 
+  console.log(popupList)
+
   // 페이지별로 현재 보여줄 항목들 계산
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = popupList.slice(startIndex, startIndex + itemsPerPage);
@@ -130,7 +132,7 @@ export default function PopupList() {
                     <td className={`${thStyle} ${color}`}>{value}</td>
                     <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id, event)}/></td>
                     <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
-                    <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" /></td>
+                    <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" onClick={() => navigate(`/exhibition-update?id=${event.id}`)}/></td>
                     <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" /></td>
                   </tr>
                 );
