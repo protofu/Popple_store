@@ -12,15 +12,22 @@ import {
 } from "react-icons/lu";
 import { TbCurrencyDollarOff } from "react-icons/tb";
 import MDEditor from "@uiw/react-md-editor";
+import Insta from "../../assets/instagram.png";
+import Home from "../../assets/home.png";
 
 const escapeHtml = (text) => {
   return text?.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
 
+
 export default function UseInfo({ data }) {
   const imageURL = import.meta.env.VITE_EXHIBITION_IMAGE;
   const h1Style = "font-bold text-[1.25rem]";
   const innerInfo = "m-6";
+
+  const handleExternalNavigation = (url) => {
+    window.open(url, "_blank");
+  };
 
   function getMarkdownText(text) {
     // 이모지를 감지하기 위한 정규식
@@ -35,6 +42,29 @@ export default function UseInfo({ data }) {
     { title: "공지사항", key: "notice", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
     { title: "상세정보", key: "detailDescription", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
     { title: "방문통계", key: "statistics", content: <MiniStatistics /> },
+    { title: "링크", key: "link", content: (
+      <div className="flex gap-4 mt-6">
+        {data.homepageLink && (
+          <img
+            src={Home}
+            alt="홈페이지 아이콘"
+            className="w-10 h-10 cursor-pointer object-contain inline"
+            onClick={() => handleExternalNavigation(data.homepageLink)}
+          />
+        )}
+        {data.instagramLink && (
+          <img
+            src={Insta}
+            alt="인스타그램 아이콘"
+            className="w-10 h-10 cursor-pointer object-contain inline ml-3 mt-0.5"
+            onClick={() => handleExternalNavigation(data.instagramLink)}
+          />
+        )}
+        {(!data.homepageLink && !data.instagramLink) && (
+          <p className="text-500">관련 링크가 없습니다.</p>
+        )}
+      </div>
+    )},
   ];
   // 방문 통계
   // 남여 비율은 백엔드에서 계산하여 % 값만 front로 던져줌
