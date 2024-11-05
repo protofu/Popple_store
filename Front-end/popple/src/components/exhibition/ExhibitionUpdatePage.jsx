@@ -131,9 +131,10 @@ export default function ExhibitionUpdatePage() {
       res.data.endAt = moment(new Date(res.data.endAt[0], res.data.endAt[1] - 1, res.data.endAt[2])).format('YYYY-MM-DD');
       //가져온 걸 exhidata에 넣어주자
       setExhiData(res.data)
+  
     } catch (error) {}
   };
-  
+ 
   //가져온 팝업/전시 정보 뿌리기
   useEffect(() => {
     handleGet();
@@ -211,7 +212,7 @@ export default function ExhibitionUpdatePage() {
     if (preview) {
       {/* 포스터 이미지 업로드하면 변경되는 부분 */}
       return <img className="w-[250px] h-auto" src={preview} alt="포스터" />;
-    } else if (info.descriptionImage && info.descriptionImage.length > 0) {
+    } else if (info.savedImage) {
       {/* 수정할 때 나오는 부분 */}
       return  <img className="w-[250px] h-auto" src={`http://localhost:8080/poster/${info.savedImage}`} alt="포스터" />;
     } else {
@@ -307,6 +308,8 @@ export default function ExhibitionUpdatePage() {
   };
   console.log("exhiData", exhiData);
   console.log("인포", info);
+
+
   return (
     <>
       <div className="flex justify-center">
