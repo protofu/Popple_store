@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function MapView({ latitude, longitude, poppleLocations }) {
-    console.log(poppleLocations);
+    const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
     const navigate = useNavigate();
     useEffect(() => {
         if (!window.kakao) {
@@ -50,6 +50,7 @@ export default function MapView({ latitude, longitude, poppleLocations }) {
                             content: `
                                 <div class="p-2 bg-white border border-gray-300 rounded shadow-md text-center">
                                     <h4 class="text-sm font-semibold text-gray-700 text-nowrap">${poppleLocations[i].exhibitionName}</h4>
+                                    <img class="rounded w-24 h-auto mt-4 mx-auto" alt="팝업/전시 포스터" src=${posterURL + poppleLocations[i].savedImage} />
                                 </div>`
                         });
 

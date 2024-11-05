@@ -4,7 +4,7 @@ import Complete from "../common/Complete";
 import { reservationAPI } from "../../api/services/Reservation";
 
 export default function Reservation({ reservation, exhi, onClose }) {
-  const reservationTime = moment(reservation).format('YYYY-MM-DD');
+  const reservationTime = moment(new Date(reservation[0], reservation[1] - 1, reservation[2])).format('YYYY-MM-DD');
   const [isChecked, setIsChecked] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [request, setRequest] = useState({
@@ -15,7 +15,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
     setRequest({
       ...request, 
       exhibitionId:exhi.id, 
-      reservationDate: moment(reservation).format('YYYY-MM-DD')
+      reservationDate: moment(new Date(reservation[0], reservation[1] - 1, reservation[2])).format('YYYY-MM-DD')
     })
 
   }, []);
