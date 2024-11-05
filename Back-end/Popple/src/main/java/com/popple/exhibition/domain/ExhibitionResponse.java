@@ -47,4 +47,6 @@ public class ExhibitionResponse {
     private int visitCount;
     private boolean reserve;
     private List<String> location;
+    private String nickname;
+   
 }

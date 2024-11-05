@@ -52,15 +52,14 @@ export default function EventRegister() {
 
       const res = await eventAPI.regist(formData);
       if (res.status === 201) {
-        alert("이벤트가 등록되었습니다.");
+        poppleAlert.alert("이벤트가 등록되었습니다.");
         navigate("/");
       }
     } catch (error) {
-      alert("이벤트 등록에 실패하였습니다.");
+      poppleAlert.alert("이벤트 등록에 실패하였습니다.");
       console.error(error, error.message)
     }
   };
-
 
   return (
     <EventForm title={"이벤트 등록"} info={info} setInfo={setInfo} handleSubmit={handleSubmit} />

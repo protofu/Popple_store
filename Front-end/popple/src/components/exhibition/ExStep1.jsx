@@ -356,10 +356,10 @@ const ExStep1 = ({ information, changeInformation }) => {
             />
           </div>
           <input
-            name="detailAddr"
+            name="detailAddress"
             placeholder="상세주소"
             className={inputStyle}
-            value={information.detailAddr}
+            value={information.detailAddress}
             onChange={(e) => changeInformation(e)}
           />
           <label>

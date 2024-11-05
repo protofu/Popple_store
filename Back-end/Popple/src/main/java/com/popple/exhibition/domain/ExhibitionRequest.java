@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExhibitionRequest {
+	private Long exhiId;
 	private Long typeId;
 	private String exhibitionName;
 	private String subTitle;

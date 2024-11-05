@@ -1,5 +1,7 @@
 package com.popple.exhibition.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,5 +40,10 @@ public class ImageService {
 	public ImageDTO getIamgeByImageId(Long id) {
 		Image image = imageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이미지가 존재하지 않습니다."));
 		return ImageDTO.toDTO(image);
+	}
+
+	public List<Image> findAll() {
+		List<Image> imageList = imageRepository.findAll();
+		return imageList;
 	}
 }

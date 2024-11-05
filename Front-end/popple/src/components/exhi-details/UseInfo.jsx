@@ -87,7 +87,7 @@ function IconBox({ data }) {;
         <span className={spanStyle}>
           <div className={iconStyle}><LuParkingCircleOff className={innerIconStyle}/><span className={innerTextStyle}>주차 불가</span></div>
         </span>}
-      {data.pet &&  
+      {!data.pet &&  
       <span className={spanStyle}>
         <div className={iconStyle}><FaDog className={innerIconStyle}/><span className={innerTextStyle}>반려동물<br />동반가능</span></div>
       </span>}

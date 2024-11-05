@@ -38,7 +38,7 @@ public class AuthService {
 		String encodedPassword = bCryptPasswordEncoder.encode(req.getPassword());
 
 		User user = User.builder().email(req.getEmail()).name(req.getName()).birth(req.getBirth())
-				.nickname(req.getNickname()).password(encodedPassword).build();
+				.nickname(req.getNickname()).password(encodedPassword).gender(req.isGender()).build();
 		log.info("user : {}", user);
 		User savedUser = userRepository.save(user);
 		return SignUpResponse.toDTO(savedUser);
