@@ -9,6 +9,7 @@ import EventDetailModal from "../components/event/EventDetailModal";
 import NoEventList from "../components/event/NoEventList";
 import EventCard from "../components/EventCard";
 import PostCard from "../components/poster-card/PostCard";
+import EventCardV2 from "../components/exhibition/EventCardV2";
 
 export default function MainPage() {
   const postURL = import.meta.env.VITE_EXHIBITION_POSTER;
@@ -148,10 +149,10 @@ export default function MainPage() {
       {/* 이벤트 섹션 */}
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5 cursor-pointer" onClick={() => handleNavigate("/event")}>EVENT</h1>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4 mx-4">
           {eventList?.length > 0 ?
             eventList.slice(0, 8).map((item, index) => (
-              <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+              <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
             )) :
             <NoEventList />
           }

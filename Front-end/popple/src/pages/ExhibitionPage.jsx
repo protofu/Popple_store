@@ -11,6 +11,7 @@ import { exhibitionAPI } from "../api/services/Exhibition";
 import { eventAPI } from "../api/services/Event";
 import EventDetailModal from "../components/event/EventDetailModal";
 import NoEventList from "../components/event/NoEventList";
+import EventCardV2 from "../components/exhibition/EventCardV2";
 
 
 
@@ -130,10 +131,10 @@ export default function ExhibitionPage() {
         <img src={eventIcon} alt="이벤트 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>EVENT</h1>
       </div>
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="flex flex-wrap gap-4 mx-4">
         {eventList?.length > 0 ?
           eventList.slice(0, 8).map((item, index) => (
-            <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+            <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
           )) :
           <NoEventList text={"이벤트"}/>
         }
@@ -166,7 +167,7 @@ export default function ExhibitionPage() {
             <button
               key={index}
               className={`mx-2 p-2 border rounded ${
-                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                currentPage === index + 1 ? "bg-popple-light text-white" : "bg-white text-black"
               }`}
               onClick={() => handlePageChange(index + 1)}
             >

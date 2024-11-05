@@ -53,7 +53,7 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
       <div>
         <h1 className={h1Style}>EVENT</h1>
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 mx-4">
         {eventList?.length > 0 ?
           eventList.map((item, index) => (
             <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />

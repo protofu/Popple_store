@@ -18,8 +18,12 @@ export default function ReservationList() {
     setShowCancelModal(true);
   };
 
-  const handleRowClick = (exhibitionId) => {
-    navigate(`/pop-up/detail/${exhibitionId}`); // 디테일 페이지로 이동
+  const handleRowClick = (exhibitionId, exhiTypeId) => {
+    if (exhiTypeId === 1) {
+      navigate(`/pop-up/detail/${exhibitionId}`);
+    } else if (exhiTypeId === 2) {
+      navigate(`/exhibition/detail/${exhibitionId}`);
+    }
   };
 
   // 날짜 포맷 변환 함수
@@ -64,54 +68,37 @@ export default function ReservationList() {
   }, []);
 
   const CancelModal = ({ reservationId, onClose }) => {
-    const [password, setPassword] = useState("");
-  
-    const handleConfirm = async () => {
-      const requestData = { password };
+    const handleCancelReservation = async () => {
       try {
-        const res = await authAPI.checkPassword(requestData);
-        if (res.status === 200) {
-          await reservationAPI.cancel(reservationId);
-          getMyReservationList();
-          onClose();
-        }
+        await reservationAPI.cancel(reservationId);
+        alert("예약이 취소되었습니다.");
+        onClose();
+        getMyReservationList();
       } catch (error) {
-        setErrorMessage("비밀번호가 틀렸습니다."); 
-        console.error("취소 실패:",  error.response ? error.response.data : error);
+        console.error("예약 취소 실패:", error.response ? error.response.data : error);
       }
     };
-
+  
     return (
       <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[300px] gap-5 border-2 border-[#8900E1] relative">
+        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[200px] gap-5 border-2 border-[#8900E1] relative">
           <button className="absolute top-2 right-2 text-[#8900E1] text-xl p-2" onClick={onClose}>
             ✖
           </button>
-          <div className="mt-10">
-            <h1 className="text-[20px] text-center">예약을 취소하시겠습니까?</h1>
-            <h1 className="text-[20px] text-center">계정 비밀번호를 입력해주세요.</h1>
-          </div>
-          <div className="w-[80%] m-0">
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none w-full p-2"
-            />
-            {errorMessage && (
-              <p className="text-red-500 text-xs text-right">{errorMessage}</p> // 오류 메시지 표시
-            )}
-          </div>
-          <div className="flex justify-center w-full">
-            <button className="bg-[#8900E1] text-white mt-1 px-4 py-2 rounded" onClick={handleConfirm}>
+          <h1 className="text-[20px] text-center mt-10">해당 예약을 취소하시겠습니까?</h1>
+          <div className="flex justify-center w-full mt-5">
+            <button 
+              className="bg-[#8900E1] text-white mt-1 px-4 py-2 rounded" 
+              onClick={handleCancelReservation}
+            >
               확인
             </button>
           </div>
         </div>
       </div>
     );
-    
   };
+  
 
   return (
     <div>
@@ -134,8 +121,7 @@ export default function ReservationList() {
               </tr>
             ) : (
               reservations.map(reservation => (
-                <tr key={reservation.id} onClick={() => handleRowClick(reservation.exhibitionId
-                )} // 행 클릭 시 디테일 페이지 이동
+                <tr key={reservation.id} onClick={() => handleRowClick(reservation.exhibitionId , reservation.exhiTypeId)} // 행 클릭 시 디테일 페이지 이동
                 className="cursor-pointer hover:bg-gray-100"
               >
                   <td className="border-b pl-5">{reservation.exhibitionName}</td>

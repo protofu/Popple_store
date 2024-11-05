@@ -60,6 +60,7 @@ public class ReservationService {
 				.map(reserve -> ReservationResponse.builder()
 				.id(reserve.getId())
 				.exhibitionId(reserve.getExhibition().getId())
+				.exhiTypeId(reserve.getExhibition().getType().getId())
 				.exhibitionName(reserve.getExhibition().getExhibitionName())
 				.address(reserve.getExhibition().getAddress())
 				.reserver(reserve.getUser().getName())

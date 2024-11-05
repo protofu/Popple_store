@@ -36,11 +36,15 @@ public class CompanyService {
 	public CompanyResponse updateCompany(CompanyRequest companyRequest, User user) {
 		Company company = companyRepository.findById(user.getCompId()).orElseThrow(() -> new IllegalArgumentException("해당 기업 회원을 찾을 수 없음"));
 		if(user.getCompId() == company.getId()) {
-			if(companyRequest.getPassword() != null) user.setPassword(companyRequest.getPassword());
-			if(companyRequest.getLeader() != null) company.setLeader(companyRequest.getLeader());
-			if(companyRequest.getAddress() != null) company.setAddress(companyRequest.getAddress());
-			if(companyRequest.getTel() != null) company.setTel(companyRequest.getTel());
-			
+
+			if (companyRequest.getBuisinessNumber() != null) company.setBuisinessNumber(companyRequest.getBuisinessNumber());
+			if (companyRequest.getSector() != null) company.setSector(companyRequest.getSector());
+			if (companyRequest.getName() != null) company.setName(companyRequest.getName());
+			if (companyRequest.getAddress() != null) company.setAddress(companyRequest.getAddress());
+			if (companyRequest.getTel() != null) company.setTel(companyRequest.getTel());
+			if (companyRequest.getLeader() != null) company.setLeader(companyRequest.getLeader());
+
+
 			companyRepository.save(company);
 			userRepository.save(user);	
 		}
