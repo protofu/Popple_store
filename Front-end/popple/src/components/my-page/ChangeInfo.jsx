@@ -5,6 +5,7 @@ import { authAPI } from "../../api/services/Auth";
 import { getCookie, setCookie } from "../../utils/CookieUtils";
 import { useForm } from "react-hook-form";
 import { poppleAlert } from "../../utils/PoppleAlert";
+import moment from "moment";
 
 const ChangeInfo = () => {
     const inputStyle =
@@ -24,7 +25,7 @@ const ChangeInfo = () => {
         if (token) {
             const id = jwtDecode(token).id;
             const res = await authAPI.getUser(id);
-            res.data.birth = res.data.birth.join("-");
+            res.data.birth = moment(new Date(res.data.birth[0], res.data.birth[1] - 1, res.data.birth[2])).format('YYYY-MM-DD');
             setUserInfo(res.data);
         } 
     };
