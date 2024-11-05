@@ -170,7 +170,7 @@ export default function DetailPage() {
             {/* 간략 내용 */}
             <div className="grid grid-cols-3 my-auto gap-14">
               <label htmlFor="location" className={infoGridStyle}>장소</label>
-              <h1 id="location" className={infoH1GridStyle}>{exhi.address}</h1>
+              <h1 id="location" className={infoH1GridStyle}>{exhi.address} {exhi.detailAddress}</h1>
               <label htmlFor="location" className={infoGridStyle}>기간</label>
               <h1 id="location" className={infoH1GridStyle}>{startAt + " - " + endAt}</h1>
               <label htmlFor="location" className={infoGridStyle}>관람연령</label>
