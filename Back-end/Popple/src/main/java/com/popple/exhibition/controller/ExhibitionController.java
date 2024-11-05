@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,8 +87,8 @@ public class ExhibitionController {
 	
 	// 삭제
 	@Operation(summary = "팝업/전시 삭제", description = "특정 팝업/전시를 삭제합니다.")
-	@PatchMapping("/delete")
-	public ResponseEntity<ExhibitionResponse> deletePopUp(Long id, @AuthenticationPrincipal User user) {
+	@PatchMapping("/delete/{id}")
+	public ResponseEntity<ExhibitionResponse> deletePopUp(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user) {
 		ExhibitionResponse exhibition = exService.deleteExhibition(id, user);
 		return ResponseEntity.ok(exhibition);
 	}
@@ -181,7 +182,7 @@ public class ExhibitionController {
 			 @ModelAttribute ExhibitionRequest req,
 			 @AuthenticationPrincipal User user,
 			 @RequestParam(name="image", required = false) List<MultipartFile> images, 
-			 @RequestParam(name="poster") MultipartFile poster ){
+			 @RequestParam(name="poster", required = false) MultipartFile poster ){
 		 ExhibitionResponse exhi = exService.updateExhi(user, req, images, poster);
 		 return ResponseEntity.ok(exhi);
 	 }

@@ -9,6 +9,7 @@ import { FiPieChart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Statistics from "./Statistics";
 import ReservationList from "../company/ReservationList";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function PopupList() {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ export default function PopupList() {
   useEffect(() => {
     getMyPopupList();
   }, [])
+
+  console.log(popupList)
 
   // 페이지별로 현재 보여줄 항목들 계산
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -103,6 +106,28 @@ export default function PopupList() {
       return selectedComponent; // 선택된 컴포넌트가 있으면 렌더링
     }
 
+  //지우기
+  const handleDelete = async(data) => {
+    
+    poppleAlert.check(
+      "삭제 확인",
+      "삭제하시겠습니까?",
+      async ()=> { 
+        const res = await exhibitionAPI.delete(data);
+        console.log(res.data)
+        await poppleAlert.alert("삭제 완")
+      },
+      () => poppleAlert.alert("삭제 취소ㅋ 쫄보~")
+    );
+    // try {
+
+    //   const res = await exhibitionAPI.delete()
+    //   poppleAlert.alert("삭제 완료","성공적으로 삭제되었습니다.")
+    // } catch (error) {
+    //   poppleAlert.alert("삭제 실패","삭제 중 오류가 발생했습니다.")
+    // }
+  }
+
     return (
       <div className="">
         <div className="mt-8 pb-12 mb-12">
@@ -130,8 +155,8 @@ export default function PopupList() {
                     <td className={`${thStyle} ${color}`}>{value}</td>
                     <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id, event)}/></td>
                     <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
-                    <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" /></td>
-                    <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" /></td>
+                    <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" onClick={() => navigate(`/exhibition-update?id=${event.id}`)}/></td>
+                    <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" onClick={() => handleDelete(event.id)}/></td>
                   </tr>
                 );
               })}

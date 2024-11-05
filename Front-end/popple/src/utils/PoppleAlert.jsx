@@ -4,14 +4,14 @@ import Swal from 'sweetalert2';
 export const poppleAlert = {
   alert : (title, text) => Swal.fire({
     // position: "top-end",
-    timer: 1500,
+    timer: 5000,
     timerProgressBar: true,
     width: 400,
     height: 100,
     title,
     text,
   }),
-  check : (title, text, confirmAction, calcelAction) => Swal.fire({
+  check : (title, text, confirmAction, cancelAction) => Swal.fire({
     title,
     text,
     icon: "warning",
@@ -22,7 +22,7 @@ export const poppleAlert = {
     if (result.isConfirmed) {
       confirmAction();
     } else {
-      calcelAction();
+      cancelAction();
     }
   })
 };

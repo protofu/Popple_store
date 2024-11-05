@@ -50,6 +50,7 @@ export default function DetailPage() {
   };
   //로그인한 유저
   const {loginUserNickname} = useLoginUserStore();
+ 
 
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
