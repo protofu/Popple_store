@@ -72,6 +72,7 @@ public class ReviewService {
 				.id(review.getId())
 				.userNickName(review.getUser().getNickname())
 				.exhibitionId(review.getExhibition().getId())
+				.exhiTypeId(review.getExhibition().getType().getId())
 				.content(review.getContent())
 				.createdAt(review.getCreatedAt())
 				.image(review.getReviewImage())

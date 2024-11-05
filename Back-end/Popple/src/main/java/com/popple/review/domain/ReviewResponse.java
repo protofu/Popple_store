@@ -12,6 +12,7 @@ import lombok.Data;
 public class ReviewResponse {
 	private Long id;
 	private Long exhibitionId;
+	private Long exhiTypeId;
 	private String userNickName;
 	private String content;
 	private ReviewImage image;

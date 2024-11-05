@@ -4,19 +4,27 @@ import ReviewItem from "../review/ReviewItem";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { authAPI } from "../../api/services/Auth";
 import NoList from "../common/NoList";
+import { useNavigate } from "react-router-dom";
 
 export default function MyReview() {
   const [reviews, setReviews] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewIdToDelete, setReviewIdToDelete] = useState(null);
+  const navigate = useNavigate();
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [reviewToEdit, setReviewToEdit] = useState(null);
-  const [updatedContent, setUpdatedContent] = useState("");
+  // const [showEditModal, setShowEditModal] = useState(false);
+  // const [reviewToEdit, setReviewToEdit] = useState(null);
+  // const [updatedContent, setUpdatedContent] = useState("");
 
-  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const handleRowClick = (exhibitionId,exhiTypeId) => {
+    if (exhiTypeId === 1) {
+      navigate(`/pop-up/detail/${exhibitionId}`);
+    } else if (exhiTypeId === 2) {
+      navigate(`/exhibition/detail/${exhibitionId}`);
+    }
+  };
 
   useEffect(()=>{
     const getMyReview = async () =>{
@@ -105,54 +113,33 @@ export default function MyReview() {
   //   );
     
   // };
+ 
 
-  const handleDelete = async (id) => {
-    const requestData = { password }; 
-    try {
-      const res = await authAPI.checkPassword(requestData);
-      if (res.status === 200) {
-        await authAPI.deleteReview(id);
-        alert("성공적으로 삭제되었습니다.");
-        setReviews(reviews.filter(review => review.id !== id));
+  const DeleteModal = ({ onClose }) => {
+    const handleClose = () => {
+      onClose();
+    };
+  
+    const handleDelete = async () => {
+      try {
+        await reviewAPI.deleteReview(reviewIdToDelete);
+        alert("리뷰가 삭제되었습니다.");
+        setReviews(reviews.filter(review => review.id !== reviewIdToDelete));
         setShowDeleteModal(false);
+      } catch (error) {
+        console.error("리뷰 삭제 실패:", error.response ? error.response.data : error);
       }
-    } catch (error) {
-      setErrorMessage("비밀번호가 틀렸습니다.");
-      console.log("리뷰 삭제 실패", error);
-    }
-  };
-
-  const DeleteModal = () => {
-    const handleCancel = () => {
-      setShowDeleteModal(false);
-      setErrorMessage("");
     };
-
-    const handleConfirm = () => {
-      handleDelete(reviewIdToDelete);
-    };
-
+  
     return (
       <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[300px] gap-5 border-2 border-[#8900E1] relative">
-          <button className="absolute top-2 right-2 text-[#8900E1] text-xl p-2" onClick={handleCancel}>
-            ✖
-          </button>
-          <h1 className="text-[20px] text-center">리뷰를 삭제하시겠습니까?</h1>
-          <h1 className="text-[20px] text-center">계정 비밀번호를 입력해주세요.</h1>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            className="border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none w-full p-2"
-          />
-          {errorMessage && (
-            <p className="text-red-500 text-xs text-right">{errorMessage}</p>
-          )}
-          <div className="flex justify-center w-full">
+        <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[400px] h-[200px] gap-5 border-2 border-[#8900E1] relative">
+          <button className="absolute top-2 right-2 text-[#8900E1] text-xl p-2" onClick={handleClose}>✖</button>
+          <h1 className="text-[20px] text-center mt-10">해당 리뷰를 삭제하시겠습니까?</h1>
+          <div className="flex justify-center w-full mt-5">
             <button 
-              className="bg-red-500 text-white px-4 py-2 mt-5 rounded" 
-              onClick={handleConfirm}
+              className="bg-[#8900E1] text-white mt-1 px-4 py-2 rounded" 
+              onClick={handleDelete}
             >
               확인
             </button>
@@ -161,7 +148,7 @@ export default function MyReview() {
       </div>
     );
   };
-
+  
 
   return (
     <div>
@@ -170,6 +157,7 @@ export default function MyReview() {
           <div 
             key={review.id} 
             className="border border-[#000000] rounded-[0.4rem] mb-2 flex items-center justify-between"
+            onClick={() => handleRowClick(review.exhibitionId, review.exhiTypeId)}
           >
             <ReviewItem review={review} style={'border-none w-full'} />
             <div className="flex mr-5 ml-0 pl-0">
@@ -179,8 +167,8 @@ export default function MyReview() {
                 <MdEdit className="text-2xl mr-3 transition-transform duration-200 hover:scale-125" />
               </button> */}
               <button 
-                onClick={() => {
-                  //delete 모달창
+                onClick={(e) => {
+                  e.stopPropagation();
                   setReviewIdToDelete(review.id);
                   setShowDeleteModal(true);
                 }} 
@@ -194,7 +182,9 @@ export default function MyReview() {
       ) : (
         <NoList text={"작성된 리뷰가 없습니다."} />
       )}
-       {showDeleteModal && <DeleteModal />}
+      {showDeleteModal && (
+        <DeleteModal onClose={() => setShowDeleteModal(false)} />
+      )}
       {/* {showEditModal && <EditModal />} */}
     </div>
   );
