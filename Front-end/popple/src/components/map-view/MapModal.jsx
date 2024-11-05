@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import LocationSearch from "./LocationSearch";
 import SearchByLocation from "./SearchByLocation";
 import { exhibitionAPI } from "../../api/services/Exhibition";
+import moment from "moment";
 
 export default function MapModal({ onClose }) {
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const [exhibitions, setExhibitions] = useState([]);
   //latitude and longitude
   const [latitude, setLatitude] = useState();
@@ -108,9 +110,15 @@ export default function MapModal({ onClose }) {
                   onClick={() => handleClick(exhibition)}
                   className="cursor-pointer rounded-lg shadow-lg p-4 bg-white hover:bg-gray-100 transition duration-200"
                 >
-                  <div className="text-lg font-semibold text-gray-800 mb-2">{exhibition.exhibitionName}</div>
-                  <div className="text-gray-600 mb-1">{exhibition.address} {exhibition.detailAddress}</div>
-                  {/* <img src={exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} /> */}
+                  <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{exhibition.typeId === 1 ? "팝업" : "전시"}</span>
+                  <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{moment(new Date(exhibition.endAt[0], exhibition.endAt[1] - 1, exhibition.endAt[2])).diff(moment(), 'days')}일 후에 {exhibition.typeId === 1 ? "팝업" : "전시"} 종료</span>
+                  <div className="text-lg font-semibold text-gray-800 my-3 overflow-hidden whitespace-nowrap truncate">
+                    <img className="w-10 h-10 rounded-full inline mr-3" src={posterURL + exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} />
+                    {exhibition.exhibitionName}
+                  </div>
+                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                    {exhibition.address} {exhibition.detailAddress}
+                  </p>
                 </div>
               ))}
             </div>
