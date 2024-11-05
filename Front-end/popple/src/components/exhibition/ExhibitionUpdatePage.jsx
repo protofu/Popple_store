@@ -1,27 +1,13 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
-import { exhibitionAPI } from "../../api/services/Exhibition";
-import { MdFastfood, MdNoFood } from "react-icons/md";
 import {
-  FaArrowDown19,
-  FaArrowUp19,
-  FaDog,
-  FaUser,
-  FaUserSlash,
-} from "react-icons/fa6";
-import { CiWifiOff, CiWifiOn } from "react-icons/ci";
-import {
-  LuCamera,
-  LuCameraOff,
-  LuFilePlus,
-  LuParkingCircle,
-  LuParkingCircleOff,
+  LuFilePlus
 } from "react-icons/lu";
-import TypeDropdown from "./TypeDropdown";
+import { exhibitionAPI } from "../../api/services/Exhibition";
+import { poppleAlert } from "../../utils/PoppleAlert";
 import Markdown from "../common/Markdown";
 import PostCode from "../common/PostCode";
 import FileCarousel from "./FileCarousel";
-import moment from "moment";
-import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function ExhibitionUpdatePage() {
   // const exId = 2572;
@@ -134,20 +120,21 @@ export default function ExhibitionUpdatePage() {
     reader.readAsDataURL(file);
     reader.onload = () => {
       setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
-      setInfo((prev) => ({ ...prev, savedImage: file }));
     };
+    setInfo((prev) => ({ ...prev, savedImage: file }));
   };
-
+  //팝업/전시 정보 가져오고
   const handleGet = async () => {
     try {
       const res = await exhibitionAPI.get(exId);
       res.data.startAt = moment(new Date(res.data.startAt[0], res.data.startAt[1] - 1, res.data.startAt[2])).format('YYYY-MM-DD');
-     
       res.data.endAt = moment(new Date(res.data.endAt[0], res.data.endAt[1] - 1, res.data.endAt[2])).format('YYYY-MM-DD');
+      //가져온 걸 exhidata에 넣어주자
       setExhiData(res.data)
     } catch (error) {}
   };
   
+  //가져온 팝업/전시 정보 뿌리기
   useEffect(() => {
     handleGet();
   }, []);
@@ -166,7 +153,7 @@ export default function ExhibitionUpdatePage() {
     exhibitionName: "",
     subTitle: "",
     free: "",
-    fee: exhiData.fee,
+    fee: "",
     startAt: "",
     endAt: "",
     detailDescription: "",
@@ -222,25 +209,13 @@ export default function ExhibitionUpdatePage() {
   };
   const renderPoster = () => {
     if (preview) {
-      {
-        /* 포스터 이미지 업로드하면 변경되는 부분 */
-      }
-      return <img className="w-[250px] h-auto" src={info.savedImage} alt="포스터" />;
+      {/* 포스터 이미지 업로드하면 변경되는 부분 */}
+      return <img className="w-[250px] h-auto" src={preview} alt="포스터" />;
     } else if (info.savedImage) {
-      {
-        /* 수정할 때 나오는 부분 */
-      }
-      return (
-        <img
-          className="w-[250px] h-auto"
-          src={`http://localhost:8080/poster/${info.savedImage}`}
-          alt="포스터"
-        />
-      );
+      {/* 수정할 때 나오는 부분 */}
+      return  <img className="w-[250px] h-auto" src={`http://localhost:8080/poster/${info.savedImage}`} alt="포스터" />;
     } else {
-      {
-        /* 등록할 때 */
-      }
+      { /* 등록할 때 */}
       return <LuFilePlus className="w-[250px] h-auto" />;
     }
   };
@@ -322,7 +297,9 @@ export default function ExhibitionUpdatePage() {
       });
 
       // 포스터 파일 추가
-      formData.append("poster", info.savedImage);
+      if(info.savedImage){
+        formData.append("poster", info.savedImage);
+      }
 
       // 서버로 전송
       const res = await exhibitionAPI.update(formData);
@@ -334,6 +311,7 @@ export default function ExhibitionUpdatePage() {
       poppleAlert.alert("", "수정 실패");
       console.error(error);
     }
+    setInfo({});
   };
   console.log("exhiData", exhiData);
   console.log("인포", info);

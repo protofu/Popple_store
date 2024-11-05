@@ -113,7 +113,7 @@ public class ExhibitionService {
 	public List<ExhibitionResponse> getAllExhibition() {
 		// 종료되지 않은 (오늘 날짜가 지나지 않은) 전시만 조회
 		LocalDate today = LocalDate.now();
-		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfter(today);
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfterAndIsDeletedIsFalse(today);
 		
 		return exhibitions.stream()
 				.map(e -> {
@@ -126,7 +126,7 @@ public class ExhibitionService {
 	// 팝업 또는 전시 전체 조회 - 타입에 따라 팝업 또는 전시를 인기순 조회
 	public List<ExhibitionResponse> getAllPopularExhibition(Long typeId) {
 		LocalDate today = LocalDate.now();
-		List<Exhibition> exhibitions = exhibitionRepository.findExhibitionsOrderedByPopularityAndEndAtAfter(typeId, today);
+		List<Exhibition> exhibitions = exhibitionRepository.findExhibitionsOrderedByPopularityAndEndAtAfterAndIsDeletedIsFalse(typeId, today);
 		return exhibitions.stream()
 		.map(e -> {
 			return convertToExhibitionResponse(e, null);
@@ -139,7 +139,7 @@ public class ExhibitionService {
 		log.info("타입으로 리스트 조회 : {}", id);
 		ExhiType type = exhiTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 타입 요청입니다."));
 		LocalDate today = LocalDate.now();
-		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfterAndType(today, type);
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfterAndTypeAndIsDeletedIsFalse(today, type);
 
 		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환	
 		return exhibitions.stream()
@@ -161,7 +161,7 @@ public class ExhibitionService {
 	// 자신이 만든 팝업/전시 찾기
 	public List<ExhibitionResponse> getAllExhibitionByUser(User user) {
 		// User로 모든 팝업/전시 찾고
-		List<Exhibition> myExhibitions = exhibitionRepository.findAllByUser(user);
+		List<Exhibition> myExhibitions = exhibitionRepository.findAllByUserAndIsDeletedIsFalse(user);
 		// 엔티티를 리스폰스로 변환 후
 		List<ExhibitionResponse> myExhibitionsResponse = myExhibitions.stream().map(e -> convertToExhibitionResponse(e, null)).collect(Collectors.toList());
 		// 반환
@@ -172,12 +172,12 @@ public class ExhibitionService {
 	public List<ExhibitionResponse> searchByKeyword(String keyword, Long typeId) {
 		LocalDate today = LocalDate.now();
 		if (typeId == 0) {
-			List<Exhibition> exList = exhibitionRepository.findByKeywordAndEndAtAfter(keyword, today);
+			List<Exhibition> exList = exhibitionRepository.findByKeywordAndEndAtAfterAndIsDeletedIsFalse(keyword, today);
 			return exList.stream().map(e -> {
 				return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 			}).collect(Collectors.toList());
 		}
-		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeIdAndEndAtAfter(keyword, typeId, today);
+		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeIdAndEndAtAfterAndIsDeletedIsFalse(keyword, typeId, today);
 		return exList.stream().map(e -> {
 			return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 		}).collect(Collectors.toList());
@@ -270,6 +270,7 @@ public class ExhibitionService {
 		.reserve(exhibition.isReserve())
 		.descriptionImage(descriptionImage)
 		.location(location)
+		.nickname(exhibition.getUser().getNickname())
 		.build();
 	}
 	

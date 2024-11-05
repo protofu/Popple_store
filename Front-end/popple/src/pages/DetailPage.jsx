@@ -51,6 +51,7 @@ export default function DetailPage() {
 
   //로그인한 유저
   const {loginUserNickname} = useLoginUserStore();
+ 
 
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
@@ -158,7 +159,7 @@ export default function DetailPage() {
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
   console.log(exhi);
   const endAtDate = new Date(exhi.endAt[0], exhi.endAt[1] - 1, exhi.endAt[2]);
-  
+  console.log("이름 비교", loginUserNickname, exhi.nickname)
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />

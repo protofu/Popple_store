@@ -5,6 +5,7 @@ import Markdown from "../common/Markdown";
 import EventForm from "./EventForm";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { poppleAlert } from "../../utils/PoppleAlert";
 export default function EventUpdate() {
   // param으로 넘겨서
   const queryParams = new URLSearchParams(location.search);
@@ -91,11 +92,11 @@ export default function EventUpdate() {
 
       const res = await eventAPI.update(formData);
       if (res.status === 200 || res.status === 204) {
-        alert("이벤트가 수정되었습니다.");
+        poppleAlert.alert("","이벤트가 수정되었습니다.");
         navigate("/event");
       }
     } catch (error) {
-      alert("이벤트 수정에 실패하였습니다.");
+      poppleAlert.alert("","이벤트 수정에 실패하였습니다.");
     }
     setInfo({});
   };
