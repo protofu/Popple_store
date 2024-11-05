@@ -1,5 +1,7 @@
 package com.popple.exhibition.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,7 +173,9 @@ public class ExhibitionService {
 	
 	// 팝업/전시 전체 조회 - 모든 전시를 조회
 	public List<ExhibitionResponse> getAllExhibition() {
-		List<Exhibition> exhibitions = exhibitionRepository.findAll();
+		// 종료되지 않은 (오늘 날짜가 지나지 않은) 전시만 조회
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfter(today);
 		
 		return exhibitions.stream()
 				.map(e -> {
@@ -185,7 +189,8 @@ public class ExhibitionService {
 	public List<ExhibitionResponse> getAllExhibition(Long id) {
 		log.info("타입으로 리스트 조회 : {}", id);
 		ExhiType type = exhiTypeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 타입 요청입니다."));
-		List<Exhibition> exhibitions = exhibitionRepository.findAllByType(type);
+		LocalDate today = LocalDate.now();
+		List<Exhibition> exhibitions = exhibitionRepository.findByEndAtAfterAndType(today, type);
 
 		// exhibitions의 각 요소를 response로 변환후 리스트화 하고 반환	
 		return exhibitions.stream()
@@ -216,14 +221,15 @@ public class ExhibitionService {
 	
 	// 키워드 검색
 	public List<ExhibitionResponse> searchByKeyword(String keyword, Long typeId) {
+		LocalDate today = LocalDate.now();
 		// List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
 		if (typeId == 0) {
-			List<Exhibition> exList = exhibitionRepository.findByExhibitionNameContainsOrAddressContains(keyword, keyword);
+			List<Exhibition> exList = exhibitionRepository.findByKeywordAndEndAtAfter(keyword, today);
 			return exList.stream().map(e -> {
 				return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 			}).collect(Collectors.toList());
 		}
-		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeId(keyword, typeId);
+		List<Exhibition> exList = exhibitionRepository.findByKeywordAndTypeIdAndEndAtAfter(keyword, typeId, today);
 		return exList.stream().map(e -> {
 			return convertToExhibitionResponse(e, fetchLocationFromKakao(e.getAddress()));
 		}).collect(Collectors.toList());
@@ -254,19 +260,41 @@ public class ExhibitionService {
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
 	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, String descriptionImage, List<String> location) {
 		return ExhibitionResponse.builder()
-				.id(exhibition.getId())
-				.typeId(exhibition.getType().getId())
-				.exhibitionName(exhibition.getExhibitionName())
-				.address(exhibition.getAddress())
-				.detailAddress(exhibition.getDetailAddress())
-				.startAt(exhibition.getStartAt())
-				.endAt(exhibition.getEndAt())
-				.savedImage(savedImage)
-				.visitCount(exhibition.getVisitCount())
-				.reserve(exhibition.isReserve())
-				.descriptionImage(descriptionImage)
-				.location(location)
-				.build();
+		.id(exhibition.getId())
+		.typeId(exhibition.getType().getId())
+		.exhibitionName(exhibition.getExhibitionName())
+		.subTitle(exhibition.getSubTitle())
+		.detailDescription(exhibition.getDetailDescription())
+		.address(exhibition.getAddress())
+		.detailAddress(exhibition.getDetailAddress())
+		.notice(exhibition.getNotice())
+		.terms(exhibition.getTerms())
+		.grade(exhibition.isGrade())
+		.fee(exhibition.getFee())
+		.homepageLink(exhibition.getHomepageLink())
+		.instagramLink(exhibition.getInstagramLink())
+		.park(exhibition.isPark())
+		.free(exhibition.isFree())
+		.pet(exhibition.isPet())
+		.food(exhibition.isFood())
+		.wifi(exhibition.isWifi())
+		.camera(exhibition.isCamera())
+		.kids(exhibition.isKids())
+		.sunday(exhibition.getSunday())
+		.monday(exhibition.getMonday())
+		.tuesday(exhibition.getTuesday())
+		.wednesday(exhibition.getWednesday())
+		.thursday(exhibition.getThursday())
+		.friday(exhibition.getFriday())
+		.saturday(exhibition.getSaturday())
+		.startAt(exhibition.getStartAt())
+		.endAt(exhibition.getEndAt())
+		.savedImage(savedImage)
+		.visitCount(exhibition.getVisitCount())
+		.reserve(exhibition.isReserve())
+		.descriptionImage(descriptionImage)
+		.location(location)
+		.build();
 	}
 
 

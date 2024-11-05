@@ -78,7 +78,7 @@ export default function MapModal({ onClose }) {
         {/* 본문 */}
         <div className="flex flex-1 h-[80vh]">
           {/* 왼쪽 컨테이너 */}
-          <div className="w-[20%] p-2 m-3 overflow-scroll overflow-x-hidden">
+          <div className="w-[25%] min-w-[400px] p-2 m-3 overflow-scroll overflow-x-hidden">
             {/* 종류 선택 버튼 */}
             <div className="grid grid-cols-3 mb-3">
               <div className={`${typeButtionStyle} border-r-[1px] rounded-l-lg ${type === 0 ? "border-popple-light border-2 bg-popple-light text-white" : "border-[#b6b6b6]"}`} onClick={() => setType(0)}>전체</div>
@@ -104,23 +104,29 @@ export default function MapModal({ onClose }) {
               </div>
             </div>
             <div className="search-result flex flex-col gap-2 p-4">
-              {exhibitions?.map((exhibition, key) => (
-                <div 
-                  key={key}
-                  onClick={() => handleClick(exhibition)}
-                  className="cursor-pointer rounded-lg shadow-lg p-4 bg-white hover:bg-gray-100 transition duration-200"
-                >
-                  <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{exhibition.typeId === 1 ? "팝업" : "전시"}</span>
-                  <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{moment(new Date(exhibition.endAt[0], exhibition.endAt[1] - 1, exhibition.endAt[2])).diff(moment(), 'days')}일 후에 {exhibition.typeId === 1 ? "팝업" : "전시"} 종료</span>
-                  <div className="text-lg font-semibold text-gray-800 my-3 overflow-hidden whitespace-nowrap truncate">
-                    <img className="w-10 h-10 rounded-full inline mr-3" src={posterURL + exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} />
-                    {exhibition.exhibitionName}
+              {exhibitions?.map((exhibition, key) => {
+                const diff = moment(new Date(exhibition.endAt[0], exhibition.endAt[1] - 1, exhibition.endAt[2])).diff(moment(), 'days');
+                const typeName = exhibition.typeId === 1 ? "팝업" : "전시";
+                return (
+                  <div 
+                    key={key}
+                    onClick={() => handleClick(exhibition)}
+                    className="cursor-pointer rounded-lg shadow-lg p-4 bg-white hover:bg-gray-100 transition duration-200"
+                  >
+                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{typeName}</span>
+                    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                      {diff === 0 ? "오늘이 마지막" : `${diff}일 후에 ${typeName} 종료` }
+                    </span>
+                    <div className="text-lg font-semibold text-gray-800 my-3 overflow-hidden whitespace-nowrap truncate">
+                      <img className="w-10 h-10 rounded-full inline mr-3" src={posterURL + exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} />
+                      {exhibition.exhibitionName}
+                    </div>
+                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                      {exhibition.address} {exhibition.detailAddress}
+                    </p>
                   </div>
-                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    {exhibition.address} {exhibition.detailAddress}
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
           {/* 오른쪽 컨테이너 */}
