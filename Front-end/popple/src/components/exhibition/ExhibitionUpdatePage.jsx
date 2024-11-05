@@ -141,9 +141,13 @@ export default function ExhibitionUpdatePage() {
   const handleGet = async () => {
     try {
       const res = await exhibitionAPI.get(exId);
+      res.data.startAt = moment(new Date(res.data.startAt[0], res.data.startAt[1] - 1, res.data.startAt[2])).format('YYYY-MM-DD');
+     
+      res.data.endAt = moment(new Date(res.data.endAt[0], res.data.endAt[1] - 1, res.data.endAt[2])).format('YYYY-MM-DD');
       setExhiData(res.data)
     } catch (error) {}
   };
+  
   useEffect(() => {
     handleGet();
   }, []);
@@ -409,10 +413,10 @@ export default function ExhibitionUpdatePage() {
                   />
                 </div>
                 <input
-                  name="detailAddr"
+                  name="detailAddress"
                   placeholder="상세주소"
                   className={inputStyle}
-                  value={info.detailAddr}
+                  value={info.detailAddress}
                   onChange={(e) => changeInformation(e)}
                 />
                 <label>

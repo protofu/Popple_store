@@ -54,6 +54,7 @@ public class ExhibitionService {
 	            .subTitle(req.getSubTitle())
 	            .detailDescription(req.getDetailDescription())
 	            .address(req.getAddress())
+	            .detailAddress(req.getDetailAddress())
 	            .notice(req.getNotice())
 	            .terms(req.getTerms())
 	            .grade(req.isGrade())
@@ -140,7 +141,9 @@ public class ExhibitionService {
 		Exhibition exhibition = exhibitionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 팝업 혹은 전시가 존재하지 않습니다."));
 		exhibition.setVisitCount(exhibition.getVisitCount()+1);
 		Exhibition savedExhibition = exhibitionRepository.save(exhibition);
+		log.info("저장한 팝업전시 : {}", exhibition);
 		ExhibitionResponse exhibitionResponse = convertToExhibitionResponse(savedExhibition, null);
+		log.info("팝업전시 리스폰스 : {}",exhibitionResponse);
 		return exhibitionResponse;
 	}
 
@@ -195,18 +198,39 @@ public class ExhibitionService {
 	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, String descriptionImage, List<String> location) {
 		return ExhibitionResponse.builder()
 				.id(exhibition.getId())
-				.typeId(exhibition.getType().getId())
-				.exhibitionName(exhibition.getExhibitionName())
-				.address(exhibition.getAddress())
-				.detailAddress(exhibition.getDetailAddress())
-				.startAt(exhibition.getStartAt())
-				.endAt(exhibition.getEndAt())
-				.savedImage(savedImage)
-				.visitCount(exhibition.getVisitCount())
-				.reserve(exhibition.isReserve())
-				.descriptionImage(descriptionImage)
-				.location(location)
-				.build();
+    			.typeId(exhibition.getType().getId())
+    			.exhibitionName(exhibition.getExhibitionName())
+    			.subTitle(exhibition.getSubTitle())
+    			.detailDescription(exhibition.getDetailDescription())
+    			.address(exhibition.getAddress())
+    			.detailAddress(exhibition.getDetailAddress())
+    			.notice(exhibition.getNotice())
+    			.terms(exhibition.getTerms())
+    			.fee(exhibition.getFee())
+    			.instagramLink(exhibition.getInstagramLink())
+    			.homepageLink(exhibition.getHomepageLink())
+    			.park(exhibition.isPark())
+    			.free(exhibition.isFree())
+    			.pet(exhibition.isPet())
+    			.food(exhibition.isFood())
+    			.wifi(exhibition.isWifi())
+    			.camera(exhibition.isCamera())
+    			.kids(exhibition.isKids())
+    			.sunday(exhibition.getSunday())
+    			.saturday(exhibition.getSaturday())
+    			.monday(exhibition.getMonday())
+    			.tuesday(exhibition.getTuesday())
+    			.wednesday(exhibition.getWednesday())
+    			.thursday(exhibition.getThursday())
+    			.friday(exhibition.getFriday())
+    			.startAt(exhibition.getStartAt())
+    			.endAt(exhibition.getEndAt())
+    			.visitCount(exhibition.getVisitCount())
+    			.reserve(exhibition.isReserve())
+    			.location(location)
+    			.savedImage(savedImage)
+    			.descriptionImage(descriptionImage)
+    			.build();
 	}
 	// 팝업/전시 수정
 //	public ExhibitionResponse updateExhibition(Long id, ExhibitionRequest exhibitionRequest, List<MultipartFile> images, List<MultipartFile> posters, User user) throws IOException {
@@ -299,7 +323,7 @@ public class ExhibitionService {
 		}
 		Exhibition save = exhibitionRepository.save(ex);
 		
-		return null;//수정할 것
+		return convertToExhibitionResponse(save, null);
 	}
 
 

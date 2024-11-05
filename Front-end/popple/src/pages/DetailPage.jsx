@@ -19,7 +19,6 @@ import DetailsEvent from "../components/exhi-details/DetailsEvent";
 import ExhibitionPage from "./ExhibitionPage";
 import { useLoginStore } from "../stores/LoginState";
 
-
 function dateToString(arr) {
   const [y,m,d] = arr;
   return y+"."+m+"."+d;

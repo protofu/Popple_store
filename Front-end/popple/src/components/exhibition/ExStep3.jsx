@@ -28,7 +28,6 @@ export default function ExStep3({ information }) {
   }
   const startAt = dateToString(information.startAt);
   const endAt = dateToString(information.endAt);
-console.log(information.startAt)
   return (
     <div className="h-full">
       <h1 className="text-2xl m-10 font-bold">{information.exhibitionName}</h1>
@@ -70,10 +69,10 @@ console.log(information.startAt)
                 입장료
               </label>
               <h1 id="location" className={infoH1GridStyle}>
-                {information.fee !== "0" ? (
-                  <span>{information.fee} 원</span>
+                {information.fee !== '0' ? (
+                  <span>{information.fee} 원 </span>
                 ) : (
-                  <span className="font-bold">입장료 무료</span>
+                  <span className="font-bold">무료</span>
                 )}
               </h1>
               {/* <label htmlFor="location" className={infoGridStyle}>
