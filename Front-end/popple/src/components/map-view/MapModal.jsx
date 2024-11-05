@@ -11,32 +11,27 @@ export default function MapModal({ onClose }) {
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
 
-  // 검색 타입
-  const [searchType, setSearchType] = useState();
-  
   const [keyword, setKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
 
-  // 모달이 처음 열릴 때 기본 위경도로 지도가 표시되도록 useEffect 추가
+  // 모달이 처음 열릴 때 기본 위경도로 내 위치로 표시되도록 useEffect 추가
   useEffect(() => {
-    // 초기 지도가 제대로 뜨도록 기본 위경도를 설정
-    setLatitude(37.5697034972222);
-    setLongitude(126.984281413033);
-
-    
-    // 검색어가 변경될 때마다 검색 결과를 가져오도록 설정
-    // if (keyword) {
-    //   fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${keyword}`, {
-    //     headers: {
-    //       Authorization
-    //     }
-    //   })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     // 검색 결과를 가져온 후 상태로 설정
-    //     setLocations(data.documents);
-    //   });
-    // }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setLatitude(37.5697034972222);
+          setLongitude(126.984281413033);
+        }
+      );
+    } else {
+      setLatitude(37.5697034972222);
+      setLongitude(126.984281413033);
+    }
   }, []);
 
   // 전시팝업 타입 선택시 상태 설정
@@ -44,8 +39,8 @@ export default function MapModal({ onClose }) {
 
   // 찾기
   const handleLocationSearch = async () => {
-    // inputKeyword로 팝업/전시 검색
-    const res = await exhibitionAPI.search(inputKeyword);
+    // inputKeyword & typeId로 팝업/전시 검색
+    const res = await exhibitionAPI.search(inputKeyword, type);
     setExhibitions(res.data);
   };
 

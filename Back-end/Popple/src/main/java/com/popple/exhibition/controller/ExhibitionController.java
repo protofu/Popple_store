@@ -119,8 +119,8 @@ public class ExhibitionController {
 	// 검색을 통한 목록 불러오기
 	@Operation(summary = "검색을 통한 목록 불러오기", description = "검색을 통한 목록을 반환합니다.")
 	@GetMapping("/search")
-	public ResponseEntity<List<ExhibitionResponse>> search(@RequestParam("keyword") String keyword) {
-		List<ExhibitionResponse> result = exService.searchByKeyword(keyword);
+	public ResponseEntity<List<ExhibitionResponse>> search(@RequestParam("keyword") String keyword, @RequestParam("typeId") Long typeId) {
+		List<ExhibitionResponse> result = exService.searchByKeyword(keyword, typeId);
 		return ResponseEntity.ok(result);
 	}
 	

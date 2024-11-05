@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MapView({ latitude, longitude, poppleLocations }) {
-
+    console.log(poppleLocations);
+    const navigate = useNavigate();
     useEffect(() => {
         if (!window.kakao) {
             const script = document.createElement('script');
@@ -41,6 +43,30 @@ export default function MapView({ latitude, longitude, poppleLocations }) {
                             map: map,
                             position: new kakao.maps.LatLng(Number(location[1]), Number(location[0])),
                             title: poppleLocations[i].exhibitionName,
+                        });
+                        markers.push(marker);
+                        // 마커에 인포윈도우 추가 (마우스 오버시)
+                        const infoWindow = new kakao.maps.InfoWindow({
+                            content: `
+                                <div class="p-2 bg-white border border-gray-300 rounded shadow-md text-center">
+                                    <h4 class="text-sm font-semibold text-gray-700 text-nowrap">${poppleLocations[i].exhibitionName}</h4>
+                                </div>`
+                        });
+
+                        kakao.maps.event.addListener(marker, 'click', () => {
+                            poppleLocations[i].type === 1
+                                ? 
+                                navigate(`/popup/detail/${poppleLocations[i].id}`)
+                                :
+                                navigate(`/exhibition/detail/${poppleLocations[i].id}`)
+                        });
+
+                        kakao.maps.event.addListener(marker, 'mouseover', () => {
+                            infoWindow.open(map, marker);
+                        });
+
+                        kakao.maps.event.addListener(marker, 'mouseout', () => {
+                            infoWindow.close();
                         });
                     } else {
                         console.log(`${poppleLocations[i].title} 은 위치 확인 불가능`);
