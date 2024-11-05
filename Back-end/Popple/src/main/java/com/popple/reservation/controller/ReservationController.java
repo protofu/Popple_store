@@ -3,6 +3,7 @@ package com.popple.reservation.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import com.popple.auth.domain.request.UserPasswordCheckRequest;
 import com.popple.auth.entity.User;
 import com.popple.reservation.domain.ReservationRequest;
 import com.popple.reservation.domain.ReservationResponse;
@@ -38,10 +37,19 @@ public class ReservationController {
 	// 예약 등록
 	@Operation(summary = "예약 등록", description = "예약을 생성합니다.")
 	@PostMapping("")
-	public ResponseEntity<ReservationResponse> reservation(@RequestBody ReservationRequest request, @AuthenticationPrincipal User user) {
+	public ResponseEntity<?> reservation(@RequestBody ReservationRequest request, @AuthenticationPrincipal User user) throws Exception {
 		log.info("예약 : {}", request);
 		ReservationResponse response = reservationService.reserve(request, user);
-		return ResponseEntity.ok(response);
+
+		// 예약 완료 시 QR 이메일 발송 로직 추가
+		// 예약 고유번호가 있으면 좋겠지만, ID로 대체하여 진행
+		String email = user.getEmail();
+		String url = "http://localhost:5173/qr-check/" + response.getId();
+		byte[] qrcode = reservationService.sendQRCode(email, url);
+		// return ResponseEntity.ok(response);
+		return ResponseEntity.ok()
+					.contentType(MediaType.IMAGE_PNG)
+					.body(qrcode);
 	}
 	
 	// 자신의 예약 목록

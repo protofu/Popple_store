@@ -19,6 +19,7 @@ import DetailsEvent from "../components/exhi-details/DetailsEvent";
 import ExhibitionPage from "./ExhibitionPage";
 import { useLoginStore } from "../stores/LoginState";
 import { useLoginUserStore } from "../stores/LoginUserState";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 function dateToString(arr) {
   const [y, m, d] = arr;
@@ -30,7 +31,7 @@ export default function DetailPage() {
   const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const navigate = useNavigate();
   const curDate = new Date(); // 현재 날짜
-  const [value, onChange] = useState(moment(curDate).format("YYYY-MM-DD"));
+  const [value, setValue] = useState(moment(curDate).format("YYYY-MM-DD"));
   const [selectTab, setSelectTab] = useState("이용정보");
   const [likeCount, setLikeCount] = useState(0);
   const { id } = useParams();
@@ -41,14 +42,12 @@ export default function DetailPage() {
     const res = await reservationAPI.checkMyReservation(id);
     setReservedDate(
       res.data
-        .filter((r) => r.deleted == false)
         .map((r) => {
-          const [y, m, d] = r.reservationDate;
+          const [y, m, d] = r.reserveTime;
           return moment(new Date(y, m - 1, d)).format("YYYY-MM-DD");
         })
     );
   };
-
   //로그인한 유저
   const {loginUserNickname} = useLoginUserStore();
 
@@ -87,7 +86,6 @@ export default function DetailPage() {
 
   // json데이터 담을 state
   const [exhi, setExhi] = useState(null);
-  const [chartData, setChartData] = useState(null);
 
   // 모달 상태
   const [showReservationModal, setShowReservationModal] = useState(false);
@@ -131,7 +129,9 @@ export default function DetailPage() {
   // }
 
   const handleDateChange = (date) => {
-    onChange(date);
+    console.log(date);
+    
+    setValue(date);
   };
 
   const handleTab = (tab) => {
@@ -156,9 +156,15 @@ export default function DetailPage() {
   const infoGridStyle = "col-span-1 w-full font-bold text-xl";
   const infoH1GridStyle = "col-span-2 text-[14px] my-auto";
   const tabStyle = "cursor-pointer mr-4 text-center w-[80px]";
-  console.log(exhi);
   const endAtDate = new Date(exhi.endAt[0], exhi.endAt[1] - 1, exhi.endAt[2]);
   
+  const handleReservation = async () => {
+    if (loginUserNickname) openModal();
+    else {
+      await poppleAlert.alert("", "로그인 후 이용 가능합니다.");
+      navigate("/login");
+    }
+  }
   return (
     <div className="mt-10 h-full">
       <CateButton text={type} />
@@ -315,19 +321,24 @@ export default function DetailPage() {
                 return html;
               }}
             />
+            {reservedDate?.length > 0 ? (
             <div className="flex flex-col justify-center items-center text-gray-500 mt-4">
-              <h1 className="m-2 text-popple-dark">
-                {reservedDate?.length > 0 ? "예약된 날짜" : "선택된 날짜"}
-              </h1>
+              <h1 className="m-2 text-popple-dark">예약된 날짜</h1>
               <div className="w-full text-center border-2 rounded-lg py-1">
-                {reservedDate?.length > 0
-                  ? moment(reservedDate[0]).format("YYYY년 MM월 DD일")
-                  : value && moment(value).format("YYYY년 MM월 DD일")}
+                {moment(reservedDate[0]).format("YYYY년 MM월 DD일")}
               </div>
             </div>
+            ):(
+              <div className="flex flex-col justify-center items-center text-gray-500 mt-4">
+              <h1 className="m-2 text-popple-dark">선택된 날짜</h1>
+              <div className="w-full text-center border-2 rounded-lg py-1">
+                {moment(value).format("YYYY년 MM월 DD일")}
+              </div>
+            </div>
+            )}
             <div
               className="bg-popple-light rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer"
-              onClick={openModal}
+              onClick={() => handleReservation()}
             >
               <p className="text-center text-white text-[1rem]">예약하기</p>
             </div>

@@ -1,15 +1,18 @@
 package com.popple.reservation.service;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.popple.auth.entity.User;
 import com.popple.auth.service.AuthService;
 import com.popple.exhibition.entity.Exhibition;
@@ -139,6 +142,37 @@ public class ReservationService {
 						.email(r.getUser().getEmail())
 						.build();
 		}).toList();
+	}
+
+    public byte[] sendQRCode(String email, String url) throws Exception {
+		// QR 코드 생성
+        return generateQRCode(url);
+    }
+
+	private byte[] generateQRCode(String url) throws Exception {
+		// QR 정보
+		int width = 500;
+		int height = 500;
+		
+		// QR code - BitMatrix: qr code 정보 생성
+		BitMatrix encode = new MultiFormatWriter()
+				.encode(url, BarcodeFormat.QR_CODE, width, height);
+		
+		// QR code - Image 생성 : 1회성으로 생성
+		// stream으로 Generate(1회성 아니면 File로)
+		try {
+			// output Stream
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			// Bitmatrix, file.format, outputStream
+			MatrixToImageWriter.writeToStream(encode, "PNG", out);
+			
+			
+			return out.toByteArray();
+		} catch (Exception e) {
+			log.warn("QR Code OutputStream 중 Exception 발생 : {}", e.getMessage());
+		}
+		return null;
 	}
 }
 

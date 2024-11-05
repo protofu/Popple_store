@@ -2,20 +2,37 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import Complete from "../common/Complete";
 import { reservationAPI } from "../../api/services/Reservation";
+import { useLoginUserStore } from "../../stores/LoginUserState";
+import { jwtDecode } from "jwt-decode";
+import { getCookie } from "../../utils/CookieUtils";
+import { authAPI } from "../../api/services/Auth";
+import { Buffer } from "buffer";
 
 export default function Reservation({ reservation, exhi, onClose }) {
-  const reservationTime = moment(new Date(reservation[0], reservation[1] - 1, reservation[2])).format('YYYY-MM-DD');
   const [isChecked, setIsChecked] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [request, setRequest] = useState({
     exhibitionId: exhi.id,
     reservationDate: "",
   });
+  const [qrImageSrc, setQrImageSrc] = useState(null);
+
+  const [userInfo, setUserInfo] = useState();
+
   useEffect(() => {
+    const getUserInfo = async () => {
+      const token = getCookie("accessToken");
+      if (token) {
+          const id = jwtDecode(token).id;
+          const res = await authAPI.getUser(id);
+          setUserInfo(res.data);
+      } 
+    };
+    getUserInfo();
     setRequest({
       ...request, 
       exhibitionId:exhi.id, 
-      reservationDate: moment(new Date(reservation[0], reservation[1] - 1, reservation[2])).format('YYYY-MM-DD')
+      reservationDate: reservation
     })
 
   }, []);
@@ -25,7 +42,11 @@ export default function Reservation({ reservation, exhi, onClose }) {
   };
 
   const handleClick = async () => {
-    await reservationAPI.create(request);
+    const res = await reservationAPI.create(request);
+    // QR 이미지 반환
+    const qrImageBase64 = Buffer.from(res.data, 'binary').toString('base64');
+    const qrImageSrc = `data:image/png;base64,${qrImageBase64}`;
+    setQrImageSrc(qrImageSrc);
     setIsComplete(prev => !prev);
   };
 
@@ -35,7 +56,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       {isComplete ? 
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
-        <Complete text={"닫기"} onClose={onClose} title={"예약완료"} description={"예약은 [마이페이지] - [예약목록]에서 취소할 수 있습니다."}/>
+        <Complete text={"닫기"} onClose={onClose} title={"예약완료"} qrImage={qrImageSrc} description={"예약은 [마이페이지] - [예약목록]에서 취소할 수 있습니다."}/>
         </div> :
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
           <h1 className="text-[32px]">예약하기</h1>
@@ -48,30 +69,30 @@ export default function Reservation({ reservation, exhi, onClose }) {
             </div>
             <div className={oneLineStyle}>
               <p className="inline">예약 날짜</p>
-              <input type="text" value={reservationTime} className={inputStyle} disabled />
+              <input type="text" value={reservation} className={inputStyle} disabled />
             </div>
           </div>
           {/* 예약자 정보 */}
           <h1 className="w-full text-[28px] text-popple-light">예약자 정보</h1>
           <div className="w-full">
             <div className={oneLineStyle}>
-              <p className="inline">예약자 성함</p>
-              <input value={exhi.exhibitionName} className={inputStyle} disabled/>
+              <p className="inline">성함</p>
+              <input value={userInfo?.name} className={inputStyle} disabled/>
+            </div>
+            <div className={oneLineStyle}>
+              <p className="inline">닉네임</p>
+              <input value={userInfo?.nickname} className={inputStyle} disabled />
             </div>
             <div className={oneLineStyle}>
               <p className="inline">이메일</p>
-              <input value={reservationTime} className={inputStyle} disabled />
-            </div>
-            <div className={oneLineStyle}>
-              <p className="inline">전화번호</p>
-              <input value={reservationTime} className={inputStyle} disabled />
+              <input value={userInfo?.email} className={inputStyle} disabled />
             </div>
           </div>
-          <h1 className="font-bold">입력하신 전화번호로 예약 정보가 발송됩니다.</h1>
+          <h1 className="font-bold">위 사용자의 이메일로 예약 정보가 발송됩니다.</h1>
           <div className="flex">
             <input type="checkbox" checked={isChecked} onClick={handleChange} className="mr-2" />
             <p className="text-center text-[0.75rem]">
-            본 서비스 이용을 위해 제3자의 정보 수집 및 공유에 대한 동의 여부를 선택해 주시기 바랍니다.
+              본 서비스 이용을 위해 제3자의 정보 수집 및 공유에 대한 동의 여부를 선택해 주시기 바랍니다.
             </p>
           </div>
           <div className="flex">
