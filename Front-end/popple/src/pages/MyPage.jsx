@@ -81,7 +81,7 @@ export default function MyPage() {
     "정보 수정": <ChangeInfo />,
     "탈퇴": resignRender(),
     "팝업/전시 목록": <PopupList/>,
-    "전체 방문 통계": <Statistics/>,
+    "전체 방문 통계": "기업 전체 방문 통계",
   };
 
   const renderContent = () => {

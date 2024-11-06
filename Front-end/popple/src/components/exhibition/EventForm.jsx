@@ -246,7 +246,7 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
           </div>
           <div>
             <label htmlFor="eventImage" className="text-sm">
-              상세 이미지 <span className="text-red-500">*</span>
+              상세 이미지
             </label>
             <div className="h-full">
               <label

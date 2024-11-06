@@ -14,6 +14,7 @@ import com.popple.event.domain.EventResponse;
 import com.popple.event.entity.Event;
 import com.popple.event.entity.EventImage;
 import com.popple.event.entity.EventPoster;
+import com.popple.event.respository.EventImageRepository;
 import com.popple.event.respository.EventPosterRepository;
 import com.popple.event.respository.EventRepository;
 import com.popple.exhibition.entity.Exhibition;
@@ -32,6 +33,7 @@ public class EventService {
 	private final ExhibitionRepository exhibitionRepository;
 	private final ExhiTypeRepository exhiTypeRepository;
 	private final EventPosterRepository eventPosterRepo;
+	private final EventImageRepository eventImageRepo;
 	private final EventImageService eventImageService;
 	private final EventPosterService eventPosterService;
 
@@ -61,6 +63,8 @@ public class EventService {
 		EventResponse res = EventResponse.toDTO(event);
 		return res;
 	}
+	
+	
 	// 이벤트 전체 조회
 		public List<EventResponse> getAllEvent() {
 			List<Event> eventList = eventRepo.findAll();// 모든 이벤트
@@ -68,7 +72,11 @@ public class EventService {
 //			return pList.stream().map(EventResponse::toDTO).toList();
 			return eventList.stream().filter(e -> !e.getEndAt().isBefore(LocalDate.now())).map(e -> {
 				EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
-				return EventResponse.toDTO(e, eventPoster.getSavedName());
+				List<EventImage> prevImages = eventImageService.findByEvent(e);
+				List<String> eventImages = prevImages.stream()
+		                .map(EventImage::getSavedName)
+		                .collect(Collectors.toList());
+				return EventResponse.toDTO(e, eventPoster.getSavedName(), eventImages);
 			}).toList();
 		}
 
