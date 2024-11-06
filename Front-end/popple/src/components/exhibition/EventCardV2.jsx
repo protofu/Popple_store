@@ -6,6 +6,7 @@ import { eventAPI } from "../../api/services/Event";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserStore } from "../../stores/LoginUserState";
 import { MdOutlineCancel } from "react-icons/md";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function EventCardV2({
   dispatch,
@@ -13,7 +14,8 @@ export default function EventCardV2({
   slogun,
   title,
   duration,
-  img,
+  eventImages,
+  eventPoster,
   usernickname,
   description,
   exhibitionId,
@@ -94,8 +96,8 @@ export default function EventCardV2({
   }
 
   useEffect(() => {
-    submit(img);
-  }, [img]);
+    submit(eventPoster);
+  }, [eventPoster]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,7 +127,8 @@ export default function EventCardV2({
     slogun,
     title,
     duration,
-    img,
+    eventPoster,
+    eventImages,
     usernickname,
     description,
     exhibitionId,
@@ -140,7 +143,6 @@ export default function EventCardV2({
     setModalOpen(false);
   };
 
-  console.log("이벤트 디테일",eventDetail)
   return (
     <div>
       <div
@@ -149,8 +151,8 @@ export default function EventCardV2({
         onClick={handleModalOpen}
       >
         <img
-          src={img}
-          alt="이벤트 이미지"
+          src={eventPoster}
+          alt="이벤트 포스터"
           className="w-2/5 h-full object-cover rounded-[12px] ml-auto"
           style={{
             maskImage: "linear-gradient(to left, black, transparent)", // 오른쪽부터 이미지가 선명해짐
@@ -188,7 +190,7 @@ EventCardV2.propTypes = {
   slogun: PropTypes.string.isRequired, // 슬로건
   title: PropTypes.string.isRequired, // 제목
   duration: PropTypes.string.isRequired, // 기간
-  img: PropTypes.string.isRequired, // 이미지 URL
+  eventPoster: PropTypes.string.isRequired, // 이미지 URL
 };
 
 function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,handleRowClick }) {
@@ -200,23 +202,23 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,h
   const handleDelete = async () => {
     try {
       const res = await eventAPI.delete(eventDetail.evId);
-      alert("삭제 완료");
+      poppleAlert.alert("","삭제 완료");
       dispatch({ type: "deleteEvent", value: eventDetail.evId });
     } catch (error) {
-      alert("삭제 불가");
+      poppleAlert.alert("","삭제 불가");
     }
   };
 
   const handleNavi = () => {
     navigate(`/event-update?id=${eventDetail.evId}`);
   };
-
+  console.log(eventDetail.eventImages)
   return (
     <div
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-auto "
       onClick={onClose}
     >
-      <div className="flex flex-col justify-evenly items-center bg-white rounded-lg p-5 w-[40%] h-auto ">
+      <div className="flex flex-col justify-evenly items-center bg-white rounded-lg p-5 w-[40%] h-auto " onClick={(e) => e.stopPropagation()}>
         <div className="grid grid-cols-3 w-full text-2xl font-bold border-b-2 pb-2 mb-2 ">
           <div className="inline"></div>
           <span className="text-center">{eventDetail.title}</span>
@@ -224,12 +226,15 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,h
             {eventDetail.duration}
           </span>
         </div>
-
-        <div className="relative flex rounded-[12px] overflow-hidden aspect-auto w-full h-[90%] max-w-[345px] bg-black">
-          <img src={eventDetail.img} className="object-cover" />
-        </div>
+        {eventDetail.eventImages &&
+          eventDetail.eventImages.map(imgSrc => (
+            <div className="">
+              <img src={imgSrc} className="object-cover" />
+            </div>
+          ))
+        }
         <div className="mt-8">
-        {eventDetail.description}
+          {eventDetail.description}
         </div>
         
         <div

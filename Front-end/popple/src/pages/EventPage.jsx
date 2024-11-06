@@ -20,6 +20,7 @@ function reducer(state, action){
 
 export default function EventPage() {
   const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
@@ -50,7 +51,6 @@ export default function EventPage() {
     }
     getEvent();
   }, []);
-  console.log(state)
   return (
     <>
       <h1 className={textStyle}>Event</h1>
