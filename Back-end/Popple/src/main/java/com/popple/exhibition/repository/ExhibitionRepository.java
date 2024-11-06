@@ -2,6 +2,7 @@ package com.popple.exhibition.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.popple.auth.entity.User;
 import com.popple.exhibition.entity.Exhibition;
+import com.popple.reservation.entity.Reservation;
 import com.popple.type.ExhiType;
 
 @Repository
@@ -40,5 +42,7 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     	List<Exhibition> findExhibitionsOrderedByPopularityAndEndAtAfterAndIsDeletedIsFalse(@Param("typeId") Long typeId, @Param("today") LocalDate today);
 
 	List<Exhibition> findByEndAtAfterAndIsDeletedIsFalse(LocalDate today);
+	
+	
 
 }
