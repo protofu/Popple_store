@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaDog,
   FaUserSlash,
@@ -111,13 +111,8 @@ const ExStep1 = ({ information, changeInformation }) => {
       setUploadPossible(false);
       return;
     }
-
-    // 새로운 파일을 추가할 수 있는 개수를 계산
-    const remainingSlots = fileMax - imagePreviewArr.length;
-    const validFiles = files.slice(0, remainingSlots);
-
     // FileReader를 사용해 미리보기 이미지 생성
-    const previewPromises = validFiles.map((f) => {
+    const previewPromises = files.map((f) => {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(f);
@@ -128,7 +123,11 @@ const ExStep1 = ({ information, changeInformation }) => {
     // 미리보기 이미지 추가
     Promise.all(previewPromises).then((newPreviews) => {
       setImagePreviewArr((prevPreviews) => {
-        return [...prevPreviews, ...newPreviews];
+        const updatePreviews = [...prevPreviews, ...newPreviews];
+        if (updatePreviews.length > fileMax) {
+          updatePreviews.splice(fileMax);
+        }
+        return updatePreviews;
       });
     });
 
@@ -136,7 +135,7 @@ const ExStep1 = ({ information, changeInformation }) => {
     changeInformation({
       target: {
         name: "image",
-        value: validFiles,
+        value: files,
       },
     });
   };
@@ -242,6 +241,7 @@ const ExStep1 = ({ information, changeInformation }) => {
     });
   };
 
+  const fileInputRef = useRef(null);
 
   return (
     <div>
@@ -431,9 +431,10 @@ const ExStep1 = ({ information, changeInformation }) => {
             <input
               type="file"
               id="detailImage"
+              ref={fileInputRef}
               className="hidden"
               multiple
-              onChange={onImageArrUpload}
+              onChange={(e) => onImageArrUpload(Array.from(e.target.files))}
               accept="image/*"
             />
             {imagePreviewArr.length > 0 ? (

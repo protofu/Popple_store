@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import FileCarousel from "./FileCarousel";
 import { useNavigate } from "react-router-dom";
 import Markdown from "../common/Markdown";
@@ -36,20 +36,22 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
       setUploadPossible(false);
       return;
     }
-    const preview = files.map((f) => {
+    const previewPromises = files.map((file) => {
       const reader = new FileReader();
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         reader.onload = () => resolve(reader.result);
       });
     });
-    Promise.all(preview).then((newPreviews) => {
-      setPreview2((prevPreviews) => {
-        const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
-        if (fileCount > fileMax) {
-          newPreviews = newPreviews.splice(0, fileCount - fileMax);
+  
+    Promise.all(previewPromises).then((newPreviews) => {
+      setPreview2((prev) => {
+        const updatedPreviews = [...prev, ...newPreviews];
+        if (updatedPreviews.length > fileMax) {
+          poppleAlert.alert("", `파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
+          updatedPreviews.splice(fileMax);
         }
-        return [...prevPreviews, ...newPreviews];
+        return updatedPreviews;
       });
     });
     setInfo((prev) => ({ ...prev, eventImage: files }));
@@ -127,19 +129,46 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
     }
   };
 
+  const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
+
   const renderPoster = () => {
     if (preview) {
       {/* 포스터 이미지 업로드하면 변경되는 부분 */}
       return <img className="w-[250px] h-auto" src={preview} alt="포스터" />
     } else if (info.eventPoster) {
       {/* 수정할 때 나오는 부분 */}
-      return <img className="w-[250px] h-auto" src={`http://localhost:8080/event_poster_image/${info.eventPoster}`} alt="포스터" />
+      return <img className="w-[250px] h-auto" src={`${eventPosterURL}${info.eventPoster}`} alt="포스터" />
     } else {
       {/* 등록할 때 */}
       return <LuFilePlus className="w-[250px] h-auto" />
     }
   }
-  console.log(info)
+
+  function deleteImg2(index) { 
+    const deletePreview2 = [...info.eventImage];
+    deletePreview2.splice(index, 1);
+    setInfo((prev) => ({
+      ...prev,
+      eventImage: deletePreview2
+    }));
+  }
+
+  const renderImage = () => {
+    if (preview2.length > 0) {
+      return <FileCarousel preview2={preview2} deleteImg={deleteImg} />;
+    } else if (info.eventImage.length > 0) {
+      return <FileCarousel preview2={info.eventImage} deleteImg={deleteImg2} />;
+    } else {
+      return (
+        <div className="flex flex-col rounded-lg justify-center text-center items-center">
+          <p className="font-medium text-lg my-5 mb-2.5">
+            클릭 혹은 파일을 이곳에 드랍
+          </p>
+          <p className="m-0 text-sm">파일당 최대 3MB</p>
+        </div>
+      );
+    }
+  };
   
   const goToNext = (event) => {
     // 만약에 필수값이 모두 입력되었으면
@@ -151,6 +180,9 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
       poppleAlert.alert("", "필수값을 모두 입력해주세요.");
     }
   }
+
+  const fileInputRef = useRef(null);
+
   return (
     <>
       <p className="text-lg mb-2 mt-10 ">{title}</p>
@@ -251,31 +283,24 @@ const EventForm = ({ title, info, setInfo, handleSubmit }) => {
             <div className="h-full">
               <label
                 className={`preview ${
-                  isActive ? "active" : " "
+                  isActive ? "active" : ""
                 } w-full h-full m-auto bg-white rounded-md border-dashed border p-3 flex justify-center cursor-pointer`}
                 onDragEnter={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragLeave={handleDragEnd}
+                onClick={() => fileInputRef.current.click()}
               >
                 <input
                   type="file"
                   name="eventImage"
+                  ref={fileInputRef}
                   className="hidden"
                   multiple
-                  onChange={onUpload2}
+                  onChange={(e) => onUpload2(Array.from(e.target.files))}
                   accept="image/*"
                 />
-                {preview2.length > 0 ? (
-                  <FileCarousel preview2={preview2} deleteImg={deleteImg} />
-                ) : (
-                  <div className="flex flex-col rounded-lg justify-center text-center items-center">
-                    <p className="font-medium text-lg my-5 mb-2.5">
-                      클릭 혹은 파일을 이곳에 드랍
-                    </p>
-                    <p className="m-0 text-sm">파일당 최대 3MB</p>
-                  </div>
-                )}
+                {renderImage()}
               </label>
               <div className="text-xs">
                 {preview2.length}/{fileMax}
