@@ -106,6 +106,17 @@ export default function ExhibitionUpdatePage() {
     setPreview2(deletePreview2);
   }
 
+  function deleteImg2(index) {
+    const deletePreview2 = [...info.descriptionImage]
+    console.log("1111111111", deletePreview2)
+    deletePreview2.splice(index, 1);
+    // info.descriptionImage 를 deletePreview2로 변경
+    setInfo((prev) => ({
+      ...prev,
+      descriptionImage: deletePreview2
+    }));
+  }
+
   //포스터 이미지 상태 관리
   const [preview, setPreview] = useState(null);
 
@@ -147,6 +158,9 @@ export default function ExhibitionUpdatePage() {
 
   useEffect(() => {
     if (Object.keys(exhiData).length > 0) {
+      exhiData.descriptionImage = exhiData.descriptionImage.map(imageUrl => {
+        return `http://localhost:8080/image/${imageUrl}`;
+      });
       setInfo((prev) => ({
         ...prev,
         ...exhiData, // 가져온 데이터를 info에 반영
@@ -244,17 +258,11 @@ export default function ExhibitionUpdatePage() {
         /* 이미지 업로드하면 변경되는 부분 */
       }
       return <FileCarousel preview2={preview2} deleteImg={deleteImg} />;
-    } else if (info.descriptionImage) {
+    } else if (info.descriptionImage > 0) {
       {
         /* 수정할 때 나오는 부분 */
+        return <FileCarousel preview2={info.descriptionImage} deleteImg={deleteImg2} />;
       }
-      return (
-        <img
-          className="w-[100px] h-auto"
-          src={`http://localhost:8080/image/${info.descriptionImage}`}
-          alt="설명 이미지"
-        />
-      );
     } else {
       {
         /* 등록할 때 */
@@ -289,6 +297,7 @@ export default function ExhibitionUpdatePage() {
       // FormData 생성
       const formData = new FormData();
       // ExhibitionRequest 필드에 맞게 데이터 추가
+      formData.append("exhiId", info.id)
       formData.append("typeId", info.typeId);
       formData.append("exhibitionName", info.exhibitionName);
       formData.append("subTitle", info.subTitle);
@@ -330,7 +339,6 @@ export default function ExhibitionUpdatePage() {
       poppleAlert.alert("", "수정 실패");
       console.error(error);
     }
-    setInfo({});
   };
   console.log("exhiData", exhiData);
   console.log("인포", info);
@@ -363,7 +371,7 @@ export default function ExhibitionUpdatePage() {
                   onChange={(e) => changeInformation(e)}
                 />
 
-                <label>
+                {/* <label>
                   입장료
                   <span className="float-right">
                     <input
@@ -381,7 +389,7 @@ export default function ExhibitionUpdatePage() {
                   value={info.free ? 0 : info.fee}
                   onChange={(e) => changeInformation(e)}
                   disabled={info.free}
-                />
+                /> */}
 
                 <div>
                   <label>예약 여부</label>{" "}
@@ -445,7 +453,7 @@ export default function ExhibitionUpdatePage() {
                   name="detailAddress"
                   placeholder="상세주소"
                   className={inputStyle}
-                  value={info.detailAddress}
+                  value={info.detailAddress || "" }
                   onChange={(e) => changeInformation(e)}
                 />
                 <label>
@@ -513,7 +521,7 @@ export default function ExhibitionUpdatePage() {
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                   onDragLeave={handleDragEnd}
-                  // onClick={() => document.getElementById("detailImage").click()}
+                  onClick={() => document.getElementById("detailImage").click()}
                 >
                   <input
                     type="file"
