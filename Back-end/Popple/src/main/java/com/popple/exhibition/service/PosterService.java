@@ -42,6 +42,6 @@ public class PosterService {
 
 	public Poster findPoster(Long exhiId) {
 		Poster poster = posterRepository.findByExhibitionId(exhiId).orElseThrow(()-> new IllegalArgumentException("해당 포스터 찾을 수 없음."));
-		return null;
+		return poster;
 	}
 }

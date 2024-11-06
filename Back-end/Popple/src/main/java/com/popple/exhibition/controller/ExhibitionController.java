@@ -133,7 +133,7 @@ public class ExhibitionController {
 		return ResponseEntity.ok(result);
 	}
 	
-	// QR 생성
+	// QR 생성 (기업 회원이 방문자가 스캔할 수 있도록 QR코드를 생성합니다.)
 	@Operation(summary = "QR 생성", description = "QR 코드를 생성합니다.")
 	@GetMapping("/qr-code")
 	public ResponseEntity<byte[]> qrMaker(@RequestParam("link") String url) throws Exception {
@@ -162,18 +162,6 @@ public class ExhibitionController {
 		}
 		return null;
 	}
-	// 수정
-	// @Operation(summary = "팝업/전시 수정", description = "특정 팝업/전시를 수정합니다.")
-	// @PatchMapping("")
-	// public ResponseEntity<ExhibitionResponse> updatePopUp(
-	// 		Long id, 
-	// 		ExhibitionRequest exhibitionRequest,
-	// 		@RequestParam(name="image") List<MultipartFile> images, 
-	// 		@RequestParam(name="poster") List<MultipartFile> posters, 
-	// 		@AuthenticationPrincipal User user) throws IOException {
-	// 	ExhibitionResponse exhibition = exService.updateExhibition(id, exhibitionRequest, images, posters, user);
-	// 	return ResponseEntity.ok(exhibition);
-	// }
 	
 	// 팝업 전시 수정
 	 @Operation(summary = "팝업/전시 수정", description = "특정 팝업/전시를 수정합니다.")

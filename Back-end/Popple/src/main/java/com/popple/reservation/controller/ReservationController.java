@@ -34,7 +34,7 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	
 	
-	// 예약 등록
+	// 예약 등록 (예약자에게 QR코드가 이메일로 발송됩니다.)
 	@Operation(summary = "예약 등록", description = "예약을 생성합니다.")
 	@PostMapping("")
 	public ResponseEntity<?> reservation(@RequestBody ReservationRequest request, @AuthenticationPrincipal User user) throws Exception {
@@ -42,14 +42,16 @@ public class ReservationController {
 		ReservationResponse response = reservationService.reserve(request, user);
 
 		// 예약 완료 시 QR 이메일 발송 로직 추가
-		// 예약 고유번호가 있으면 좋겠지만, ID로 대체하여 진행
 		String email = user.getEmail();
-		String url = "http://localhost:5173/qr-check/" + response.getId();
-		byte[] qrcode = reservationService.sendQRCode(email, url);
-		// return ResponseEntity.ok(response);
-		return ResponseEntity.ok()
-					.contentType(MediaType.IMAGE_PNG)
-					.body(qrcode);
+		// 예약 고유번호가 있으면 좋겠지만, ID로 대체하여 진행
+		String url = request.getReservationLink();
+		String title = response.getReserver() + "님의 [" + response.getExhibitionName() + "] 예약 QR코드입니다.";
+		boolean qrcode = reservationService.sendQRCode(email, title, url);
+		if (qrcode) {
+			return ResponseEntity.ok(response);
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("QR코드 전송 실패");
+		}
 	}
 	
 	// 자신의 예약 목록
@@ -76,14 +78,14 @@ public class ReservationController {
 		return ResponseEntity.ok(res);
 	}
 	
-	// 방문 확인
+	// 방문 확인 (예약자가 방문했을 때, 기업회원이 QR코드를 스캔하여 방문 확인을 처리합니다)
 	@Operation(summary = "방문 확인", description = "예약을 확인 처리 합니다.")
 	@PatchMapping("/check/{id}")
-	public ResponseEntity<?> checkReserver(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
-		if (user == null) {
+	public ResponseEntity<?> checkReserver(@PathVariable("id") Long reservationId, @AuthenticationPrincipal User user) {
+		if (user == null && user.getAuthorities().isEmpty() && user.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
 			ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 		}
-		ReserverResponse res = reservationService.checkReserver(exId, user);
+		ReserverResponse res = reservationService.checkReserver(reservationId, user);
 		if (res == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청");
 		}

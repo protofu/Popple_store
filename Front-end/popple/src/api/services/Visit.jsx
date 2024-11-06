@@ -2,8 +2,8 @@ import api from "../api"; // api 인스턴스 가져오기
 
 export const visitAPI = {
   // 방문 체크
-  visitCheck: (data) => api.post(`/review`, data),
-
+  visitCheck: (data) => api.post(`/visit/${data}`),
+  amIVisited: (exId) => api.get(`/visit/me/${exId}`),
   // 아래는 팝업/전시 기준입니다.
 
   // 요일 기준 방문 통계

@@ -1,29 +1,31 @@
 import { Route, Routes } from "react-router-dom";
-import MainPage from "../pages/MainPage";
+import ExhibitionRegistPage from "../pages/ExhibitionRegistPage";
+import AuthLayout from "../pages/layouts/AuthLayout";
 import Layout from "../pages/layouts/Layout";
 import LoginPage from "../pages/LoginPage";
-import styles from './Router.module.css';
-import SignUpPage from "../pages/SignUpPage";
-import AuthLayout from "../pages/layouts/AuthLayout";
+import MainPage from "../pages/MainPage";
 import OAuthLoginPage from "../pages/OAuthLoginPage";
-import ExhibitionRegistPage from "../pages/ExhibitionRegistPage";
+import SignUpPage from "../pages/SignUpPage";
+import styles from './Router.module.css';
 // 전시 팝업 관련
-import ExhibitionPage from "../pages/ExhibitionPage";
-import PopUpPage from "../pages/PopUpPage";
-import EventPage from "../pages/EventPage";
-import HelpServicePage from "../pages/HelpServicePage";
-import MyPage from "../pages/MyPage";
-import PolicyPage from "../pages/PolicyPage";
-import CompanySignUpPage from "../pages/CompanySignUpPage";
-import QRPage from "../pages/QRPage";
-import DetailPage from "../pages/DetailPage";
-import HelpDetailPage from "../pages/HelpDetailPage";
-import EventRegister from "../pages/EventRegister";
 import ScrollToTop from "../components/common/ScrollToTop";
-import HelpCreate from "../pages/HelpCreate";
 import EventUpdate from "../components/exhibition/EventUpdate";
 import ExhibitionUpdatePage from "../components/exhibition/ExhibitionUpdatePage";
+import CompanySignUpPage from "../pages/CompanySignUpPage";
+import DetailPage from "../pages/DetailPage";
+import EventPage from "../pages/EventPage";
+import EventRegister from "../pages/EventRegister";
+import ExhibitionPage from "../pages/ExhibitionPage";
+import HelpCreate from "../pages/HelpCreate";
+import HelpDetailPage from "../pages/HelpDetailPage";
+import HelpServicePage from "../pages/HelpServicePage";
+import MyPage from "../pages/MyPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import PolicyPage from "../pages/PolicyPage";
+import PopUpPage from "../pages/PopUpPage";
+import QRPage from "../pages/QRPage";
+import ReserveCheck from "../pages/ReserveCheck";
+import VisitCheck from "../pages/VisitCheck";
 
 
 
@@ -65,7 +67,12 @@ export default function Router() {
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/policy/:id" element={<PolicyPage />} />
           <Route path="/company-signup" element={<CompanySignUpPage/>}/>
-          <Route path="/qr-code" element={<QRPage/>}/>
+          {/* 예약자 확인 [기업회원 접근용]  */}
+          <Route path="/reservation-check/:id" element={<ReserveCheck />}/> 
+          {/* 방문 QR 안내 [기업회원 접근용] */}
+          <Route path="/qr-code" element={<QRPage />}/>
+          {/* 방문자 확인 [일반회원 접근용] */}
+          <Route path="/visit-check/:id" element={<VisitCheck />}/> 
         </Route>
 
         {/* 404 페이지 */}

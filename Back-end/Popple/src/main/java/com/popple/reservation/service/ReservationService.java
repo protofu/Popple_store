@@ -1,12 +1,11 @@
 package com.popple.reservation.service;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.google.zxing.BarcodeFormat;
@@ -22,7 +21,14 @@ import com.popple.reservation.domain.ReservationResponse;
 import com.popple.reservation.domain.ReserverResponse;
 import com.popple.reservation.entity.Reservation;
 import com.popple.reservation.repository.ReservationRepository;
+import com.popple.visit.service.VisitService;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final VisitService visitService;
 	private final AuthService authService;
+	private final JavaMailSender javaMailSender;
 	
 	// 예약
 	public ReservationResponse reserve(ReservationRequest request, User user) {
@@ -106,24 +114,15 @@ public class ReservationService {
 	}
 
 	// 방문 확인
-	public ReserverResponse checkReserver(Long exId, User user) {
-		
-		LocalDate currentDate = LocalDate.now();
-		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("잘못된 팝업/전시 입니다."));
-		List<Reservation> reservationList = reservationRepository.findByExhibitionAndUser(exhibition, user);
-		Optional<Reservation> optReservation = reservationList.stream()
-			.filter(reservation -> reservation.getReservationDate().equals(currentDate))
-    	.findFirst();
-		Reservation reservation = optReservation.orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
-		if (!reservation.getUser().getId().equals(user.getId()) ) {
-			return null;
-		}
+	public ReserverResponse checkReserver(Long reservationId, User user) {
+		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
 		reservation.setAttend(true);
 		Reservation savedReservation = reservationRepository.save(reservation);
-		
+		visitService.insert(savedReservation.getExhibition().getId(), savedReservation.getUser());
 		return ReserverResponse.builder()
 				.id(savedReservation.getId())
-				.reserverName(savedReservation.getExhibition().getExhibitionName())
+				.reserverName(savedReservation.getUser().getName())
+				.email(savedReservation.getUser().getEmail())
 				.reserveTime(savedReservation.getReservationDate())
 				.isAttend(savedReservation.isAttend())
 				.build();
@@ -145,10 +144,45 @@ public class ReservationService {
 		}).toList();
 	}
 
-    public byte[] sendQRCode(String email, String url) throws Exception {
-		// QR 코드 생성
-        return generateQRCode(url);
+    public boolean sendQRCode(String email, String title, String url) throws Exception {
+		byte[] qrcode = generateQRCode(url);
+		return sendEmail(email, title, qrcode);
     }
+
+	private boolean sendEmail(String email, String title, byte[] qrcode) {
+    MimeMessage message = javaMailSender.createMimeMessage();
+    String text = "<h1>QR 코드를 확인해주세요.</h1><br><img src=\"cid:qrcode\"/>";
+
+    try {
+        message.setSubject(title, "UTF-8");
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+
+        // Create a multipart message for both text and QR code image
+        MimeMultipart multipart = new MimeMultipart("related");
+
+        // Part 1: Text part
+        MimeBodyPart textPart = new MimeBodyPart();
+        textPart.setText(text, "UTF-8", "html");
+        multipart.addBodyPart(textPart);
+
+        // Part 2: QR code image part
+        MimeBodyPart imagePart = new MimeBodyPart();
+        imagePart.setContent(qrcode, "image/png");
+        imagePart.setHeader("Content-ID", "<qrcode>");
+        imagePart.setDisposition(MimeBodyPart.INLINE);
+        multipart.addBodyPart(imagePart);
+
+        // Set the multipart message to the email message
+        message.setContent(multipart);
+
+        javaMailSender.send(message);
+    } catch (MessagingException e) {
+        log.warn("QR 코드 이메일 발송 중 Exception 발생 : {}", e.getMessage());
+        return false;
+    }
+
+    return true;
+}
 
 	private byte[] generateQRCode(String url) throws Exception {
 		// QR 정보

@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class ReservationRequest {
 	private Long exhibitionId;
+	private String reservationLink;
 	private LocalDate reservationDate;
 	
 	
