@@ -24,4 +24,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
 	Optional<Reservation> findByUserIdAndExhibitionId(Long id, Long exId);
 
+  Optional<Reservation> findByIdAndDeletedAtIsNull(Long reservationId);
+
 }
