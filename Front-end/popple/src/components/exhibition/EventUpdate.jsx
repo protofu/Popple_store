@@ -29,7 +29,7 @@ export default function EventUpdate() {
           eventPoster,
           eventImage
         } = res.data;
-        console.log("레데", res.data)
+
         setEventData({
           eventImage: eventImage,
           eventName: eventName,

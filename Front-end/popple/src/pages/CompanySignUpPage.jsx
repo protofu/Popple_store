@@ -147,17 +147,12 @@ export default function CompanySignUpPage() {
     try {
       data.sector = drop;
       const res = await companyAuthAPI.create(data);
-      poppleAlert.alert("","가입 성공");
+      await poppleAlert.alert("","가입 성공");
       navigate("/login");
     } catch (error) {
       poppleAlert.alert("","가입 실패");
     }
   };
-
-  const watch1 = watch();
-  useEffect(() => {
-    console.log(watch1);
-  }, [watch1]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

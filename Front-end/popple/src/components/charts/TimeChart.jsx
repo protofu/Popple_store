@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 export default function TimeChart({ timeData, humanCount }) {
   const result = [];
-  console.log(timeData);
 
   useEffect(() => {
     timeData.forEach((item) => {

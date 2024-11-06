@@ -169,7 +169,6 @@ export default function ExhibitionRegistPage() {
       console.error(error)
     }
   };
-  console.log(information)
   const goToNext = () => {
     // 만약에 필수값이 모두 입력되었으면
     const { exhibitionName, subTitle, startAt, endAt, poster, image, address } = information

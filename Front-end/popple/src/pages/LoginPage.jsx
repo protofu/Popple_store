@@ -32,7 +32,7 @@ export default function LoginPage() {
         navigate("/")
       }
     } catch (error) {
-      alert("비밀번호 또는 이메일 오류입니다.")
+      poppleAlert.alert("", "비밀번호 또는 이메일 오류입니다.");
       console.error("로그인 실패" + error);
     }
   };

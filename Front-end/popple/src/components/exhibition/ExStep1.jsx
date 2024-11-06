@@ -107,7 +107,6 @@ const ExStep1 = ({ information, changeInformation }) => {
   const onImageArrUpload = (files) => {
     // 파일이 fileMax보다 많으면 이상이면 업로드 안함
     if (imagePreviewArr.length >= fileMax) {
-      alert(`파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
       setUploadPossible(false);
       return;
     }
@@ -125,6 +124,7 @@ const ExStep1 = ({ information, changeInformation }) => {
       setImagePreviewArr((prevPreviews) => {
         const updatePreviews = [...prevPreviews, ...newPreviews];
         if (updatePreviews.length > fileMax) {
+          poppleAlert.alert("", `파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
           updatePreviews.splice(fileMax);
         }
         return updatePreviews;

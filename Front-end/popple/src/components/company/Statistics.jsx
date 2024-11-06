@@ -60,8 +60,6 @@ export default function Statistics({ eventId, onClose  }) {
     return <div>로딩중</div>;
   }
 
-  console.log(chartData.weekData);
-  
   return (
     <div className="flex flex-col w-full gap-2">
       <div className="flex justify-between mx-3">

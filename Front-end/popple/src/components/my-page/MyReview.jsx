@@ -32,7 +32,7 @@ export default function MyReview() {
         const res= await reviewAPI.getMyReviewList();
         setReviews(res.data);
       } catch(error){
-        console.log("리뷰 목록 불러오기 실패",error);
+        console.err("리뷰 목록 불러오기 실패",error);
       }
     };
     getMyReview();
@@ -123,7 +123,7 @@ export default function MyReview() {
     const handleDelete = async () => {
       try {
         await reviewAPI.deleteReview(reviewIdToDelete);
-        alert("리뷰가 삭제되었습니다.");
+        await poppleAlert.alert("", "리뷰가 삭제되었습니다.");
         setReviews(reviews.filter(review => review.id !== reviewIdToDelete));
         setShowDeleteModal(false);
       } catch (error) {

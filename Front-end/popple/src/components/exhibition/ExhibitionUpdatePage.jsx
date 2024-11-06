@@ -110,7 +110,6 @@ export default function ExhibitionUpdatePage() {
 
   function deleteImg2(index) {
     const deletePreview2 = [...info.descriptionImage]
-    console.log("1111111111", deletePreview2)
     deletePreview2.splice(index, 1);
     // info.descriptionImage 를 deletePreview2로 변경
     setInfo((prev) => ({
@@ -333,7 +332,6 @@ export default function ExhibitionUpdatePage() {
 
       // 서버로 전송
       const res = await exhibitionAPI.update(formData);
-      console.log("레데", res.data);
       if (res.status === 200) {
         poppleAlert.alert("", "수정 성공");
         navigate("/my-page")
@@ -343,8 +341,6 @@ export default function ExhibitionUpdatePage() {
       console.error(error);
     }
   };
-  console.log("exhiData", exhiData);
-  console.log("인포", info);
 
   const fileInputRef = useRef(null);
   return (

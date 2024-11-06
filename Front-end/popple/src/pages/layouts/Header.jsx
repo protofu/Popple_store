@@ -35,7 +35,6 @@ export default function Header() {
     setLoginUser(null);
     removeCookie("accessToken");
     window.location.href = "/";
-    console.log("로그아웃");
   }
 
   const menuLiStyle = "list-none relative inline-block text-gray-800 font-bold cursor-pointer group p-1";
