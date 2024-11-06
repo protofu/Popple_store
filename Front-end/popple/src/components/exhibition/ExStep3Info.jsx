@@ -1,11 +1,9 @@
-import MiniStatistics from "../charts/MiniStatistics";
 
 import { FaDog, FaUserSlash, FaArrowUp19 } from "react-icons/fa6";
 import { MdNoFood } from "react-icons/md";
 import { CiWifiOff } from "react-icons/ci";
 import { LuParkingCircleOff, LuCameraOff } from "react-icons/lu";
 import { TbCurrencyDollarOff } from "react-icons/tb";
-import MDEditor from "@uiw/react-md-editor";
 
 const escapeHtml = (text) => {
   return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");

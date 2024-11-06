@@ -186,11 +186,8 @@ public class ExhibitionService {
 	public ExhibitionResponse updateExhi(User user, ExhibitionRequest req, List<MultipartFile> images,
 			MultipartFile poster) {
 		Exhibition ex = exhibitionRepository.findById(req.getExhiId()).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
-		log.info(ex.getExhibitionName() + "의 수정 시작");
-		log.info(ex.getUser().getEmail() + "이 전시회 생성한 사람");
-		log.info(user.getEmail() + "이 현재 로그인한 사람");
-		System.out.println(ex.getUser().getId() == user.getId());
 		if(ex.getUser().getId() == user.getId()) {
+			
 			ex.setDetailDescription(req.getDetailDescription());
 			ex.setAddress(req.getAddress());
 			ex.setStartAt(req.getStartAt());

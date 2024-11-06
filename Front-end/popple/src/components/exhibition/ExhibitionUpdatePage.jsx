@@ -6,10 +6,10 @@ import { poppleAlert } from "../../utils/PoppleAlert";
 import Markdown from "../common/Markdown";
 import PostCode from "../common/PostCode";
 import FileCarousel from "./FileCarousel";
+import { useNavigate } from "react-router-dom";
 
 export default function ExhibitionUpdatePage() {
-  // const exId = 2572;
-
+  const navigate = useNavigate();
   // param으로 넘겨서
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
@@ -258,14 +258,14 @@ export default function ExhibitionUpdatePage() {
         /* 이미지 업로드하면 변경되는 부분 */
       }
       return <FileCarousel preview2={preview2} deleteImg={deleteImg} />;
-    } else if (info.descriptionImage > 0) {
+    } else if (info.descriptionImage.length > 0) {
       {
-        /* 수정할 때 나오는 부분 */
+        /* 초기 */
         return <FileCarousel preview2={info.descriptionImage} deleteImg={deleteImg2} />;
       }
     } else {
       {
-        /* 등록할 때 */
+        /* 없을 때 */
       }
       return (
         <div className="flex flex-col rounded-lg justify-center text-center items-center">
@@ -334,6 +334,7 @@ export default function ExhibitionUpdatePage() {
       console.log("레데", res.data);
       if (res.status === 200) {
         poppleAlert.alert("", "수정 성공");
+        navigate("/my-page")
       }
     } catch (error) {
       poppleAlert.alert("", "수정 실패");
