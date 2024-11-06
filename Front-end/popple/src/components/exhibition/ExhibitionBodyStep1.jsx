@@ -23,6 +23,7 @@ import { weekField } from "./data/week.json";
 import { input } from "@material-tailwind/react";
 import { all } from "axios";
 import { data } from "autoprefixer";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
   const fileMax = 10;
@@ -74,27 +75,29 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
   //상세 이미지 상태 관리
   const [preview2, setPreview2] = useState([]);
   const onUpload2 = (files) => {
-    // 파일이 2개 이상이면 업로드 안함
     if (preview2.length >= fileMax) {
       setUploadPossible(false);
-      return false;
+      return;
     }
-    const preview = files.map((f) => {
+    const previewPromises = files.map((file) => {
       const reader = new FileReader();
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         reader.onload = () => resolve(reader.result);
       });
     });
-    Promise.all(preview).then((newPreviews) => {
-      setPreview2((prevPreviews) => {
-        const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
-        if (fileCount > fileMax) {
-          newPreviews = newPreviews.splice(0, fileCount - fileMax);
+  
+    Promise.all(previewPromises).then((newPreviews) => {
+      setPreview2((prev) => {
+        const updatedPreviews = [...prev, ...newPreviews];
+        if (updatedPreviews.length > fileMax) {
+          poppleAlert.alert("", `파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
+          updatedPreviews.splice(fileMax);
         }
-        return [...prevPreviews, ...newPreviews];
+        return updatedPreviews;
       });
     });
+    setInfo((prev) => ({ ...prev, eventImage: files }));
   };
   
 
@@ -356,14 +359,15 @@ const ExhibitionBodyStep1 = ({ allOfPopUpData, setAllOfPopUpData }) => {
                 onDragEnter={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
-                onDragLeave={handleDragEnd}
+                
+                onClick={() => document.getElementById("detailImage").click()}
               >
                 <input
                   type="file"
                   id="detailImage"
                   className="hidden"
                   multiple
-                  onChange={onUpload2}
+                  onChange={(e) => onUpload2(Array.from(e.target.files))}
                   accept="image/*"
                 />
                 {preview2.length > 0 ? (

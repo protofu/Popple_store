@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LuFilePlus } from "react-icons/lu";
 import FileCarousel from "../components/exhibition/FileCarousel";
 import { eventAPI } from "../api/services/Event";
@@ -42,20 +42,22 @@ export default function EventRegiUpdate() {
       setUploadPossible(false);
       return;
     }
-    const preview = files.map((f) => {
+    const previewPromises = files.map((file) => {
       const reader = new FileReader();
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         reader.onload = () => resolve(reader.result);
       });
     });
-    Promise.all(preview).then((newPreviews) => {
-      setPreview2((prevPreviews) => {
-        const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
-        if (fileCount > fileMax) {
-          newPreviews = newPreviews.splice(0, fileCount - fileMax);
+  
+    Promise.all(previewPromises).then((newPreviews) => {
+      setPreview2((prev) => {
+        const updatedPreviews = [...prev, ...newPreviews];
+        if (updatedPreviews.length > fileMax) {
+          poppleAlert.alert("", `파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
+          updatedPreviews.splice(fileMax);
         }
-        return [...prevPreviews, ...newPreviews];
+        return updatedPreviews;
       });
     });
     setInfo((prev) => ({ ...prev, eventImage: files }));
@@ -149,6 +151,8 @@ export default function EventRegiUpdate() {
       poppleAlert.alert("", "필수값을 모두 입력해주세요.");
     }
   }
+
+  const fileInputRef = useRef(null);
 
   return (
     <>
@@ -264,14 +268,15 @@ export default function EventRegiUpdate() {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragLeave={handleDragEnd}
-                
+                onClick={() => document.getElementById("image").click()}
               >
                 <input
                   type="file"
                   id="image"
+                  ref={fileInputRef}
                   className="hidden"
                   multiple
-                  onChange={onUpload2}
+                  onChange={(e) => onUpload2(Array.from(e.target.files))}
                   accept="image/*"
                 />
                 {preview2.length > 0 ? (

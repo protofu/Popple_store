@@ -45,9 +45,8 @@ export default function ReviewInDetail({isVisited}) {
       try {
         const res = await reviewAPI.getReviewList(id);
         setReviews(res.data);
-        console.log(res.data);
       } catch (error) {
-        alert("리뷰를 불러오는 중 오류가 발생했습니다.");
+        await poppleAlert.alert("", "리뷰를 불러오는 중 오류가 발생했습니다.");
         console.error("오류 발생:" + error);
       }
     };

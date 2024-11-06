@@ -66,25 +66,33 @@ public class EventService {
 	
 	
 	// 이벤트 전체 조회
-		public List<EventResponse> getAllEvent() {
-			List<Event> eventList = eventRepo.findAll();// 모든 이벤트
-			// pList 반환
+	public List<EventResponse> getAllEvent() {
+		List<Event> eventList = eventRepo.findAll();// 모든 이벤트
+		// pList 반환
 //			return pList.stream().map(EventResponse::toDTO).toList();
-			return eventList.stream().filter(e -> !e.getEndAt().isBefore(LocalDate.now())).map(e -> {
-				EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
-				List<EventImage> prevImages = eventImageService.findByEvent(e);
-				List<String> eventImages = prevImages.stream()
-		                .map(EventImage::getSavedName)
-		                .collect(Collectors.toList());
-				return EventResponse.toDTO(e, eventPoster.getSavedName(), eventImages);
-			}).toList();
-		}
+		return eventList.stream().map(e -> {
+			EventPoster eventPoster = eventPosterRepo.findByEventId(e.getId()).orElse(null);
+			String posterName = null;
+			if(eventPoster != null) {
+				posterName = eventPoster.getSavedName();
+			}
+			List<EventImage> prevImages = eventImageService.findByEvent(e);
+			List<String> eventImages = prevImages.stream()
+					.map(EventImage::getSavedName)
+					.collect(Collectors.toList());
+			return EventResponse.toDTO(e, posterName, eventImages);
+		}).toList();
+	}
 
 	// 이벤트 상세 조회
 	public EventResponse getEvent(Long id) {
 		Event event = eventRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이벤트가 존재하지 않습니다"));
 		EventPoster poster = eventPosterService.findPoster(id);
-		EventResponse res = EventResponse.toDTO(event, poster.getPosterName());
+		List<EventImage> prevImages = eventImageService.findByEvent(event);
+		List<String> eventImages = prevImages.stream()
+				.map(EventImage::getSavedName)
+				.collect(Collectors.toList());
+		EventResponse res = EventResponse.toDTO(event, poster.getPosterName(), eventImages);
 		return res;
 	}
 

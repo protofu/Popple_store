@@ -12,7 +12,6 @@ export default function ReviewItem({ review, style }) {
   
   // 이미지 불러오기
   const imageUrl = `${import.meta.env.VITE_SERVER}/review_image/${review.image?.savedName}`;
-  console.log(imageUrl);
 
   return (
     <div className={`grid grid-cols-[1fr_4fr] border-2 border-[#A4A4A4] rounded-[0.4rem] p-3 m-5 mb-1 h-[148px] ${style}`}>

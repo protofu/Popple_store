@@ -27,9 +27,11 @@ export default function EventUpdate() {
           startAt,
           endAt,
           eventPoster,
+          eventImage
         } = res.data;
-        console.log("레데", res.data)
+
         setEventData({
+          eventImage: eventImage,
           eventName: eventName,
           summary: summary,
           description: description,
@@ -48,6 +50,10 @@ export default function EventUpdate() {
 
   useEffect(() => {
     if (Object.keys(eventData).length > 0) {
+      eventData.eventImage = eventData.eventImage.map((img) => {
+        const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
+        return eventImageURL+img;
+      });
       setInfo((prev) => ({
         ...prev,
         ...eventData, // 가져온 데이터를 info에 반영
@@ -100,7 +106,7 @@ export default function EventUpdate() {
     }
     setInfo({});
   };
-  console.log("수정 데이터",info)
+
   return (
     <EventForm title={"이벤트 수정"} info={info} setInfo={setInfo} handleSubmit={handleSubmit} />
   );

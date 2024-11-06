@@ -14,9 +14,9 @@ export default function EventDetailModal({ onClose, evnetId }) {
   const handleDelete = async () => {
     try {
       await eventAPI.delete(evnetId);
-      alert("삭제 완료");
+      poppleAlert.alert("", "삭제 완료");
     } catch (error) {
-      alert("삭제 불가");
+      poppleAlert.alert("", "삭제 불가");
     }
   };
 

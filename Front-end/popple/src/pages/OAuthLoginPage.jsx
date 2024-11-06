@@ -14,18 +14,13 @@ export default function OAuthLoginPage() {
 
   // URL 쿼리 스트링에서 authorization code를 추출함
   const code = new URLSearchParams(window.location.search).get("code");
-  console.log("Authorization Code:", code); // 확인용 콘솔 로그
-
   const [authData, setAuthData] = useState();
 
   const login = async () => {
-    console.log("login 메서드 ㄱㄱ");
     try {
       const res = await oauthAPI.signUp(provider, code);
-      console.log("res 데이터" + res.data);
       if (res.data.accessToken) {
         setCookie("accessToken", res.data.accessToken, { path: "/"});
-        // console.log("추가정보 없이 로그인 성공" + res.data.accessToken);
         window.location.href="/";
         return;
       } else if (res.data.deleted) {
@@ -71,11 +66,9 @@ export default function OAuthLoginPage() {
       }
     } catch (err) {
       console.error(err);
-      alert(err.res.data.message);
     }
   };
 
-  console.log(authData);
   if (authData && !authData.ableToLogin) {
     return (
       <AuthLayout>

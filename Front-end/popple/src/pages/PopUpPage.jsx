@@ -98,7 +98,6 @@ export default function PopUpPage() {
       try {
         // 인기 있는 팝업은 visitCount와 like 개수와 review 개수를 합산하여 가져온다.
         const res = await exhibitionAPI.getPopularList(type);
-        console.log(res.data);
         setPopupData(res.data); // 상태에 필터링된 데이터 설정
         const visitCountRes = res.data.sort((a, b) => b.visitCount - a.visitCount);
         setVisitCountData(visitCountRes);

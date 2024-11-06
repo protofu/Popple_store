@@ -19,14 +19,12 @@ export default function WriteReviewModal({ isOpen, onClose }) {
   
   const onUpload = (e) => {
       const file = e.target.files[0];
-      console.log('Selected file:', file); // 파일 확인
       if (!file) return;
 
       const reader = new FileReader();
 
       reader.readAsDataURL(file);
       reader.onload = () => {
-        console.log('File content:', reader.result); // 결과 확인
         setPreview(reader.result); // 파일의 컨텐츠를 preview에 저장
         setData((prevData) => ({
           ...prevData,
@@ -37,7 +35,6 @@ export default function WriteReviewModal({ isOpen, onClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
-    console.log(data);
 
     const formData = new FormData();
     formData.append('content', data.content);
@@ -48,14 +45,12 @@ export default function WriteReviewModal({ isOpen, onClose }) {
 
     try {
       const res = await reviewAPI.writeReview(formData);
-      console.log(res.status);
-      
       if (res.status === 201) {
-        alert("리뷰가 작성되었습니다.");
+        await poppleAlert.alert("", "리뷰가 작성되었습니다.");
         onClose();
       }
     } catch (error) {
-      alert("리뷰 작성 중 오류가 발생했습니다.");
+      await poppleAlert.alert("", "리뷰 작성 중 오류가 발생했습니다.");
       console.error("오류 발생:" + error);
     }
   };

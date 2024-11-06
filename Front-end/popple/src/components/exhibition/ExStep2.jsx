@@ -14,7 +14,6 @@ const ExStep2 = ({information, changeInformation}) => {
             const res = await companyAuthAPI.getInfo(data);
             if (res.status === 200) {
                 const {name,buisinessNumber, tel,address } = res.data;
-                console.log(res.data)
                 setCompanyInfo({ 
                     name: name,
                     businessNumber : buisinessNumber,

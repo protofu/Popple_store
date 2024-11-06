@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LuFilePlus } from "react-icons/lu";
 import { exhibitionAPI } from "../../api/services/Exhibition";
 import { poppleAlert } from "../../utils/PoppleAlert";
@@ -80,23 +80,25 @@ export default function ExhibitionUpdatePage() {
       setUploadPossible(false);
       return;
     }
-    const preview = files.map((f) => {
+    const previewPromises = files.map((file) => {
       const reader = new FileReader();
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(file);
       return new Promise((resolve) => {
         reader.onload = () => resolve(reader.result);
       });
     });
-    Promise.all(preview).then((newPreviews) => {
-      setPreview2((prevPreviews) => {
-        const fileCount = prevPreviews.length + newPreviews.length; // 저장할 파일 총개수
-        if (fileCount > fileMax) {
-          newPreviews = newPreviews.splice(0, fileCount - fileMax);
+  
+    Promise.all(previewPromises).then((newPreviews) => {
+      setPreview2((prev) => {
+        const updatedPreviews = [...prev, ...newPreviews];
+        if (updatedPreviews.length > fileMax) {
+          poppleAlert.alert("", `파일은 최대 ${fileMax}개까지 업로드 가능합니다.`);
+          updatedPreviews.splice(fileMax);
         }
-        return [...prevPreviews, ...newPreviews];
+        return updatedPreviews;
       });
     });
-    setInfo((prev) => ({ ...prev, descriptionImage: files }));
+    setInfo((prev) => ({ ...prev, eventImage: files }));
   };
 
   //파일 이미지 삭제
@@ -108,7 +110,6 @@ export default function ExhibitionUpdatePage() {
 
   function deleteImg2(index) {
     const deletePreview2 = [...info.descriptionImage]
-    console.log("1111111111", deletePreview2)
     deletePreview2.splice(index, 1);
     // info.descriptionImage 를 deletePreview2로 변경
     setInfo((prev) => ({
@@ -331,7 +332,6 @@ export default function ExhibitionUpdatePage() {
 
       // 서버로 전송
       const res = await exhibitionAPI.update(formData);
-      console.log("레데", res.data);
       if (res.status === 200) {
         poppleAlert.alert("", "수정 성공");
         navigate("/my-page")
@@ -341,9 +341,8 @@ export default function ExhibitionUpdatePage() {
       console.error(error);
     }
   };
-  console.log("exhiData", exhiData);
-  console.log("인포", info);
 
+  const fileInputRef = useRef(null);
   return (
     <>
       <div className="flex justify-center">
@@ -526,10 +525,11 @@ export default function ExhibitionUpdatePage() {
                 >
                   <input
                     type="file"
+                    ref={fileInputRef}
                     id="detailImage"
                     className="hidden"
                     multiple
-                    onChange={onImageArrUpload}
+                    onChange={(e) => onImageArrUpload(Array.from(e.target.files))}
                     accept="image/*"
                   />
                   {renderImage()}

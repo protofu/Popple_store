@@ -15,10 +15,9 @@ export default function HelpCreate() {
       setError("제목과 내용을 입력해 주세요.");
       return;
     }
-    console.log("postHelp : ", postHelp);
     try {
       await helpAPI.createHelp(postHelp);
-      alert("문의가 등록되었습니다.")
+      await poppleAlert.alert("", "문의가 등록되었습니다.");
       navigate("/help");
     } catch (err) {
       console.error(err);

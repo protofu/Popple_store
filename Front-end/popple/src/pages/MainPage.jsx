@@ -133,8 +133,6 @@ export default function MainPage() {
             spaceBetween={0}
             slidesPerView={1}
             navigation={{ prevEl: ".arrow-up", nextEl:".arrow-down" }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
             modules={[Autoplay, EffectCoverflow, Navigation]}
           >
             <SwiperSlide className="cursor-pointer">

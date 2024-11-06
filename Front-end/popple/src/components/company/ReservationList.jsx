@@ -10,7 +10,6 @@ export default function ReservationList({ event, eventId, onClose }) {
 
   const getReservationList = async () => {
     const res = await reservationAPI.getReserverList(eventId);
-    console.log(res.data);
     setReserverList(res.data);
   };
 

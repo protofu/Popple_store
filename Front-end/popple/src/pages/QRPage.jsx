@@ -16,8 +16,7 @@ export default function QRPage() {
       const imageUrl = URL.createObjectURL(res.data);
       setIamgeData(imageUrl);
     } catch (error) {
-      console.log(error);
-      alert(error.response.data.message);
+      console.err(error);
     }
   }
 

@@ -16,8 +16,6 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
   const [eventList, setEventList] = useState([]);
   const getEvents = async () => {
     const res = await eventAPI.getExhibitionEvents(id);
-    console.log(res.data);
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
@@ -33,11 +31,7 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
   useEffect(() => {
     getEvents();
   }, [])
-//
-  useEffect(() => {
-    console.log("eventList 상태 변화:", eventList);
-  }, [eventList]);
-//
+  
   const [propEventId, setPropEventId] = useState(null);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   // 이벤트 모달 오픈
