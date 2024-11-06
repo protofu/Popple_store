@@ -16,10 +16,17 @@ export default function EventCardV2({
   img,
   usernickname,
   description,
+  exhibitionId,
+  exhibitionTitle,
+  exhiTypeId
 }) {
   const [palette, setPalette] = useState([]);
   const [textColor, setTextColor] = useState();
 
+  const [isButtonFixed, setIsButtonFixed] = useState(false);
+  const navigate = useNavigate();
+
+  
   function corsProxy(url) {
     return `${url}`;
   }
@@ -90,6 +97,27 @@ export default function EventCardV2({
     submit(img);
   }, [img]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsButtonFixed(true);
+      } else {
+        setIsButtonFixed(false);
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleRowClick = (exhibitionId, exhiTypeId) => {
+    if (exhiTypeId === 1) {
+      navigate(`/pop-up/detail/${exhibitionId}`);
+    } else if (exhiTypeId === 2) {
+      navigate(`/exhibition/detail/${exhibitionId}`);
+    }
+  };
+
   const [isModalOpen, setModalOpen] = useState(false);
 
   const eventDetail = {
@@ -100,6 +128,9 @@ export default function EventCardV2({
     img,
     usernickname,
     description,
+    exhibitionId,
+    exhibitionTitle,
+    exhiTypeId
   };
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -136,12 +167,15 @@ export default function EventCardV2({
           <p className="text-sm">{duration}</p>
         </div>
       </div>
+
       {isModalOpen && (
         <EventDetailModal
           onClose={handleModalClose}
           eventDetail={eventDetail}
           dispatch={dispatch}
           open={handleModalOpen}
+          isButtonFixed={isButtonFixed}
+          handleRowClick={handleRowClick}
         />
       )}
       
@@ -157,7 +191,7 @@ EventCardV2.propTypes = {
   img: PropTypes.string.isRequired, // 이미지 URL
 };
 
-function EventDetailModal({ onClose, eventDetail, dispatch, open, }) {
+function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,handleRowClick }) {
 
   const { loginUserNickname } = useLoginUserStore();
   const navigate = useNavigate();
@@ -197,6 +231,13 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open, }) {
         <div className="mt-8">
         {eventDetail.description}
         </div>
+        
+        <div
+          className={`mt-12 border rounded-lg p-2 border-[#8900E1] text-black text-center cursor-pointer hover:bg-[#8900E1] hover:text-white`}
+          onClick={() => handleRowClick(eventDetail.exhibitionId, eventDetail.exhiTypeId)}
+        >
+          '{eventDetail.exhibitionTitle}' 자세히 보기
+        </div>
 
         <div className="w-full mt-20">
           {loginUserNickname === eventDetail.usernickname && (
@@ -204,7 +245,8 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open, }) {
               <button className="border rounded-lg p-2" onClick={handleNavi}>
                 수정
               </button>
-              <span></span>
+             
+              
               <button
                 className="border rounded-lg p-2"
                 onClick={() => handleDelete()}
@@ -214,6 +256,8 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open, }) {
             </div>
           )}
         </div>
+        
+        
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import EventCard from "../EventCard";
 import NoEventList from "../event/NoEventList";
 import EventDetailModal from "../event/EventDetailModal";
 import { useLoginUserStore } from "../../stores/LoginUserState";
+import EventCardV2 from "../exhibition/EventCardV2";
 
 export default function DetailsEvent({ navigate, usernickname, loginusernickname }) {
   const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
@@ -15,19 +16,27 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
   const getEvents = async () => {
     const res = await eventAPI.getExhibitionEvents(id);
     console.log(res.data);
-    const today = new Date(); // 오늘 날짜 가져오기
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
     const filtered = res.data.filter(item => {
-        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
-        return endAt > today; // 오늘보다 후인지 확인
+      const endAt = new Date(item.endAt[0], item.endAt[1] - 1, item.endAt[2]);
+      endAt.setHours(0, 0, 0, 0);
+      return endAt > yesterday; 
     });
     setEventList(filtered);
   };
 
   useEffect(() => {
-
     getEvents();
   }, [])
-
+//
+  useEffect(() => {
+    console.log("eventList 상태 변화:", eventList);
+  }, [eventList]);
+//
   const [propEventId, setPropEventId] = useState(null);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   // 이벤트 모달 오픈
@@ -56,7 +65,20 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
       <div className="flex flex-wrap gap-4 mx-4">
         {eventList?.length > 0 ?
           eventList.map((item, index) => (
-            <EventCard key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+            
+            <EventCardV2 
+              key={index} 
+              slogun={item.eventName} 
+              title={item.summary} 
+              duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
+              img={`${eventPosterURL}${item.image}`} 
+              onOpen={() => openEventModal(item.id)} 
+              id={item.id}
+              description={item.description} 
+              exhibitionTitle={item.exhibition.exhibitionName}
+              exhibitionId={item.exhibition.id}
+              exhiTypeId={item.exhibition.type.id}
+              />
           )) :
           <NoEventList text={"이벤트"}/>
         }
