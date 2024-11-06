@@ -418,7 +418,7 @@ export default function ExhibitionUpdatePage() {
                   메인 포스터 <span className="text-red-500">*</span>
                 </label>
                 <label
-                  className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
+                  className={`${inputStyle} py-5 flex justify-center cursor-pointer h-72`}
                 >
                   <input
                     className="hidden"
@@ -516,7 +516,7 @@ export default function ExhibitionUpdatePage() {
                 <div
                   className={`${inputStyle} preview ${
                     isActive ? "active" : " "
-                  } flex justify-center cursor-pointer h-48`}
+                  } flex justify-center cursor-pointer h-72`}
                   onDragEnter={handleDragStart}
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
