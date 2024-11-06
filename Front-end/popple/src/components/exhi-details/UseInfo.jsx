@@ -37,8 +37,14 @@ export default function UseInfo({ data }) {
     return text?.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(emojiRegex, ' $1 ');
   }
 
+  const renderDescriptionImage = () => {
+    return data.descriptionImage.map(r => (
+      <img src={`${imageURL}${r}`} alt="설명 이미지" className="mb-2" />
+    ))
+  }
+
   const sections = [
-    { title: "관람정보", key: "descriptionImage", content: <img src={`${imageURL}${data.descriptionImage}`} alt="설명 이미지" /> },
+    { title: "관람정보", key: "descriptionImage", content: renderDescriptionImage() },
     { title: "공지사항", key: "notice", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.notice))} /> },
     { title: "상세정보", key: "detailDescription", content: <MDEditor.Markdown source={escapeHtml(getMarkdownText(data.detailDescription))} /> },
     { title: "방문통계", key: "statistics", content: <MiniStatistics /> },

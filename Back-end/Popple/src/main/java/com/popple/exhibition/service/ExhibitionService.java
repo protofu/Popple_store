@@ -185,9 +185,11 @@ public class ExhibitionService {
 	
 	public ExhibitionResponse updateExhi(User user, ExhibitionRequest req, List<MultipartFile> images,
 			MultipartFile poster) {
-		Exhibition ex = exhibitionRepository.findById(req.getTypeId()).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
-		List<Image> prevImage = imageService.findAll();
-		Poster prevPoster = posterService.findPoster(req.getExhiId());
+		Exhibition ex = exhibitionRepository.findById(req.getExhiId()).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
+		log.info(ex.getExhibitionName() + "의 수정 시작");
+		log.info(ex.getUser().getEmail() + "이 전시회 생성한 사람");
+		log.info(user.getEmail() + "이 현재 로그인한 사람");
+		System.out.println(ex.getUser().getId() == user.getId());
 		if(ex.getUser().getId() == user.getId()) {
 			ex.setDetailDescription(req.getDetailDescription());
 			ex.setAddress(req.getAddress());
@@ -201,10 +203,12 @@ public class ExhibitionService {
 			ex.setNotice(req.getNotice());
 			
 			if(images != null) {
+				List<Image> prevImage = imageService.findAll();
 				prevImage.forEach(i -> imageService.deleteImage(i.getId()));
 				images.stream().map(image -> imageService.saveImage(image, ex)).collect(Collectors.toList());
 			}
 			if(poster != null) {
+				Poster prevPoster = posterService.findPoster(req.getExhiId());
 				posterService.deletePoster(prevPoster.getId());
 				posterService.savePoster(poster, ex);
 			}
@@ -234,7 +238,7 @@ public class ExhibitionService {
 	}
 	
 	// Exhibition 엔티티를 ExhibitionResponse로 변환하는 메서드
-	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, String descriptionImage, List<String> location) {
+	private ExhibitionResponse buildExhibitionResponse(Exhibition exhibition, String savedImage, List<String> descriptionImage, List<String> location) {
 		return ExhibitionResponse.builder()
 		.id(exhibition.getId())
 		.typeId(exhibition.getType().getId())
@@ -276,7 +280,7 @@ public class ExhibitionService {
 	
 	private ExhibitionResponse convertToExhibitionResponse(Exhibition exhibition, List<String> location) {
 		String savedImage = posterRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
-		String descriptionImage = imageRepository.findFirstByExhibition(exhibition.getId()).orElse(null);
+		List<String> descriptionImage = imageRepository.findByExhibition(exhibition.getId()).orElse(null);
 		return buildExhibitionResponse(exhibition, savedImage, descriptionImage, location);
 	}
 }
