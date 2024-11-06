@@ -26,7 +26,7 @@ export default function FileCarousel({ preview2, deleteImg }) {
         <SwiperSlide key={index}>
           <button type="button" onClick={()=>deleteImg(index)} >
             <TiDelete/>
-            <img src={data} />
+            <img src={data} className="w-[120px] h-auto"/>
           </button>
         </SwiperSlide>
       ))}
