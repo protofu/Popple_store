@@ -69,8 +69,6 @@ export default function MapView({ latitude, longitude, poppleLocations }) {
                         kakao.maps.event.addListener(marker, 'mouseout', () => {
                             infoWindow.close();
                         });
-                    } else {
-                        console.log(`${poppleLocations[i].title} 은 위치 확인 불가능`);
                     }
                 }
             });

@@ -105,7 +105,7 @@ export default function DetailPage() {
   const copyCurrentLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      alert("링크가 복사되었습니다!");
+      poppleAlert.alert("", "링크가 복사되었습니다!");
     } catch (error) {
       console.error("링크 복사에 실패했습니다.", error);
     }
@@ -136,8 +136,6 @@ export default function DetailPage() {
   // }
 
   const handleDateChange = (date) => {
-    console.log(date);
-    
     setValue(date);
   };
 

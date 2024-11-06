@@ -143,7 +143,6 @@ export default function SignUpPage({ oAuth = false, authData, onOAuthSubmit }) {
     try {
       data.birth = data.birth.toISOString().split("T")[0];
       const res = await authAPI.create(data);
-      console.log(res.data)
       poppleAlert.alert("","가입 성공");
       navigate("/login");
       

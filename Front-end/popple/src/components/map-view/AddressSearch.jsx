@@ -8,8 +8,6 @@ export default function AddressSearch () {
   const handleSearch = async () => {
     const searchResults = await searchAddress(query);
     setResults(searchResults);
-    console.log(searchResults[0].x);
-    console.log(searchResults[0].y);
   };
 
   return (

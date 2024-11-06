@@ -97,9 +97,8 @@ public class EventController {
 			@ModelAttribute EventRequest req,
 			@AuthenticationPrincipal User user, 
 			@RequestParam(name = "eventImage", required = false) List<MultipartFile> images, 
-			@RequestParam(name = "eventPoster") MultipartFile poster) {
+			@RequestParam(name = "eventPoster", required = false) MultipartFile poster) {
 		if (eventService.isMine(req.getExId(), user)) {
-			log.info("어 나야 수정하러 왔어:{}",req);
 			EventResponse event = eventService.updateEvent(user, images, poster, req);			
 			return ResponseEntity.ok(event);
 		} return ResponseEntity.ok(null);

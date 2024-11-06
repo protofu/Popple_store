@@ -49,7 +49,6 @@ export default function MapView({ latitude, longitude, keyword, onResultsUpdate 
                     if (keyword) {
                         const ps = new window.kakao.maps.services.Places();
                         ps.keywordSearch(keyword, placesSearchCB);
-                        console.log("map-view-keyword :", keyword);
 
                         function placesSearchCB(data, status, pagination) {
                             if (status === window.kakao.maps.services.Status.OK) {
@@ -61,7 +60,6 @@ export default function MapView({ latitude, longitude, keyword, onResultsUpdate 
                                 }
                                 // setResults(data);
                                 onResultsUpdate(data);
-                                console.log(data);
                                 map.setBounds(bounds);
                             }
                         }

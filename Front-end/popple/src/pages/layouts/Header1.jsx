@@ -39,7 +39,6 @@ export default function Header() {
     removeCookie("accessToken");
     window.location.href='/';
   }
-  console.log(loginUserRole);
 
   return (
     // <header className="fixed top-0 w-screen bg-white border-b border-gray-300 z-50 flex flex-col pb-1 h-16"></header>

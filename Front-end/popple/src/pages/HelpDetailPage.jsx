@@ -19,7 +19,6 @@ export default function HelpDetailPage() {
   const { loginUserNickname, loginUserRole } = useLoginUserStore(state => state);
   const navigate = useNavigate();
 
-  console.log(loginUserRole);
   // 날짜 포맷 변환 함수
   const formatDate = (dateArray) => {
     const [year, month, day, hour, minute, second] = dateArray;
@@ -32,9 +31,8 @@ export default function HelpDetailPage() {
         try {
           const faqDatas = await axios.get("/jsons/faqs.json");
           setItem(faqDatas.data[id]);
-          console.log(faqDatas.data[id]);
         } catch (error) {
-          console.log("error", error);
+          console.err("error", error);
         }
       };
       getFaq();
@@ -46,11 +44,10 @@ export default function HelpDetailPage() {
           faqData.data.updatedAt = formatDate(faqData.data.updatedAt);
           setItem(faqData.data);
         } catch (error) {
-          console.log("error", error);
+          console.err("error", error);
         }
       };
       getHelp();
-      console.log("디테일 : ", item);
     }
 
   }, []);
@@ -68,10 +65,10 @@ export default function HelpDetailPage() {
   const handledeleteClick = async () => {
     try {
       await helpAPI.delete(id);
-      alert("성공적으로 삭제되었습니다.")
+      await poppleAlert.alert("", "성공적으로 삭제되었습니다.");
       navigate("/help");
     } catch (err) {
-      console.log(err);
+      console.err("error", err);
     }
   };
 
@@ -82,15 +79,13 @@ export default function HelpDetailPage() {
   const handleReplyClick = async () => {
     try {
       await helpAPI.answer(answerData);
-      alert("답변이 작성되었습니다.")
+      await poppleAlert.alert("", "답변이 작성되었습니다.");
       setAnswer(false);
       window.location.reload();
     } catch (err) {
-      console.log(err);
+      console.err(err);
     }
   };
-
-  console.log(answer);
 
   return (
     <div className="flex flex-col h-[80vh]">

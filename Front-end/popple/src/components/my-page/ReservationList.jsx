@@ -35,7 +35,6 @@ export default function ReservationList() {
   // 예약 목록 가져오기
   const getMyReservationList = async () => {
     const res = await reservationAPI.getList();
-    console.log("API 응답:", res);
 
     // 현재 시간에 따라서 나누기
     const current=[];
@@ -71,7 +70,7 @@ export default function ReservationList() {
     const handleCancelReservation = async () => {
       try {
         await reservationAPI.cancel(reservationId);
-        alert("예약이 취소되었습니다.");
+        await poppleAlert.alert("", "예약이 취소되었습니다.");
         onClose();
         getMyReservationList();
       } catch (error) {

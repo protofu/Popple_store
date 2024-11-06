@@ -27,7 +27,6 @@ const ChangeInfo = () => {
         if (token) {
             const id = jwtDecode(token).id;
             const role = jwtDecode(token).role;
-            console.log("Decoded role:", role); 
             const res = await authAPI.getUser(id);
             res.data.birth = moment(new Date(res.data.birth[0], res.data.birth[1] - 1, res.data.birth[2])).format('YYYY-MM-DD');
             if (role === "ROLE_COMPANY") {
@@ -215,7 +214,7 @@ const ChangeInfo = () => {
             await poppleAlert.alert("", "회원정보 수정이 완료되었습니다.");
           }
     } catch (error) {
-        console.log(error);   
+        console.err(error);   
     }
   };
 

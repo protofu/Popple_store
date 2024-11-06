@@ -212,7 +212,7 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,h
   const handleNavi = () => {
     navigate(`/event-update?id=${eventDetail.evId}`);
   };
-  console.log(eventDetail.eventImages)
+
   return (
     <div
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 overflow-auto "

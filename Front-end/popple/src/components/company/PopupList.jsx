@@ -33,7 +33,6 @@ export default function PopupList() {
     getMyPopupList();
   }, [])
 
-  console.log(popupList)
 
   // 페이지별로 현재 보여줄 항목들 계산
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -114,7 +113,6 @@ export default function PopupList() {
       "삭제하시겠습니까?",
       async ()=> { 
         const res = await exhibitionAPI.delete(data);
-        console.log(res.data)
         await poppleAlert.alert("삭제 완료")
       },
       () => poppleAlert.alert("삭제 취소")
