@@ -26,7 +26,7 @@ export default function EventUpdate() {
           description,
           startAt,
           endAt,
-          image,
+          eventPoster,
         } = res.data;
         console.log("레데", res.data)
         setEventData({
@@ -35,7 +35,7 @@ export default function EventUpdate() {
           description: description,
           startAt: moment(new Date(startAt[0], startAt[1] - 1, startAt[2])).format('YYYY-MM-DD'),
           endAt: moment(new Date(endAt[0], endAt[1] - 1, endAt[2])).format('YYYY-MM-DD'),
-          eventPoster:image,
+          eventPoster:eventPoster,
         });
       }
     } catch (error) {}

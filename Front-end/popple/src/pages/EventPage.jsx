@@ -20,6 +20,7 @@ function reducer(state, action){
 
 export default function EventPage() {
   const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   const textStyle = "text-[28px] ml-3 font-bold mt-5";
   // const [eventList, setEventList] = useState([])
   const [state, dispatch] = useReducer(reducer, []);
@@ -38,14 +39,12 @@ export default function EventPage() {
     }
     getEvent();
   }, []);
-  console.log(state)
   return (
     <>
       <h1 className={textStyle}>Event</h1>
       <hr className="mt-2 mb-0 border-gray-500" />
       <div className="mt-10">
         <h1 className="text-center text-2xl mb-5">EVENT</h1>
-        {/* <ExStepComplete exhiId={exhiId}/> */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center ">
           {state.map((item, index) => (
               <EventCardV2 
@@ -57,7 +56,8 @@ export default function EventPage() {
                 title={item.eventName}
                 usernickname={item.exhibition.user.nickname}
                 duration={dateToString(item.startAt) + " ~ "+ dateToString(item.endAt)} 
-                img={`${eventPosterURL}${item.image}`}
+                eventPoster={`${eventPosterURL}${item.eventPoster}`}
+                eventImages={item.eventImage.map(image => `${eventImageURL}${image}`)}
               />
           ))}
         </div>
