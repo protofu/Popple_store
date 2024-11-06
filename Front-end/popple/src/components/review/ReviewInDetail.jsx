@@ -3,18 +3,42 @@ import CustomSubmitButton from "../common/CustomSubmitButton";
 import ReviewItem from "./ReviewItem";
 import WriteReviewModal from "./WriteReview";
 import { reviewAPI } from "../../api/services/Review";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {useLoginStore} from "../../stores/LoginState";
+import LoginPromptModal from "../LoginPromptModal";
 
 export default function ReviewInDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState(null);
   const { id } = useParams("id");
   const [reviewReload, setReviewReload] = useState(false);
-  const openModal = () => setIsModalOpen(true);
+  
+  // 로그인 안 한 사용자가 리뷰작성하려할때 -> 아직 방문인증이 없어서 추가함
+  const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
+  const isLogIn = useLoginStore(state => state.isLoggedIn);
+  const navigate = useNavigate();
+  const openModal = () => {
+    if(isLogIn){
+      setIsModalOpen(true)
+    }else{
+      setIsLoginPromptOpen(true);
+    }
+  };
+  const closeLoginPrompt = () => {
+    setIsLoginPromptOpen(false);
+  };
+  const goToLoginPage = () => {
+    navigate("/login");
+    setIsLoginPromptOpen(false);
+  };
+
+  //const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setReviewReload(prev => !prev);
     setIsModalOpen(false);
   }
+ 
+  
 
   useEffect(() => {
     const getReview = async () => {
@@ -53,6 +77,12 @@ export default function ReviewInDetail() {
           <p>리뷰가 없습니다.</p>
         )}
       </div>
+      {/* 로그인 안 한 사용자가 리뷰작성하려할때 */}
+      <LoginPromptModal 
+        isOpen={isLoginPromptOpen} 
+        onClose={closeLoginPrompt} 
+        onConfirm={goToLoginPage}
+      />
     </div>
   );
 };
