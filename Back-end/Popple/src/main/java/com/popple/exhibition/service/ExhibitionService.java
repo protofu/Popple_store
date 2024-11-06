@@ -187,7 +187,6 @@ public class ExhibitionService {
 			MultipartFile poster) {
 		Exhibition ex = exhibitionRepository.findById(req.getExhiId()).orElseThrow(() -> new IllegalArgumentException("해당 팝업/전시를 찾을 수 없습니다."));
 		if(ex.getUser().getId() == user.getId()) {
-			
 			ex.setDetailDescription(req.getDetailDescription());
 			ex.setAddress(req.getAddress());
 			ex.setStartAt(req.getStartAt());
@@ -210,7 +209,7 @@ public class ExhibitionService {
 				posterService.savePoster(poster, ex);
 			}
 		}
-		return null;
+		return convertToExhibitionResponse(exhibitionRepository.save(ex), null);
 	}
 
 	private List<String> fetchLocationFromKakao(String address) {

@@ -102,7 +102,7 @@ export default function ExhibitionUpdatePage() {
         return updatedPreviews;
       });
     });
-    setInfo((prev) => ({ ...prev, eventImage: files }));
+    setInfo((prev) => ({ ...prev, descriptionImage: files }));
   };
 
   //파일 이미지 삭제

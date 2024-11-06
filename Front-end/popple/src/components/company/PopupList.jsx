@@ -23,12 +23,41 @@ export default function PopupList() {
     const res = await exhibitionAPI.my();
     const today = new Date(); // 오늘 날짜 가져오기
     // 진행 혹은 예정인 데이터들
-    const filtered = res.data.filter(item => {
-        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
-        return endAt > today; // 오늘보다 후인지 확인
+
+    // 상태 별 분류
+    const ongoing =[];
+    const upcoming =[];
+    const finished=[];
+
+    res.data.forEach(item=>{
+      const {value, color, diffDays} = getStatus(item.startAt, item.endAt);
+
+      if(value === "진행중"){
+        ongoing.push({...item, diffDays,value,color});
+      } else if(value === "종료"){
+        finished.push({...item,diffDays,value,color});
+      }
+      else{
+        upcoming.push({...item, diffDays,value,color});
+      }
     });
-    setPopupList(res.data);
-  }
+
+    // 진행중인 건, 먼저 시작한 팝업/전시가 위로 올라오게
+    ongoing.sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
+    // 오픈 대기 중인 건, 곧 시작하는게 위로 올라오게
+    upcoming.sort((a,b)=>a.diffDays-b.diffDays);
+    // 끝난건 최근에 끝난 순으로
+    finished.sort((a,b)=>new Date(b.endAt)-new Date(a.endAt));
+
+    setPopupList([...ongoing,...upcoming,...finished]);
+  
+
+    // const filtered = res.data.filter(item => {
+    //     const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
+    //     return endAt > today; // 오늘보다 후인지 확인
+    // });
+    // setPopupList(res.data);
+  };
   useEffect(() => {
     getMyPopupList();
   }, [])
@@ -54,26 +83,28 @@ export default function PopupList() {
     const endAt = new Date(end[0], end[1] - 1, end[2]);
     endAt.setHours(23, 59, 59, 999); // 종료 날짜의 시간을 23:59:59로 설정
   
-    if (today < startAt) {
-      // 오픈 전 상태
+
+    if (today >= startAt && today <= endAt) {
+      return {
+        value: "진행중",
+        color: "text-green-600 font-bold",
+        diffDays: 0,
+      };
+    } else if(today < startAt) {
       const diffDays = Math.ceil((startAt - today) / (1000 * 60 * 60 * 24)); // 남은 날짜 계산
       return {
         value: `오픈 D-DAY ${diffDays}`,
         color: "text-red-500 font-bold",
+        diffDays,
       };
-    } else if (today >= startAt && today <= endAt) {
-      // 진행 중 상태
-      return {
-        value: "진행중",
-        color: "text-green-600 font-bold",
-      };
-    } else {
-      // 종료된 상태
-      return {
-        value: "종료",
-        color: "text-gray-400 font-bold",
-      };
+    } else{
+        return {
+          value: "종료",
+          color: "text-gray-400 font-bold",
+          diffDays: null,
+        };
     }
+    
   }
   // 30자가 넘으면 ...으로 줄이는 함수
   function formatExhibitionName(name) {
