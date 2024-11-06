@@ -34,9 +34,16 @@ public class EventImageService {
 	public void deleteImage(Long id) {
 		eventImageRepository.deleteById(id);
 	}
+	public List<EventImage> findByEvent(Event event) {
+		List<EventImage> imageList = eventImageRepository.findByEvent(event);
+		return imageList;
+		
+	}
+	
 	public List<EventImage> findAll() {
 		List<EventImage> imageList = eventImageRepository.findAll();
 		return imageList;
 	}
+	
 	
 }

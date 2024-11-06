@@ -115,17 +115,11 @@ export default function PopupList() {
       async ()=> { 
         const res = await exhibitionAPI.delete(data);
         console.log(res.data)
-        await poppleAlert.alert("삭제 완")
+        await poppleAlert.alert("삭제 완료")
       },
-      () => poppleAlert.alert("삭제 취소ㅋ 쫄보~")
+      () => poppleAlert.alert("삭제 취소")
     );
-    // try {
-
-    //   const res = await exhibitionAPI.delete()
-    //   poppleAlert.alert("삭제 완료","성공적으로 삭제되었습니다.")
-    // } catch (error) {
-    //   poppleAlert.alert("삭제 실패","삭제 중 오류가 발생했습니다.")
-    // }
+   
   }
 
   const handleShowQRPage = (event) => {
