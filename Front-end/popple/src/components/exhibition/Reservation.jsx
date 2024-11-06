@@ -1,12 +1,10 @@
-import moment from "moment";
-import { useEffect, useState } from "react";
-import Complete from "../common/Complete";
-import { reservationAPI } from "../../api/services/Reservation";
-import { useLoginUserStore } from "../../stores/LoginUserState";
-import { jwtDecode } from "jwt-decode";
-import { getCookie } from "../../utils/CookieUtils";
-import { authAPI } from "../../api/services/Auth";
 import { Buffer } from "buffer";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { authAPI } from "../../api/services/Auth";
+import { reservationAPI } from "../../api/services/Reservation";
+import { getCookie } from "../../utils/CookieUtils";
+import Complete from "../common/Complete";
 
 export default function Reservation({ reservation, exhi, onClose }) {
   const [isChecked, setIsChecked] = useState(false);
@@ -15,7 +13,6 @@ export default function Reservation({ reservation, exhi, onClose }) {
     exhibitionId: exhi.id,
     reservationDate: "",
   });
-  const [qrImageSrc, setQrImageSrc] = useState(null);
 
   const [userInfo, setUserInfo] = useState();
 
@@ -40,23 +37,26 @@ export default function Reservation({ reservation, exhi, onClose }) {
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
-
+  
+  const [loading, setLoading] = useState(false);
   const handleClick = async () => {
+    setLoading(true);
     const res = await reservationAPI.create(request);
     // QR 이미지 반환
-    const qrImageBase64 = Buffer.from(res.data, 'binary').toString('base64');
-    const qrImageSrc = `data:image/png;base64,${qrImageBase64}`;
-    setQrImageSrc(qrImageSrc);
-    setIsComplete(prev => !prev);
+    if (res.status === 200) {
+      setIsComplete(prev => !prev);
+      setLoading(false);
+    }
   };
 
   const inputStyle = "border border-[#ccc] rounded-[8px] focus:border-[#8900E1] focus:border-2 focus:outline-none px-2 w-full h-[80%] my-auto mx-3";
   const oneLineStyle = "grid grid-cols-[1fr_2fr] h-12 flex items-center mx-5";
+
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       {isComplete ? 
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
-        <Complete text={"닫기"} onClose={onClose} title={"예약완료"} qrImage={qrImageSrc} description={"예약은 [마이페이지] - [예약목록]에서 취소할 수 있습니다."}/>
+        <Complete text={"닫기"} onClose={onClose} title={"예약완료"} description={"예약은 [마이페이지] - [예약목록]에서 취소할 수 있습니다."}/>
         </div> :
         <div className="flex flex-col justify-center items-center bg-white rounded-xl p-5 w-[50%] h-[80%] gap-5 px-36 border-2 border-popple-light">
           <h1 className="text-[32px]">예약하기</h1>
@@ -102,12 +102,20 @@ export default function Reservation({ reservation, exhi, onClose }) {
             >
               <p className="text-center text-white text-[1.2rem]">돌아가기</p>
             </div>
-            <div 
-              className={`bg-green-600 rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
-              onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
-            >
-              <p className="text-center text-white text-[1.2rem]">예약확정</p>
-            </div>
+            { loading ?
+              <div 
+                className="bg-gray-300 rounded-lg mx-2 my-3 py-2 shadow-xl cursor-not-allowed w-[200px]"
+              >
+                <p className="text-center text-white text-[1.2rem]">예약확정 중...</p>
+              </div>
+              :
+              <div 
+                className={`bg-green-600 rounded-lg mx-2 my-3 py-2 shadow-xl cursor-pointer w-[200px] ${isChecked ? '' : 'opacity-50 cursor-not-allowed'}`} 
+                onClick={isChecked ? handleClick : null} // 클릭 핸들러를 조건부로 설정
+              >
+                <p className="text-center text-white text-[1.2rem]">예약확정</p>
+              </div>
+            }
           </div> 
         </div>
       }

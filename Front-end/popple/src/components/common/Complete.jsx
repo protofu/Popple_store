@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Complete({ path, text, onClose, title, qrImage, description, caution }) {
+export default function Complete({ path, text, onClose, title, description, caution }) {
   const navigate = useNavigate();
 
   const handleClick = (path) => {
@@ -16,7 +16,6 @@ export default function Complete({ path, text, onClose, title, qrImage, descript
         <div className="mb-4">
           <h1 className="text-2xl font-bold mb-4">{title}</h1>
           <h1 className="text-[16px]">{description}</h1>
-          <img src={qrImage} alt="qr코드" width={200}/> 이메일 전송 기능이 없어서, qr코드 이미지가 이곳에 나타납니다.
         </div>
         <h2 className="text-sm text-gray-600">{caution}</h2>
       </div>

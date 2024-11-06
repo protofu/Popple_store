@@ -42,14 +42,16 @@ public class ReservationController {
 		ReservationResponse response = reservationService.reserve(request, user);
 
 		// 예약 완료 시 QR 이메일 발송 로직 추가
-		// 예약 고유번호가 있으면 좋겠지만, ID로 대체하여 진행
 		String email = user.getEmail();
+		// 예약 고유번호가 있으면 좋겠지만, ID로 대체하여 진행
 		String url = "http://localhost:5173/qr-check/" + response.getId();
-		byte[] qrcode = reservationService.sendQRCode(email, url);
-		// return ResponseEntity.ok(response);
-		return ResponseEntity.ok()
-					.contentType(MediaType.IMAGE_PNG)
-					.body(qrcode);
+		String title = response.getReserver() + "님의 [" + response.getExhibitionName() + "] 예약 QR코드입니다.";
+		boolean qrcode = reservationService.sendQRCode(email, title, url);
+		if (qrcode) {
+			return ResponseEntity.ok(response);
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("QR코드 전송 실패");
+		}
 	}
 	
 	// 자신의 예약 목록
