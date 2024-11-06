@@ -115,7 +115,7 @@ public class ReservationService {
 
 	// 방문 확인
 	public ReserverResponse checkReserver(Long reservationId, User user) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
+		Reservation reservation = reservationRepository.findByIdAndDeletedAtIsNull(reservationId).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
 		reservation.setAttend(true);
 		Reservation savedReservation = reservationRepository.save(reservation);
 		visitService.insert(savedReservation.getExhibition().getId(), savedReservation.getUser());

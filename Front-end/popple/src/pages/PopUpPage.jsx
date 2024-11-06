@@ -45,10 +45,14 @@ export default function PopUpPage() {
   const [eventList, setEventList] = useState([]);
   const getEvents = async () => {
     const res = await eventAPI.getSpecificList(type);
-    const today = new Date(); // 오늘 날짜 가져오기
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
     const filtered = res.data.filter(item => {
-        const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
-        return endAt > today; // 오늘보다 후인지 확인
+      const endAt = new Date(item.endAt[0], item.endAt[1] - 1, item.endAt[2]);
+      endAt.setHours(0, 0, 0, 0);
+      return endAt > yesterday; 
     });
     setEventList(filtered);
   };
@@ -112,7 +116,7 @@ export default function PopUpPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, []);
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   const titleStyle = "flex items-center w-full mt-10 mb-5 ml-0";
   const textStyle = "text-2xl ml-2 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
@@ -139,8 +143,20 @@ export default function PopUpPage() {
       <div className="flex flex-wrap gap-4 mx-4">
         {eventList?.length > 0 ?
           eventList.slice(0, 8).map((item, index) => (
-            <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
-          )) :
+            <EventCardV2 
+              key={index} 
+              slogun={item.eventName} 
+              title={item.summary} 
+              duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
+              onOpen={() => openEventModal(item.id)} 
+              id={item.id}
+              description={item.description} 
+              exhibitionTitle={item.exhibition.exhibitionName}
+              exhibitionId={item.exhibition.id}
+              exhiTypeId={item.exhibition.type.id}
+              />          )) :
           <NoEventList text={"이벤트"} />
         }
         {/* onClose, eventDetail, dispatch */}

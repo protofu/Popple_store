@@ -39,9 +39,13 @@ export default function MainPage() {
   const getEvents = async () => {
     const res = await eventAPI.getAll();
     const today = new Date(); // 오늘 날짜 가져오기
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
     const filtered = res.data.filter(item => {
         const endAt = new Date(item.endAt); // endAt을 Date 객체로 변환
-        return endAt > today; // 오늘보다 후인지 확인
+        endAt.setHours(0, 0, 0, 0);
+        return endAt > yesterday; 
     });
     setEventList(filtered);
   };
@@ -85,7 +89,7 @@ export default function MainPage() {
     });
     setExData(filtered);
   };
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   useEffect(() => {
     getEvents();
     const updateItemsPerPage = () => {
@@ -152,8 +156,20 @@ export default function MainPage() {
         <div className="flex flex-wrap justify-center gap-4 mx-4">
           {eventList?.length > 0 ?
             eventList.slice(0, 8).map((item, index) => (
-              <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.eventPoster}`} onOpen={() => openEventModal(item.id)} id={item.id} />
-            )) :
+              <EventCardV2 
+              key={index} 
+              slogun={item.eventName} 
+              title={item.summary} 
+              duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
+              onOpen={() => openEventModal(item.id)} 
+              id={item.id}
+              description={item.description} 
+              exhibitionTitle={item.exhibition.exhibitionName}
+              exhibitionId={item.exhibition.id}
+              exhiTypeId={item.exhibition.type.id}
+              />            )) :
             <NoEventList />
           }
           {isEventModalOpen && <EventDetailModal onClose={() => CloseEventModal()} evnetId={propEventId} />}
