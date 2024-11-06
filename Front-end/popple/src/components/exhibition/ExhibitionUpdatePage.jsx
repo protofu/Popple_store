@@ -1,8 +1,6 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import {
-  LuFilePlus
-} from "react-icons/lu";
+import { LuFilePlus } from "react-icons/lu";
 import { exhibitionAPI } from "../../api/services/Exhibition";
 import { poppleAlert } from "../../utils/PoppleAlert";
 import Markdown from "../common/Markdown";
@@ -55,7 +53,7 @@ export default function ExhibitionUpdatePage() {
   };
 
   // 이미지 다중 업로드 관련 상태
-  
+
   const [uploadPossible, setUploadPossible] = useState(true); // 업로드 가능 여부
   const [isActive, setIsActive] = useState(false); // 파일 드래그앤드랍 상태
   const fileMax = 5; // 최대 업로드 가능 파일 수
@@ -127,14 +125,21 @@ export default function ExhibitionUpdatePage() {
   const handleGet = async () => {
     try {
       const res = await exhibitionAPI.get(exId);
-      res.data.startAt = moment(new Date(res.data.startAt[0], res.data.startAt[1] - 1, res.data.startAt[2])).format('YYYY-MM-DD');
-      res.data.endAt = moment(new Date(res.data.endAt[0], res.data.endAt[1] - 1, res.data.endAt[2])).format('YYYY-MM-DD');
+      res.data.startAt = moment(
+        new Date(
+          res.data.startAt[0],
+          res.data.startAt[1] - 1,
+          res.data.startAt[2]
+        )
+      ).format("YYYY-MM-DD");
+      res.data.endAt = moment(
+        new Date(res.data.endAt[0], res.data.endAt[1] - 1, res.data.endAt[2])
+      ).format("YYYY-MM-DD");
       //가져온 걸 exhidata에 넣어주자
-      setExhiData(res.data)
-  
+      setExhiData(res.data);
     } catch (error) {}
   };
- 
+
   //가져온 팝업/전시 정보 뿌리기
   useEffect(() => {
     handleGet();
@@ -210,37 +215,58 @@ export default function ExhibitionUpdatePage() {
   };
   const renderPoster = () => {
     if (preview) {
-      {/* 포스터 이미지 업로드하면 변경되는 부분 */}
+      {
+        /* 포스터 이미지 업로드하면 변경되는 부분 */
+      }
       return <img className="w-[250px] h-auto" src={preview} alt="포스터" />;
     } else if (info.savedImage) {
-      {/* 수정할 때 나오는 부분 */}
-      return  <img className="w-[250px] h-auto" src={`http://localhost:8080/poster/${info.savedImage}`} alt="포스터" />;
+      {
+        /* 수정할 때 나오는 부분 */
+      }
+      return (
+        <img
+          className="w-[250px] h-auto"
+          src={`http://localhost:8080/poster/${info.savedImage}`}
+          alt="포스터"
+        />
+      );
     } else {
-      { /* 등록할 때 */}
+      {
+        /* 등록할 때 */
+      }
       return <LuFilePlus className="w-[250px] h-auto" />;
     }
   };
-  
-  
+
   const renderImage = () => {
     if (preview2.length > 0) {
-      { /* 이미지 업로드하면 변경되는 부분 */ }
+      {
+        /* 이미지 업로드하면 변경되는 부분 */
+      }
       return <FileCarousel preview2={preview2} deleteImg={deleteImg} />;
     } else if (info.descriptionImage) {
-      { /* 수정할 때 나오는 부분 */ }
+      {
+        /* 수정할 때 나오는 부분 */
+      }
       return (
-        <img className="w-[100px] h-auto" src={`http://localhost:8080/image/${info.descriptionImage}`} alt="설명 이미지"/>
+        <img
+          className="w-[100px] h-auto"
+          src={`http://localhost:8080/image/${info.descriptionImage}`}
+          alt="설명 이미지"
+        />
       );
     } else {
-      { /* 등록할 때 */ }
+      {
+        /* 등록할 때 */
+      }
       return (
-      <div className="flex flex-col rounded-lg justify-center text-center items-center">
-      <p className="font-medium text-lg my-5 mb-2.5">
-        클릭 혹은 파일을 이곳에 드랍
-      </p>
-      <p className="m-0 text-sm">파일당 최대 3MB</p>
-    </div>
-    );
+        <div className="flex flex-col rounded-lg justify-center text-center items-center">
+          <p className="font-medium text-lg my-5 mb-2.5">
+            클릭 혹은 파일을 이곳에 드랍
+          </p>
+          <p className="m-0 text-sm">파일당 최대 3MB</p>
+        </div>
+      );
     }
   };
 
@@ -268,7 +294,7 @@ export default function ExhibitionUpdatePage() {
       formData.append("subTitle", info.subTitle);
       formData.append("detailDescription", info.detailDescription);
       formData.append("address", info.address);
-      formData.append("detailAddress", info.detailAddress)
+      formData.append("detailAddress", info.detailAddress);
       formData.append("notice", info.notice);
       formData.append("terms", info.terms);
       formData.append("homepageLink", info.homepageLink);
@@ -290,13 +316,13 @@ export default function ExhibitionUpdatePage() {
       });
 
       // 포스터 파일 추가
-      if(info.savedImage){
+      if (info.savedImage) {
         formData.append("poster", info.savedImage);
       }
 
       // 서버로 전송
       const res = await exhibitionAPI.update(formData);
-      console.log("레데",res.data)
+      console.log("레데", res.data);
       if (res.status === 200) {
         poppleAlert.alert("", "수정 성공");
       }
@@ -308,7 +334,6 @@ export default function ExhibitionUpdatePage() {
   };
   console.log("exhiData", exhiData);
   console.log("인포", info);
-
 
   return (
     <>
@@ -503,8 +528,18 @@ export default function ExhibitionUpdatePage() {
               </div>
             </div>
           </div>
+          <hr className="w-full mt-10" />
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="border rounded-lg p-3 mt-10 hover:bg-popple hover:text-white "
+              onClick={updateExhibition}
+            >
+              수정
+            </button>
+          </div>
         </div>
-        <button type="submit" onClick={updateExhibition}>수정</button>
       </div>
     </>
   );
