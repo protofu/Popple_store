@@ -152,7 +152,7 @@ export default function MainPage() {
         <div className="flex flex-wrap justify-center gap-4 mx-4">
           {eventList?.length > 0 ?
             eventList.slice(0, 8).map((item, index) => (
-              <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.image}`} onOpen={() => openEventModal(item.id)} id={item.id} />
+              <EventCardV2 key={index} slogun={item.eventName} title={item.summary} duration={dateToString(item.startAt) + " - " + dateToString(item.endAt)} img={`${eventPosterURL}${item.eventPoster}`} onOpen={() => openEventModal(item.id)} id={item.id} />
             )) :
             <NoEventList />
           }
