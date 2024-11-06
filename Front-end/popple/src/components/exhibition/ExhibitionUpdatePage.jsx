@@ -11,6 +11,10 @@ import { useNavigate } from "react-router-dom";
 export default function ExhibitionUpdatePage() {
   const navigate = useNavigate();
   // param으로 넘겨서
+  const handleBackClick = () => {
+    // 이전 페이지로 이동
+    navigate(-1);
+  };
   const queryParams = new URLSearchParams(location.search);
   // key값이 id 인 것의 value값을 가져옴
   const exId = queryParams.get("id");
@@ -539,7 +543,11 @@ export default function ExhibitionUpdatePage() {
           </div>
           <hr className="w-full mt-10" />
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <div className="">
+              <div div className="border rounded-lg p-3 mt-10 hover:bg-popple hover:text-white" onClick={handleBackClick}>이전</div>
+            </div>
+            <div className="">
             <button
               type="submit"
               className="border rounded-lg p-3 mt-10 hover:bg-popple hover:text-white "
@@ -548,6 +556,9 @@ export default function ExhibitionUpdatePage() {
               수정
             </button>
           </div>
+          </div>
+          
+
         </div>
       </div>
     </>
