@@ -539,7 +539,14 @@ export default function ExhibitionUpdatePage() {
           </div>
           <hr className="w-full mt-10" />
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <button
+              type="submit"
+               className="border rounded-lg p-3 mt-10 hover:bg-popple hover:text-white "
+              onClick={()=>navigate("/my-page")}
+            >
+              취소
+            </button>
             <button
               type="submit"
               className="border rounded-lg p-3 mt-10 hover:bg-popple hover:text-white "

@@ -229,7 +229,7 @@ function EventDetailModal({ onClose, eventDetail, dispatch, open,isButtonFixed,h
         {eventDetail.eventImages &&
           eventDetail.eventImages.map(imgSrc => (
             <div className="">
-              <img src={imgSrc} className="object-cover" />
+              <img src={imgSrc} />
             </div>
           ))
         }
