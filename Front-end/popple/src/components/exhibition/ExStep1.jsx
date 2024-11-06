@@ -317,7 +317,7 @@ const ExStep1 = ({ information, changeInformation }) => {
             메인 포스터 <span className="text-red-500">*</span>
           </label>
           <label
-            className={`${inputStyle} py-5 flex justify-center cursor-pointer h-48`}
+            className={`${inputStyle} py-5 flex justify-center cursor-pointer h-72 w-2/3`}
           >
             <input
               className="hidden"
@@ -421,7 +421,7 @@ const ExStep1 = ({ information, changeInformation }) => {
 
           <div
             className={`${inputStyle} preview ${isActive ? "active" : " "
-              } flex justify-center cursor-pointer h-48`}
+              } flex justify-center cursor-pointer h-72`}
             onDragEnter={handleDragStart}
             onDragOver={handleDragOver}
             onDrop={handleDrop}

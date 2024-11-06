@@ -182,9 +182,12 @@ export default function ExhibitionPage() {
           {Array.from({ length: totalPages }, (_, index) => (
             <button
               key={index}
-              className={`mx-2 p-2 border rounded ${
-                currentPage === index + 1 ? "bg-popple-light text-white" : "bg-white text-black"
-              }`}
+              className={`
+                flex items-center justify-center px-4 h-10 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                ${currentPage === index + 1 && 
+                  "bg-popple text-white shadow-lg transform scale-105"
+                }
+              `}
               onClick={() => handlePageChange(index + 1)}
             >
               {index + 1}
