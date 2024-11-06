@@ -35,8 +35,8 @@ export default function TimeChart({ timeData, humanCount }) {
     "12~14": "#2ca02c",
     "14~16": "#d62728",
     "16~18": "#9467bd",
-    "18~20": "#9467bd",
-    "20~22": "#9467bd",
+    "18~20": "#8c564b",
+    "20~22": "#e377c2",
   };
 
   return (
@@ -55,7 +55,7 @@ export default function TimeChart({ timeData, humanCount }) {
           tooltip={ point => {
               return (
                   <div className="bg-white p-2 rounded-lg shadow-md text-black">
-                      {point.data.timeGroup} ({point.data.count}명)
+                      {point.data.timeGroup}시 ({point.data.count}명)
                   </div>
               )
           }}
@@ -63,32 +63,8 @@ export default function TimeChart({ timeData, humanCount }) {
           enableGridY={false}
           enableTotals={true}
           enableGridX={true}
-          labelSkipHeight={12}
+          labelSkipHeight={12}          
           valueFormat={(v) => v+"%"}
-          legends={[
-            {
-                dataFrom: 'indexes',
-                anchor: 'right',
-                direction: 'column',
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 100,
-                itemHeight: 20,
-                itemDirection: 'left-to-right',
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
-                    {
-                        on: 'hover',
-                        style: {
-                            itemOpacity: 1
-                        }
-                    }
-                ]
-            }
-        ]}
       />
     </div>
   );

@@ -78,6 +78,15 @@ export default function WeekChart({ weekData, humanCount }) {
         enableCrosshair={true} // 크로스헤어 활성화
         useMesh={true} // 메쉬 활성화 (마우스 이동 시 데이터 포인트 쉽게 탐색)
         colors={['#FB9A99']}
+        tooltip={ point => {
+          console.log(point);
+          return (
+          <div className="bg-white p-2 shadow-md">
+            <div>{point.point.data.x}요일 ({point.point.data.y}명)</div>
+          </div>
+          )
+        }
+      } 
       />
     </div>
   );

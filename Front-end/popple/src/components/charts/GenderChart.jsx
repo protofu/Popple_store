@@ -12,19 +12,15 @@ export default function GenderChart({ pieChartData }) {
         innerRadius={0.5} // 내부 반경 (0에서 1 사이의 비율), 값이 클수록 중심이 비어있는 원의 비율이 커짐
         padAngle={2} // 파이 조각 간의 간격 설정 (도 단위)
         cornerRadius={3} // 파이 조각의 모서리를 둥글게 만들기 위한 반경
-        colors={{ scheme: 'category10' }}
+        colors={[ "#FF7F0E", "#1F77B4"]} // 파이 조각의 색상 설정
         startAngle={-180}
         activeInnerRadiusOffset={7}
         activeOuterRadiusOffset={8} // 활성화된 파이 조각의 외부 반경 오프셋 (hover 시 확대 효과)
         borderWidth={1} // 파이 조각의 테두리 두께
         borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }} // 파이 조각의 테두리 색상 설정 (기본 색상보다 어둡게 설정)
-        arcLinkLabelsSkipAngle={10} // 각 링크 레이블을 생략할 각도 (10도 이하의 각도는 생략)
-        enableArcLinkLabels={false}
-        arcLinkLabelsTextColor="#333333" // 링크 레이블의 텍스트 색상
-        arcLinkLabelsThickness={2} // 링크 레이블의 두께
-        arcLinkLabelsColor={{ from: 'color' }} // 링크 레이블의 색상 설정 (각 조각의 색상 사용)
+        enableArcLinkLabels={false} // 링크 레이블 활성화 여부
         arcLabelsSkipAngle={10} // 각 조각의 레이블을 생략할 각도 (10도 이하의 각도는 생략)
-        arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }} // 각 조각 레이블의 텍스트 색상 (각 조각 색상보다 어둡게 설정)
+        arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }} // 각 조각 레이블의 텍스트 색상 (각 조각 색상보다 어둡게 설정)    
         id="id" // 데이터에서 사용할 고유 식별자 (이름은 주로 데이터 키와 일치해야 함)
         tooltip={point => { // 툴팁 설정
             return (
