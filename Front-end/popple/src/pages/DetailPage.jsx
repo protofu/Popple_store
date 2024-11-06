@@ -20,6 +20,7 @@ import ExhibitionPage from "./ExhibitionPage";
 import { useLoginStore } from "../stores/LoginState";
 import { useLoginUserStore } from "../stores/LoginUserState";
 import { poppleAlert } from "../utils/PoppleAlert";
+import { visitAPI } from "../api/services/Visit";
 
 function dateToString(arr) {
   const [y, m, d] = arr;
@@ -48,12 +49,14 @@ export default function DetailPage() {
         })
     );
   };
+
   //로그인한 유저
   const {loginUserNickname} = useLoginUserStore();
  
 
   // 좋아요
   const [isLiked, setIsLiked] = useState(false);
+  const [isVisited, setIsVisited] = useState(false);
 
   const handleClickLike = async () => {
     if (isLiked) {
@@ -68,6 +71,12 @@ export default function DetailPage() {
   };
 
   useEffect(() => {
+    // 내가 방문을 했었나요?
+    const visitedData = async () => {
+      const res = await visitAPI.amIVisited(id);
+      setIsVisited(res.data);
+    };
+
     // 내가 좋아요를 눌렀나요?
     const likeData = async () => {
       const res = await likeAPI.amILiked(id);
@@ -82,6 +91,7 @@ export default function DetailPage() {
     if (isLoggedIn) {
       getLikeCount();
       likeData();
+      visitedData();
     }
   }, [id]);
 
@@ -107,12 +117,8 @@ export default function DetailPage() {
 
     const axiosData = async () => {
       try {
-        // axios로 public 폴더에 있는 JSON 파일 불러오기
         const resDetail = await exhibitionAPI.get(id);
-        // const resChartData = await axios.get('/jsons/visitors.json');
-        // console.log(resChartData.data);
-        setExhi(resDetail.data); // 불러온 데이터를 상태에 저장
-        // setChartData(resChartData.data);
+        setExhi(resDetail.data);
       } catch (error) {
         console.error("Error fetching JSON data:", error);
       }
@@ -285,7 +291,7 @@ export default function DetailPage() {
           </div>
           <div className="mt-4">
             {selectTab === "이용정보" && <UseInfo data={exhi} />}
-            {selectTab === "리뷰" && <ReviewInDetail />}
+            {selectTab === "리뷰" && <ReviewInDetail isVisited={isVisited} />}
             {selectTab === "EVENT" && <DetailsEvent navigate={navigate} usernickname={exhi.nickname} loginusernickname={loginUserNickname}/>}
           </div>
         </div>

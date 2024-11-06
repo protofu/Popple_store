@@ -82,7 +82,7 @@ export default function PopupList() {
   }
   
 
-  const trStyle = "grid grid-cols-[4fr_2fr_0.8fr_0.8fr_0.8fr_0.8fr] border-b my-auto";
+  const trStyle = "grid grid-cols-[4fr_2fr_1fr_1fr_1fr_1fr] border-b my-auto";
   const thStyle = "my-auto";
 
   const [selectedComponent, setSelectedComponent] = useState(null); // 선택된 컴포넌트 상태 추가
@@ -128,6 +128,9 @@ export default function PopupList() {
     // }
   }
 
+  const handleShowQRPage = (event) => {
+    navigate(`/qr-code`, { state: { exhibition: event } }); // QR코드 페이지로 이동 및 데이터 전달
+  }
     return (
       <div className="">
         <div className="mt-8 pb-12 mb-12">
@@ -153,7 +156,14 @@ export default function PopupList() {
                       <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
                     </td>
                     <td className={`${thStyle} ${color}`}>{value}</td>
-                    <td className={`${thStyle} m-auto`}><PiAddressBookLight className="size-[36px] cursor-pointer" onClick={() => handleIconClick(`reservation`, event.id, event)}/></td>
+                    <td className={`${thStyle} m-auto`}>
+                      {
+                        event.reserve ?
+                        <div className="bg-blue-100 text-blue-800 cursor-pointer text-sm px-2.5 py-0.5 rounded-full" onClick={() => handleIconClick(`reservation`, event.id, event)}>예약자 확인</div>
+                        :
+                        <div className="bg-green-100 text-green-800 cursor-pointer text-sm px-2.5 py-0.5 rounded-full"onClick={() => handleShowQRPage(event)}>입장 QR 확인</div>
+                      }
+                    </td>
                     <td className={`${thStyle} m-auto`}><FiPieChart className="size-[30px] cursor-pointer" onClick={() => handleIconClick(`statistics`, event.id)}/></td>
                     <td className={`${thStyle} m-auto`}><LiaEditSolid className="size-[36px] cursor-pointer" onClick={() => navigate(`/exhibition-update?id=${event.id}`)}/></td>
                     <td className={`${thStyle} m-auto`}><IoTrashOutline className="size-[32px] cursor-pointer" onClick={() => handleDelete(event.id)}/></td>

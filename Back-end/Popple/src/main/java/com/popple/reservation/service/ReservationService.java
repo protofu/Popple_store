@@ -1,10 +1,8 @@
 package com.popple.reservation.service;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,6 +21,7 @@ import com.popple.reservation.domain.ReservationResponse;
 import com.popple.reservation.domain.ReserverResponse;
 import com.popple.reservation.entity.Reservation;
 import com.popple.reservation.repository.ReservationRepository;
+import com.popple.visit.service.VisitService;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -39,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final ExhibitionRepository exhibitionRepository;
+	private final VisitService visitService;
 	private final AuthService authService;
 	private final JavaMailSender javaMailSender;
 	
@@ -114,24 +114,15 @@ public class ReservationService {
 	}
 
 	// 방문 확인
-	public ReserverResponse checkReserver(Long exId, User user) {
-		
-		LocalDate currentDate = LocalDate.now();
-		Exhibition exhibition = exhibitionRepository.findById(exId).orElseThrow(() -> new IllegalArgumentException("잘못된 팝업/전시 입니다."));
-		List<Reservation> reservationList = reservationRepository.findByExhibitionAndUser(exhibition, user);
-		Optional<Reservation> optReservation = reservationList.stream()
-			.filter(reservation -> reservation.getReservationDate().equals(currentDate))
-    	.findFirst();
-		Reservation reservation = optReservation.orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
-		if (!reservation.getUser().getId().equals(user.getId()) ) {
-			return null;
-		}
+	public ReserverResponse checkReserver(Long reservationId, User user) {
+		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("잘못된 예약입니다."));
 		reservation.setAttend(true);
 		Reservation savedReservation = reservationRepository.save(reservation);
-		
+		visitService.insert(savedReservation.getExhibition().getId(), savedReservation.getUser());
 		return ReserverResponse.builder()
 				.id(savedReservation.getId())
-				.reserverName(savedReservation.getExhibition().getExhibitionName())
+				.reserverName(savedReservation.getUser().getName())
+				.email(savedReservation.getUser().getEmail())
 				.reserveTime(savedReservation.getReservationDate())
 				.isAttend(savedReservation.isAttend())
 				.build();

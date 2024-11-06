@@ -14,4 +14,6 @@ public interface VisitRepository extends JpaRepository<Visit, Long>{
 
 	List<Visit> findAllByCompanyId(Long exId);
 
+    boolean existsByExhibitionIdAndUserId(Long exId, Long id);
+
 }

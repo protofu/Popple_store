@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class VisitController {
 	private final VisitService visitService;
 
-	
 	// 방문 체크
 	@Operation(summary = "방문 체크", description = "방문 인증을 합니다.")
 	@PostMapping("/{id}")
@@ -35,6 +34,15 @@ public class VisitController {
 		return ResponseEntity.ok(res);
 	}
 	
+	// 내가 방문 했나?
+    @Operation(summary = "좋아요 여부 확인", description = "좋아요 여부를 확인합니다.")
+    @GetMapping("/me/{id}")
+    public ResponseEntity<Boolean> amILiked(@PathVariable("id") Long exId, @AuthenticationPrincipal User user) {
+    	log.info("여부확인");
+    	boolean isVisited = visitService.getVisitState(exId, user);
+    	return ResponseEntity.ok(isVisited);    		
+    }
+
 	// 팝업/전시 기준
 	
 	// 요일 기준 방문 통계

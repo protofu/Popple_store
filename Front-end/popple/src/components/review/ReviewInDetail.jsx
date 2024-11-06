@@ -5,7 +5,7 @@ import WriteReviewModal from "./WriteReview";
 import { reviewAPI } from "../../api/services/Review";
 import { useParams } from "react-router-dom";
 
-export default function ReviewInDetail() {
+export default function ReviewInDetail({isVisited}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState(null);
   const { id } = useParams("id");
@@ -44,7 +44,7 @@ export default function ReviewInDetail() {
         <div className="grid grid-cols-[2fr_4fr_2fr] border-b-2 mb-3 p-1">
           <h1 className="font-bold">총 {reviews?.length}개의 리뷰가 있습니다.</h1>
           <h5 className="text-right text-[12px] text-[#a4a4a4] pt-2"><span className="text-[#D36A6A] mr-1">*</span>리뷰는 방문인증이 완료되면 작성할 수 있습니다.</h5>
-          <CustomSubmitButton text={"리뷰 작성하기"} onClick={openModal} />
+          { isVisited && <CustomSubmitButton text={"리뷰 작성하기"} onClick={openModal} />}
           <WriteReviewModal isOpen={isModalOpen} onClose={closeModal} />
         </div>
         {reviews !== null ? (

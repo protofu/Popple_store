@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { qrAPI } from "../api/services/QR";
+import { useLocation, useParams } from "react-router-dom";
+import { visitAPI } from "../api/services/Visit";
 
 export default function QRPage() {
-  const { register, handleSubmit } = useForm();
+  const { state: { exhibition } } = useLocation();
   const [imageData, setIamgeData] = useState(null);
 
-  const onSubmit = async (data) => {
+  const getQR = async () => {
     try {
-      const res = await qrAPI.getQR(data.link);
+      // 팝업/전시 ID 값을 전달하여 QR 코드 생성
+      const link = "http://localhost:5173/visit-check/" + exhibition.id
+      const res = await qrAPI.getQR(link);
       const imageUrl = URL.createObjectURL(res.data);
       setIamgeData(imageUrl);
     } catch (error) {
@@ -16,21 +20,23 @@ export default function QRPage() {
       alert(error.response.data.message);
     }
   }
-  // QR에는 팝업 아이디를 담아서 넘겨줘야한다.
-  // 공통으로 User정보는 자동으로 넘어가고 팝업 ID 는 RequestParam으로 넘어간다.
-  // 예약한 사용자는 예약 목록에서 찾아서 바꿔주면 되는데
-  // 일반 방문자는 어떻게 하지?
+
+  useEffect(() => {
+    getQR();
+  }, []);
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full mt-[30px]">
-      <h1>QR연결 페이지</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="url" placeholder="주소" {...register("link")} />
-        <button>입력</button>
-      </form>
+      <h1 className="text-3xl font-bold text-popple-dark mb-5">{exhibition.exhibitionName}</h1>
+      <p>QR 코드를 찍고, 입장하세요.</p>
       {imageData ?
         <img src={imageData} alt="QR code" /> : ""
       }
+      <div className="flex gap-3">
+        <button className="w-24 h-10 bg-popple-light text-white rounded-md" onClick={() => getQR()}>새로고침</button>
+        <button className="w-24 h-10 bg-popple-light text-white rounded-md" onClick={() => window.print()}>인쇄</button>
+        <button className="w-24 h-10 bg-popple-light text-white rounded-md" onClick={() => window.history.back()}>돌아가기</button>
+      </div>
     </div>
   );
 };

@@ -11,6 +11,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
   const [isComplete, setIsComplete] = useState(false);
   const [request, setRequest] = useState({
     exhibitionId: exhi.id,
+    reservationLink: "http://localhost:5173/reservation-check/" + exhi.id,
     reservationDate: "",
   });
 
@@ -29,6 +30,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
     setRequest({
       ...request, 
       exhibitionId:exhi.id, 
+      reservationLink: "http://localhost:5173/reservation-check/" + exhi.id,
       reservationDate: reservation
     })
 
