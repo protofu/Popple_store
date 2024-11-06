@@ -89,7 +89,7 @@ export default function MainPage() {
     });
     setExData(filtered);
   };
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   useEffect(() => {
     getEvents();
     const updateItemsPerPage = () => {
@@ -161,7 +161,8 @@ export default function MainPage() {
               slogun={item.eventName} 
               title={item.summary} 
               duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
-              img={`${eventPosterURL}${item.image}`} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
               onOpen={() => openEventModal(item.id)} 
               id={item.id}
               description={item.description} 

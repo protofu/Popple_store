@@ -112,7 +112,7 @@ export default function ExhibitionPage() {
   const CloseEventModal = () => {
     setIsEventModalOpen(false);
   };
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
 
   const titleStyle = "flex items-center w-full m-10 ml-0";
   const textStyle = "text-[28px] ml-3 font-bold whitespace-nowrap";
@@ -143,7 +143,8 @@ export default function ExhibitionPage() {
               slogun={item.eventName} 
               title={item.summary} 
               duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
-              img={`${eventPosterURL}${item.image}`} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
               onOpen={() => openEventModal(item.id)} 
               id={item.id}
               description={item.description} 

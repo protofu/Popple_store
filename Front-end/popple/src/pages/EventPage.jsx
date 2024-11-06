@@ -69,7 +69,8 @@ export default function EventPage() {
                 title={item.eventName}
                 usernickname={item.exhibition.user.nickname}
                 duration={dateToString(item.startAt) + " ~ "+ dateToString(item.endAt)} 
-                img={`${eventPosterURL}${item.image}`}
+                eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+                eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
                 exhibitionId={item.exhibition.id}
                 exhibitionTitle={item.exhibition.exhibitionName}
                 exhiTypeId={item.exhibition.type.id} 

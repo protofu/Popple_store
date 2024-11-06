@@ -6,6 +6,7 @@ import NoEventList from "../event/NoEventList";
 import EventDetailModal from "../event/EventDetailModal";
 import { useLoginUserStore } from "../../stores/LoginUserState";
 import EventCardV2 from "../exhibition/EventCardV2";
+import { image } from "@uiw/react-md-editor";
 
 export default function DetailsEvent({ navigate, usernickname, loginusernickname }) {
   const eventPosterURL = import.meta.env.VITE_EVENT_POSTER;
@@ -56,7 +57,7 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
   }
   
   const h1Style = "font-bold text-[1.25rem]";
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   return (
     <div className="flex flex-col gap-8 mb-[2rem] mx-12 mt-12 ">
       <div>
@@ -71,7 +72,8 @@ export default function DetailsEvent({ navigate, usernickname, loginusernickname
               slogun={item.eventName} 
               title={item.summary} 
               duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
-              img={`${eventPosterURL}${item.image}`} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
               onOpen={() => openEventModal(item.id)} 
               id={item.id}
               description={item.description} 

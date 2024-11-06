@@ -149,7 +149,11 @@ public class EventService {
 		List<Event> eventList = eventRepo.findAllByExhibitionId(exId);
 		return eventList.stream().map(e -> {
 					EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
-					return EventResponse.toDTO(e, eventPoster.getSavedName());
+					List<EventImage> prevImages = eventImageService.findByEvent(e);
+					List<String> eventImages = prevImages.stream()
+		                .map(EventImage::getSavedName)
+		                .collect(Collectors.toList());
+					return EventResponse.toDTO(e, eventPoster.getSavedName(), eventImages);
 				}).toList();
 	}
 
@@ -160,7 +164,11 @@ public class EventService {
 		return eventList.stream().filter(e -> type.equals(e.getExhibition().getType()))
 				.map(e -> {
 					EventPoster eventPoster = eventPosterRepo.findOneByEvent(e);
-					return EventResponse.toDTO(e, eventPoster.getSavedName());
+					List<EventImage> prevImages = eventImageService.findByEvent(e);
+					List<String> eventImages = prevImages.stream()
+		                .map(EventImage::getSavedName)
+		                .collect(Collectors.toList());
+					return EventResponse.toDTO(e, eventPoster.getSavedName(), eventImages);
 				}).toList();
 	}
 

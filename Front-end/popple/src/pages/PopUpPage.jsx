@@ -116,7 +116,7 @@ export default function PopUpPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, []);
-
+  const eventImageURL = import.meta.env.VITE_EVENT_IMAGE;
   const titleStyle = "flex items-center w-full mt-10 mb-5 ml-0";
   const textStyle = "text-2xl ml-2 font-bold whitespace-nowrap";
   const titleImgStyle = "inline w-[2.5rem]";
@@ -148,7 +148,8 @@ export default function PopUpPage() {
               slogun={item.eventName} 
               title={item.summary} 
               duration={dateToString(item.startAt) + " ~ " + dateToString(item.endAt)} 
-              img={`${eventPosterURL}${item.image}`} 
+              eventPoster={`${eventPosterURL}${item.eventPoster}`} 
+              eventImages={item.eventImage?.map(image => `${eventImageURL}${image}`)}
               onOpen={() => openEventModal(item.id)} 
               id={item.id}
               description={item.description} 
