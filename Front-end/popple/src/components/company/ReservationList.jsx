@@ -102,6 +102,9 @@ export default function ReservationList({ event, eventId, onClose }) {
             </div>
           )}
         </div>
+        <div className="flex justify-end">
+          <div div className="p-1 w-[9%] text-center rounded-lg mb-2 mr-0 border-1 font-bold text-white bg-popple-light shadow-lg cursor-pointer" onClick={onClose}>이전으로</div>
+        </div>
     </div>
   );
 };
