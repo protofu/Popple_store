@@ -7,10 +7,12 @@ import eventImg4 from "../assets/img4.png";
 import eventIcon from "../assets/icons/party.png";
 import popupIcon from "../assets/icons/popup-icon.png";
 import popularIcon from "../assets/icons/popular-icon.png";
+import mostview from "../assets/icons/mostview.png"
 import { useEffect, useState } from "react";
 import PostCarousel from "../components/poster-card/PostCarousel";
 import PostCard from "../components/poster-card/PostCard";
 import PosterSlide from "../components/poster-card/PosterSlide";
+import event from "../assets/icons/event.png"
 import EventCard from "../components/EventCard";
 import { exhibitionAPI } from "../api/services/Exhibition";
 import MapModal from "../components/map-view/MapModal";
@@ -123,10 +125,11 @@ export default function PopUpPage() {
   return (
     <div className="w-full mx-auto mt-4">
       {/* 조회수 기준으로 캐러셀 표현 */}
-      <div>
+      <div className={titleStyle}>
+        <img src={mostview} alt="조회수 아이콘" className={titleImgStyle}/>
         <h1 className={textStyle}>가장 많이 본 POP-UP</h1>
-        <PostCarousel items={visitCountData.slice(0,10)} max={10} />
       </div>
+        <PostCarousel items={visitCountData.slice(0,10)} max={10} />
       {/* 인기있는 POP-UP - {인기테이블을 어떻게 할지?} */}
       <div className={titleStyle}> 
         <img src={popularIcon} alt="인기 아이콘" className={titleImgStyle} />
@@ -136,7 +139,7 @@ export default function PopUpPage() {
 
       {/* EVENT */}
       <div className={titleStyle}>
-        <img src={eventIcon} alt="이벤트 아이콘" className={titleImgStyle} />
+        <img src={event} alt="이벤트 아이콘" className={titleImgStyle} />
         <h1 className={textStyle}>EVENT</h1>
       </div>
       <div className="flex flex-wrap gap-4 mx-4">
@@ -155,6 +158,7 @@ export default function PopUpPage() {
               exhibitionTitle={item.exhibition.exhibitionName}
               exhibitionId={item.exhibition.id}
               exhiTypeId={item.exhibition.type.id}
+              usernickname={item.exhibition.user.nickname}
               />          )) :
           <NoEventList text={"이벤트"} />
         }

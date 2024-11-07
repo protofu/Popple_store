@@ -4,6 +4,9 @@ import AgeChart from "../charts/AgeChart";
 import GenderChart from "../charts/GenderChart";
 import TimeChart from "../charts/TimeChart";
 import WeekChart from "../charts/WeekChart";
+import { exhibitionAPI } from "../../api/services/Exhibition";
+import { replace } from "react-router-dom";
+import moment from "moment";
 
 export default function Statistics({ eventId, onClose  }) {
   const [chartData, setChartData] = useState({ 
@@ -27,8 +30,22 @@ export default function Statistics({ eventId, onClose  }) {
       return total + value;
     }, 0);
   }
+  const [exhi, setExhi] = useState({});
 
+  const getExhi = async() => {    
+   try {
+    const res = await exhibitionAPI.get(eventId)
+   
+    setExhi(res.data)
+   } catch (error) {
+    console.error(error)
+   }
+  }
+  console.log(exhi)
 
+  useEffect(() => {
+    getExhi();
+  }, []);
   // 데이터를 불러올 함수
   const getChartDatas = async () => {
     const ageRes = await visitAPI.ageStatistic(eventId);
@@ -59,12 +76,33 @@ export default function Statistics({ eventId, onClose  }) {
   ) {
     return <div>로딩중</div>;
   }
+  const today = new Date();
+  const startAt = new Date(exhi.startAt)
+  const endAt = new Date(exhi.endAt)
+  const dDay = moment(startAt).diff(moment(), 'days')+1;
 
+
+  console.log(Math.ceil(exhi.startAt <= today && today <= exhi.endAt))
   return (
     <div className="flex flex-col w-full gap-2">
+      
       <div className="flex justify-between mx-3">
         <p className="text-[24px] inline-block">방문통계</p>
         <span>누적 방문자, 총 <span className="font-bold text-[24px] text-popple-light">{chartData.humanCount}</span>명</span>
+      </div>
+      <div className="border-2 rounded-2xl p-3 grid grid-cols-3 ">
+        <div className="font-bold">{exhi.exhibitionName}</div>
+        <div className="text-center">
+          {
+          today >= startAt && today <= endAt ? <p className="text-green-600 font-bold">진행중</p> : 
+              today < startAt ? <p className="text-red-500 font-bold">오픈 D-Day{dDay}</p> : 
+              <p className="text-gray-400 font-bold">종료</p>
+              }
+        </div>
+        <div className="font-bold text-end">
+          {new Date(exhi.startAt).toLocaleDateString('ko-KR').replace(/,/g, '.')} ~ 
+          {new Date(exhi.endAt).toLocaleDateString('ko-KR').replace(/,/g, '.')}
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         {/* ageChart */}
