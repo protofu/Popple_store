@@ -25,7 +25,7 @@ jobs:
             
             # 환경 설정 파일 생성
             echo "환경 설정 파일 생성"
-            cat <<EOF > src/main/resources/application.yml
+            sudo bash -c 'cat <<EOF > src/main/resources/application.yml
             spring:
               application:
                 name: Popple
