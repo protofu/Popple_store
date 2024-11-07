@@ -3,6 +3,7 @@ package com.popple.common.config;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,7 +38,10 @@ public class WebSecurityConfig {
 	private final UserDetailsService userDetailsService;
 	private final UserRepository userRespository;
 	private final JwtProperties jwtProperties;
-	
+
+	@Value("${spring.front_url}")
+	private String front_url;
+
 	// JWT Provider 생성자 호출
 	private JwtProvider jwtProvider() {
 		return new JwtProvider(userDetailsService, jwtProperties);
@@ -112,7 +116,7 @@ public class WebSecurityConfig {
 			// 허용되는 HTTP 메서드 목록 설정 -> *를 통해 모든 메서드 허용(GET, POST...)
 			config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 			// 허용할 도메인 패턴 설정 -> 클라이언트 도메인을 해주면됩니다.
-			config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:5173"));
+			config.setAllowedOriginPatterns(Collections.singletonList(front_url));
 			// 자격증명(쿠키, 인증 헤더 ...)을 포함한 요청을 허용할지 결정 -> true 설정으로 클라이언트가 자격증명 요청을 서버로 전송 가능
 			config.setAllowCredentials(true);
 			return config;
