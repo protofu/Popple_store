@@ -106,7 +106,7 @@ jobs:
                 path: /v3/api-docs
               swagger-ui:
 
-            EOF
+            EOF'
             
             # GIT 최신 코드 가져오기
             echo "GIT PULL 작업"
