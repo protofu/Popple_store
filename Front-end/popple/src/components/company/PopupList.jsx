@@ -122,7 +122,7 @@ export default function PopupList() {
     if (action === 'reservation') {
       setSelectedComponent(<ReservationList event={event} eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     } else if (action === 'statistics') {
-      setSelectedComponent(<Statistics eventId={eventId} onClose={() => setSelectedComponent(null)} />);
+      setSelectedComponent(<Statistics getStatus={getStatus} eventId={eventId} onClose={() => setSelectedComponent(null)} />);
     }
     // } else if (action === 'edit') {
     //   setSelectedComponent(<Edit eventId={eventId} onClose={() => setSelectedComponent(null)} />);
