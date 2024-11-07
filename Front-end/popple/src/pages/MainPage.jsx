@@ -111,7 +111,7 @@ export default function MainPage() {
       window.removeEventListener("resize", updateItemsPerPage); // 컴포넌트 언마운트 시 리스너 제거
     };
   }, [isPop])
-
+ 
   return (
     <div className="flex flex-col items-center">
       {/* 메인 이미지 */}
@@ -167,6 +167,7 @@ export default function MainPage() {
               exhibitionTitle={item.exhibition.exhibitionName}
               exhibitionId={item.exhibition.id}
               exhiTypeId={item.exhibition.type.id}
+              usernickname={item.exhibition.user.nickname}
               />            )) :
             <NoEventList />
           }

@@ -151,6 +151,7 @@ export default function ExhibitionPage() {
               exhibitionTitle={item.exhibition.exhibitionName}
               exhibitionId={item.exhibition.id}
               exhiTypeId={item.exhibition.type.id}
+              usernickname={item.exhibition.user.nickname}
               />          )) :
           <NoEventList text={"이벤트"}/>
         }
