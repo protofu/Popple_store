@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Statistics from "./Statistics";
 import ReservationList from "../company/ReservationList";
 import { poppleAlert } from "../../utils/PoppleAlert";
+import moment from "moment";
 
 export default function PopupList() {
   const navigate = useNavigate();
@@ -43,9 +44,9 @@ export default function PopupList() {
     });
 
     // 진행중인 건, 먼저 시작한 팝업/전시가 위로 올라오게
-    ongoing.sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
+    ongoing.sort((a,b)=>a.diffDays-b.diffDays);
     // 오픈 대기 중인 건, 곧 시작하는게 위로 올라오게
-    upcoming.sort((a,b)=>a.diffDays-b.diffDays);
+    upcoming.sort((a,b)=>new Date(a.startAt)-new Date(b.startAt));
     // 끝난건 최근에 끝난 순으로
     finished.sort((a,b)=>new Date(b.endAt)-new Date(a.endAt));
 
@@ -83,26 +84,24 @@ export default function PopupList() {
     const endAt = new Date(end[0], end[1] - 1, end[2]);
     endAt.setHours(23, 59, 59, 999); // 종료 날짜의 시간을 23:59:59로 설정
   
+    const status = startAt > new Date() ? "예정" : endAt < new Date() ? "종료" : "진행중 D-" + moment(endAt).diff(moment(), 'days');
 
-    if (today >= startAt && today <= endAt) {
+
+    if (status === "예정") {
       return {
-        value: "진행중",
-        color: "text-green-600 font-bold",
-        diffDays: 0,
+        value: status,
+        color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
       };
-    } else if(today < startAt) {
-      const diffDays = Math.ceil((startAt - today) / (1000 * 60 * 60 * 24)); // 남은 날짜 계산
+    } else if(status === "종료") {
       return {
-        value: `오픈 D-DAY ${diffDays}`,
-        color: "text-red-500 font-bold",
-        diffDays,
+        value: status,
+        color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
       };
     } else{
-        return {
-          value: "종료",
-          color: "text-gray-400 font-bold",
-          diffDays: null,
-        };
+      return {
+        value: status,
+        color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+      };
     }
     
   }
@@ -112,7 +111,7 @@ export default function PopupList() {
   }
   
 
-  const trStyle = "grid grid-cols-[4fr_2fr_1fr_1fr_1fr_1fr] border-b my-auto";
+  const trStyle = "grid grid-cols-[4fr_1fr_1fr_1fr_1fr_1fr] border-b my-auto";
   const thStyle = "my-auto";
 
   const [selectedComponent, setSelectedComponent] = useState(null); // 선택된 컴포넌트 상태 추가
@@ -163,7 +162,7 @@ export default function PopupList() {
             <thead>
               <tr className={`${trStyle} border-gray-500 h-10`}>
                 <th className="text-center">팝업/전시명</th>
-                <th>상태</th>
+                <th className="text-center">상태</th>
                 <th className="text-center">예약</th>
                 <th className="text-center">통계</th>
                 <th className="text-center">수정</th>
@@ -178,7 +177,7 @@ export default function PopupList() {
                     <td className={`${thStyle} h-12 flex items-center`} title={event.exhibitionName} >
                       <span className="cursor-pointer" onClick={() => navigate(event.typeId === 1 ? `/pop-up/detail/${event.id}` : `/exhibition/detail/${event.id}`)}>{formatExhibitionName(event.exhibitionName)}</span>
                     </td>
-                    <td className={`${thStyle} ${color}`}>{value}</td>
+                    <td className={`${thStyle} ${color} text-sm font-medium m-auto px-2.5 py-0.5 rounded-full`}>{value}</td>
                     <td className={`${thStyle} m-auto`}>
                       {
                         event.reserve ?

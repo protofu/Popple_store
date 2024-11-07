@@ -105,7 +105,9 @@ export default function MapModal({ onClose }) {
             </div>
             <div className="search-result flex flex-col gap-2 p-4">
               {exhibitions?.map((exhibition, key) => {
-                const diff = moment(new Date(exhibition.endAt[0], exhibition.endAt[1] - 1, exhibition.endAt[2])).diff(moment(), 'days');
+                const startDate = new Date(exhibition.startAt[0], exhibition.startAt[1] - 1, exhibition.startAt[2]);
+                const endDate = new Date(exhibition.endAt[0], exhibition.endAt[1] - 1, exhibition.endAt[2]);
+                const status = startDate > new Date() ? "예정" : endDate < new Date() ? "종료" : "진행중 D-" + moment(endDate).diff(moment(), 'days')+1;
                 const typeName = exhibition.typeId === 1 ? "팝업" : "전시";
                 return (
                   <div 
@@ -113,10 +115,21 @@ export default function MapModal({ onClose }) {
                     onClick={() => handleClick(exhibition)}
                     className="cursor-pointer rounded-lg shadow-lg p-4 bg-white hover:bg-gray-100 transition duration-200"
                   >
-                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{typeName}</span>
-                    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
-                      {diff === 0 ? "오늘이 마지막" : `${diff}일 후에 ${typeName} 종료` }
-                    </span>
+                    <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{typeName}</span>
+                    {status === "예정" ? (
+                      
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                        {status}
+                      </span>
+                    ) : status === "종료" ? (
+                      <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-900 dark:text-gray-300">
+                        {status}
+                      </span>
+                    ) : (
+                      <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                        {status}
+                      </span>
+                    )}
                     <div className="text-lg font-semibold text-gray-800 my-3 overflow-hidden whitespace-nowrap truncate">
                       <img className="w-10 h-10 rounded-full inline mr-3" src={posterURL + exhibition.savedImage} alt={`${exhibition.exhibitionName} 이미지`} />
                       {exhibition.exhibitionName}
