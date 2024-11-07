@@ -7,11 +7,11 @@ import { visitAPI } from "../api/services/Visit";
 export default function QRPage() {
   const { state: { exhibition } } = useLocation();
   const [imageData, setIamgeData] = useState(null);
-
+  const visitURL = import.meta.env.VITE_QR_VISIT;
   const getQR = async () => {
     try {
       // 팝업/전시 ID 값을 전달하여 QR 코드 생성
-      const link = "http://localhost:5173/visit-check/" + exhibition.id
+      const link = `${visitURL}${exhibition.id}`
       const res = await qrAPI.getQR(link);
       const imageUrl = URL.createObjectURL(res.data);
       setIamgeData(imageUrl);

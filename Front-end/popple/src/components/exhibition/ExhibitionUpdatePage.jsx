@@ -161,10 +161,11 @@ export default function ExhibitionUpdatePage() {
     handleGet();
   }, []);
 
+  const imageURL = import.meta.env.VITE_EXHIBITION_IMAGE;
   useEffect(() => {
     if (Object.keys(exhiData).length > 0) {
       exhiData.descriptionImage = exhiData.descriptionImage.map(imageUrl => {
-        return `http://localhost:8080/image/${imageUrl}`;
+        return `${imageURL}${imageUrl}`;
       });
       setInfo((prev) => ({
         ...prev,
@@ -232,6 +233,8 @@ export default function ExhibitionUpdatePage() {
       });
     }
   };
+
+  const posterURL = import.meta.env.VITE_EXHIBITION_POSTER;
   const renderPoster = () => {
     if (preview) {
       {
@@ -245,7 +248,7 @@ export default function ExhibitionUpdatePage() {
       return (
         <img
           className="w-[250px] h-auto"
-          src={`http://localhost:8080/poster/${info.savedImage}`}
+          src={`${posterURL}${info.savedImage}`}
           alt="포스터"
         />
       );
