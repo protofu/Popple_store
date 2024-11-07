@@ -1,0 +1,52 @@
+name: FRONT-WORKFLOW
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  front-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            # 오류 발생 시 스크립트 중단
+            set -e
+            
+            # SSH 접속 후 작업 디렉토리로 이동
+            echo "SSH 접속"
+            cd Popple/Front-end/popple
+
+            # 환경 설정 파일 생성
+            echo "환경 설정 파일 생성"
+            echo -e "VITE_REST_SERVER=${{ secrets.REST_SERVER }}" >> .env
+            echo -e "VITE_SERVER=${{ secrets.SERVER }}" >> .env
+
+            echo -e "VITE_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+            echo -e "VITE_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env
+            echo -e "VITE_KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }}" >> .env
+            echo -e "VITE_KAKAO_INTEGRITY=${{ secrets.KAKAO_INTEGRITY }}" >> .env
+            echo -e "VITE_KAKAO_SHARE_VERSION=${{ secrets.KAKAO_SHARE_VERSION }}" >> .env
+
+            echo -e "VITE_GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo -e "VITE_GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> .env
+
+            echo -e "VITE_QR_RESERVATION=${{ secrets.QR_RESERVATION }}" >> .env
+            echo -e "VITE_QR_VISIT=${{ secrets.QR_VISIT }}" >> .env
+
+            echo -e "VITE_EXHIBITION_POSTER=${{ secrets.EXHIBITION_POSTER }}" >> .env
+            echo -e "VITE_EXHIBITION_IMAGE=${{ secrets.EXHIBITION_IMAGE }}" >> .env
+            echo -e "VITE_EVENT_POSTER=${{ secrets.EVENT_POSTER }}" >> .env
+            echo -e "VITE_EVENT_IMAGE=${{ secrets.EVENT_IMAGE }}" >> .env
+            
+            # GIT 최신 코드 가져오기
+            echo "GIT PULL 작업"
+            git_output=$(sudo git pull origin main 2>&1)
+            echo "$git_output"
+
+            # Docker 빌드
+            echo "Docker build"
+            docker compose up -d --build front-image

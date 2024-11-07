@@ -1,0 +1,118 @@
+name: BACK-WORKFLOW
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  back-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            # 오류 발생 시 스크립트 중단
+            set -e
+            
+            # SSH 접속 후 작업 디렉토리로 이동
+            echo "SSH 접속"
+            cd Popple/Back-end/Popple
+
+            # 디렉토리 생성 (경로가 존재하지 않으면 생성)
+            mkdir -p src/main/resources
+            
+            # 환경 설정 파일 생성
+            echo "환경 설정 파일 생성"
+            cat <<EOF > src/main/resources/application.yml
+            spring:
+              application:
+                name: Popple
+              datasource:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: ${{ secret.DATABASE_URL }}
+                username: ${{ secret.DATABASE_USERNAME }} # 데이터베이스 사용자 이름을 환경 변수로 설정
+                password: ${{ secret.DATABASE_PASSWORD }} # 데이터베이스 비밀번호를 환경 변수로 설정
+              jpa:
+                generate-ddl: true
+                show-sql: true
+                hibernate:
+                  ddl-auto: create
+                datsource:
+                  initialization-mode: alawys
+                defer-datasource-initialization: true
+                properties:
+                  hibernate:
+                    dialect: org.hibernate.dialect.MySQLDialect
+              sql:
+                init:
+                  encoding: UTF-8
+                  mode: ALWAYS
+              front_url: ${{ secret.FRONT_URL }}
+              upload:
+                image_location: ${{ secret.UPLOAD_IMAGE_LOCATION }}
+                poster_location: ${{ secret.UPLOAD_POSTER_LOCATION }}
+                review_location: ${{ secret.UPLOAD_REVIEW_LOCATION }}
+                event_image_location: ${{ secret.UPLOAD_EVENT_IMAGE_LOCATION }}
+                event_poster_location: ${{ secret.UPLOAD_EVENT_POSTER_LOCATION }}
+              mvc:
+                pathmatch:
+                  matching-strategy: ant-path-matcher
+              security:
+                user:
+                  name: popple # 기본 사용자 이름 (환경 변수로 설정)
+                  password: 960512 # 기본 사용자 비밀번호 (환경 변수로 설정)
+              servlet:
+                multipart:
+                max-file-size: 10MB
+                max-request-size: 10MB
+              mail:
+                host: smtp.gmail.com # 메일 호스트를 환경 변수로 설정
+                port: 587 # 메일 포트를 환경 변수로 설정
+                username: ${{ secrets.MAIL_USERNAME  }}
+                password: ${{ secrets.MAIL_PASSWORD  }}
+                properties:
+                  mail:
+                    smtp:
+                      auth: true
+                      timeout: 5000
+                      starttls:
+                        enable: true
+            # jwt 토큰 발행 기초 설정
+            jwt:
+                issuer: team-popple
+                secret_key: ${{ secrets.JWT_SECRET_KEY  }} # JWT 비밀 키 (노출되면 심각한 보안 문제 발생, 환경 변수로 설정)
+                access_duration: ${{ secrets.JWT_ACCESS_DURATION  }}
+                refresh_duration: ${{ secrets.JWT_REFRESH_DURATION  }}
+
+            oauth2:
+              clients:
+                google:
+                  client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
+                  client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }} # Google OAuth 클라이언트 비밀 키 (환경 변수로 설정)
+                  redirect-uri: ${{ secrets.GOOGLE_REDIRECT_URI }}
+                  token-uri: ${{ secrets.GOOGLE_TOKEN_URI }}
+                  user-info-request-uri: ${{ secrets.GOOGLE_USER_INFO_REQ_URI }}
+                kakao:
+                  client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+                  client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+                  redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
+                  token-uri: ${{ secrets.KAKAO_TOKEN_URI }}
+                  user-info-request-uri: ${{ secrets.KAKAO_USER_INFO_REQ_URI }}
+
+            springdoc:
+              api-docs:
+                path: /v3/api-docs
+              swagger-ui:
+
+            EOF
+            
+            # GIT 최신 코드 가져오기
+            echo "GIT PULL 작업"
+            git_output=$(sudo git pull origin main 2>&1)
+            echo "$git_output"
+
+            # Docker 빌드
+            echo "Docker build"
+            docker compose up -d --build
