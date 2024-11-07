@@ -5,7 +5,6 @@
 .classpath
 .project
 .gradle
-gradle */
 ### Java ###
 # Compiled class file
 *.class
@@ -43,5 +42,4 @@ application.yml
 ### Ignore bin directory ###
 bin/
 build/
-gradle/
 # End of https://www.toptal.com/developers/gitignore/api/java,redis
