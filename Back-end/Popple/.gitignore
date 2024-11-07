@@ -4,8 +4,6 @@
 .vscode
 .classpath
 .project
-.gradle
-gradle */
 ### Java ###
 # Compiled class file
 *.class
