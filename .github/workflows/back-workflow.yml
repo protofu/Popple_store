@@ -31,9 +31,9 @@ jobs:
                 name: Popple
               datasource:
                 driver-class-name: com.mysql.cj.jdbc.Driver
-                url: ${{ secret.DATABASE_URL }}
-                username: ${{ secret.DATABASE_USERNAME }} # 데이터베이스 사용자 이름을 환경 변수로 설정
-                password: ${{ secret.DATABASE_PASSWORD }} # 데이터베이스 비밀번호를 환경 변수로 설정
+                url: ${{ secrets.DATABASE_URL }}
+                username: ${{ secrets.DATABASE_USERNAME }} # 데이터베이스 사용자 이름을 환경 변수로 설정
+                password: ${{ secrets.DATABASE_PASSWORD }} # 데이터베이스 비밀번호를 환경 변수로 설정
               jpa:
                 generate-ddl: true
                 show-sql: true
@@ -49,13 +49,13 @@ jobs:
                 init:
                   encoding: UTF-8
                   mode: ALWAYS
-              front_url: ${{ secret.FRONT_URL }}
+              front_url: ${{ secrets.FRONT_URL }}
               upload:
-                image_location: ${{ secret.UPLOAD_IMAGE_LOCATION }}
-                poster_location: ${{ secret.UPLOAD_POSTER_LOCATION }}
-                review_location: ${{ secret.UPLOAD_REVIEW_LOCATION }}
-                event_image_location: ${{ secret.UPLOAD_EVENT_IMAGE_LOCATION }}
-                event_poster_location: ${{ secret.UPLOAD_EVENT_POSTER_LOCATION }}
+                image_location: ${{ secrets.UPLOAD_IMAGE_LOCATION }}
+                poster_location: ${{ secrets.UPLOAD_POSTER_LOCATION }}
+                review_location: ${{ secrets.UPLOAD_REVIEW_LOCATION }}
+                event_image_location: ${{ secrets.UPLOAD_EVENT_IMAGE_LOCATION }}
+                event_poster_location: ${{ secrets.UPLOAD_EVENT_POSTER_LOCATION }}
               mvc:
                 pathmatch:
                   matching-strategy: ant-path-matcher
@@ -82,7 +82,7 @@ jobs:
             # jwt 토큰 발행 기초 설정
             jwt:
                 issuer: team-popple
-                secret_key: ${{ secrets.JWT_SECRET_KEY  }} # JWT 비밀 키 (노출되면 심각한 보안 문제 발생, 환경 변수로 설정)
+                secrets_key: ${{ secrets.JWT_secrets_KEY  }} # JWT 비밀 키 (노출되면 심각한 보안 문제 발생, 환경 변수로 설정)
                 access_duration: ${{ secrets.JWT_ACCESS_DURATION  }}
                 refresh_duration: ${{ secrets.JWT_REFRESH_DURATION  }}
 
@@ -90,13 +90,13 @@ jobs:
               clients:
                 google:
                   client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
-                  client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }} # Google OAuth 클라이언트 비밀 키 (환경 변수로 설정)
+                  client-secrets: ${{ secrets.GOOGLE_CLIENT_secrets }} # Google OAuth 클라이언트 비밀 키 (환경 변수로 설정)
                   redirect-uri: ${{ secrets.GOOGLE_REDIRECT_URI }}
                   token-uri: ${{ secrets.GOOGLE_TOKEN_URI }}
                   user-info-request-uri: ${{ secrets.GOOGLE_USER_INFO_REQ_URI }}
                 kakao:
                   client-id: ${{ secrets.KAKAO_CLIENT_ID }}
-                  client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+                  client-secrets: ${{ secrets.KAKAO_CLIENT_secrets }}
                   redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
                   token-uri: ${{ secrets.KAKAO_TOKEN_URI }}
                   user-info-request-uri: ${{ secrets.KAKAO_USER_INFO_REQ_URI }}
