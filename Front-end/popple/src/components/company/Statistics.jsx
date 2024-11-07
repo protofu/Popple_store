@@ -8,7 +8,7 @@ import { exhibitionAPI } from "../../api/services/Exhibition";
 import { replace } from "react-router-dom";
 import moment from "moment";
 
-export default function Statistics({ eventId, onClose, getStatus  }) {
+export default function Statistics({ eventId, onClose  }) {
   const [chartData, setChartData] = useState({ 
     ageData:[],
     genderData:[],
@@ -85,6 +85,11 @@ export default function Statistics({ eventId, onClose, getStatus  }) {
   console.log(Math.ceil(exhi.startAt <= today && today <= exhi.endAt))
   return (
     <div className="flex flex-col w-full gap-2">
+      
+      <div className="flex justify-between mx-3">
+        <p className="text-[24px] inline-block">방문통계</p>
+        <span>누적 방문자, 총 <span className="font-bold text-[24px] text-popple-light">{chartData.humanCount}</span>명</span>
+      </div>
       <div className="border-2 rounded-2xl p-3 grid grid-cols-3 ">
         <div className="font-bold">{exhi.exhibitionName}</div>
         <div className="text-center">
@@ -97,11 +102,7 @@ export default function Statistics({ eventId, onClose, getStatus  }) {
         <div className="font-bold text-end">
           {new Date(exhi.startAt).toLocaleDateString('ko-KR').replace(/,/g, '.')} ~ 
           {new Date(exhi.endAt).toLocaleDateString('ko-KR').replace(/,/g, '.')}
-      </div>
-      </div>
-      <div className="flex justify-between mx-3">
-        <p className="text-[24px] inline-block">방문통계</p>
-        <span>누적 방문자, 총 <span className="font-bold text-[24px] text-popple-light">{chartData.humanCount}</span>명</span>
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         {/* ageChart */}

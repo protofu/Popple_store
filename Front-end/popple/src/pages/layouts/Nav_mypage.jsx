@@ -5,7 +5,8 @@ export default function Nav_mypage ({ onItemSelect, initialActiveItem }) {
   const { loginUserRole } = useLoginUserStore(state => state);
 
   const userItems = ["찜", "예약 목록", "방문 리뷰", "정보 수정", "탈퇴"];
-  const companyItems = ["팝업/전시 목록", "전체 방문 통계", "정보 수정", "탈퇴"];
+  const companyItems = ["팝업/전시 목록", "정보 수정", "탈퇴"];
+  // "전체 방문 통계",
   
   const items = loginUserRole === "ROLE_COMPANY" ? companyItems : userItems;
 
@@ -35,10 +36,10 @@ export default function Nav_mypage ({ onItemSelect, initialActiveItem }) {
             >
               <div className="icon mr-2 text-2xl flex items-center justify-center" style={{ minWidth: '30px' }}>
                 {index === 0 && (loginUserRole === "ROLE_COMPANY" ? "📊" : "❤")}
-                {index === 1 && (loginUserRole === "ROLE_COMPANY" ? "📈" : "📋")}
-                {index === 2 && (loginUserRole === "ROLE_COMPANY" ? "⚙️" : "🔖")}
-                {index === 3 && (loginUserRole === "ROLE_COMPANY" ? "⚠" : "⚙️")}
-                {index === 4 && "⚠"}
+                {/* {index === 1 && (loginUserRole === "ROLE_COMPANY" ? "📈" : "📋")} */}
+                {index === 1 && (loginUserRole === "ROLE_COMPANY" ? "⚙️" : "🔖")}
+                {index === 2 && (loginUserRole === "ROLE_COMPANY" ? "⚠" : "⚙️")}
+                {index === 3 && "⚠"}
               </div>
               <div>{item}</div>
             </a>
