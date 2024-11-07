@@ -12,10 +12,10 @@ import com.popple.exhibition.entity.Image;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-	@Query(value = "SELECT p.saved_name FROM Image p WHERE p.exhibition_id = :exhibitionId LIMIT 1", nativeQuery = true)
+	@Query(value = "SELECT p.saved_name FROM image p WHERE p.exhibition_id = :exhibitionId LIMIT 1", nativeQuery = true)
 	Optional<String> findFirstByExhibition(@Param("exhibitionId") Long exhibitionId);
 
-	@Query(value = "SELECT p.saved_name FROM Image p WHERE p.exhibition_id = :exhibitionId", nativeQuery = true)
+	@Query(value = "SELECT p.saved_name FROM image p WHERE p.exhibition_id = :exhibitionId", nativeQuery = true)
 	Optional<List<String>> findByExhibition(@Param("exhibitionId") Long exhibitionId);
 
 }
