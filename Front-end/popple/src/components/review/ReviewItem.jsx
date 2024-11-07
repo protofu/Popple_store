@@ -11,7 +11,7 @@ export default function ReviewItem({ review, style }) {
   const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   
   // 이미지 불러오기
-  const imageUrl = `${import.meta.env.VITE_SERVER}/review_image/${review.image?.savedName}`;
+  const imageUrl = `${import.meta.env.VITE_REST_SERVER}/review_image/${review.image?.savedName}`;
 
   return (
     <div className={`grid grid-cols-[1fr_4fr] border-2 border-[#A4A4A4] rounded-[0.4rem] p-3 m-5 mb-1 h-[148px] ${style}`}>

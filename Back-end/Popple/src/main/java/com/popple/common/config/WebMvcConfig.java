@@ -38,19 +38,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
 		registry
-		.addResourceHandler("/review_image/**")
+		.addResourceHandler("/api/review_image/**")
 		.addResourceLocations("file:"+uploadPath + "/");
 		registry
-		.addResourceHandler("/image/**")
+		.addResourceHandler("/api/image/**")
 		.addResourceLocations("file:"+imagePath + "/");
 		registry
-		.addResourceHandler("/poster/**")
+		.addResourceHandler("/api/poster/**")
 		.addResourceLocations("file:"+posterPath + "/");
 		registry
-		.addResourceHandler("/event_poster_image/**")
+		.addResourceHandler("/api/event_poster_image/**")
 		.addResourceLocations("file:"+eventPosterPath + "/");
 		registry
-		.addResourceHandler("/event_image/**")
+		.addResourceHandler("/api/event_image/**")
 		.addResourceLocations("file:"+eventImagePath + "/");
 	}
 }
