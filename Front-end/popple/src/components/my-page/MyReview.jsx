@@ -5,6 +5,7 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { authAPI } from "../../api/services/Auth";
 import NoList from "../common/NoList";
 import { useNavigate } from "react-router-dom";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function MyReview() {
   const [reviews, setReviews] = useState([]);

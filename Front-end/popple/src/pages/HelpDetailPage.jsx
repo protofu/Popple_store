@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useLoginUserStore } from "../stores/LoginUserState";
 import moment from "moment";
+import { poppleAlert } from "../utils/PoppleAlert";
 
 export default function HelpDetailPage() {
   const location = useLocation();

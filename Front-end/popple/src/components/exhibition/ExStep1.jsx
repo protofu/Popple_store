@@ -21,6 +21,7 @@ import FileCarousel from "./FileCarousel";
 import TypeDropdown from "./TypeDropdown";
 import { useForm } from "react-hook-form";
 import { title } from "process";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 const ExStep1 = ({ information, changeInformation }) => {
   const {

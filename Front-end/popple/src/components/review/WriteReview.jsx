@@ -3,6 +3,7 @@ import CustomSubmitButton from '../common/CustomSubmitButton';
 import { LuFilePlus } from 'react-icons/lu';
 import { reviewAPI } from '../../api/services/Review';
 import { useParams } from 'react-router-dom';
+import { poppleAlert } from '../../utils/PoppleAlert';
 
 export default function WriteReviewModal({ isOpen, onClose }) {
   if (!isOpen) return null; // 모달이 닫혀있으면 렌더링하지 않음

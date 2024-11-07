@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { eventAPI } from "../../api/services/Event";
 import { useLoginUserStore } from "../../stores/LoginUserState";
 import { useEffect, useState } from "react";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function EventDetailModal({ onClose, evnetId }) {
 

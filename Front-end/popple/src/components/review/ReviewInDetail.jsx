@@ -6,6 +6,7 @@ import { reviewAPI } from "../../api/services/Review";
 import { useNavigate, useParams } from "react-router-dom";
 import {useLoginStore} from "../../stores/LoginState";
 import LoginPromptModal from "../LoginPromptModal";
+import { poppleAlert } from "../../utils/PoppleAlert";
 
 export default function ReviewInDetail({isVisited}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
