@@ -9,9 +9,10 @@ import Complete from "../common/Complete";
 export default function Reservation({ reservation, exhi, onClose }) {
   const [isChecked, setIsChecked] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const reservationURL = import.meta.env.VITE_QR_RESERVATION;
   const [request, setRequest] = useState({
     exhibitionId: exhi.id,
-    reservationLink: "http://localhost:5173/reservation-check/" + exhi.id,
+    reservationLink: `${reservationURL}${exhi.id}`,
     reservationDate: "",
   });
 
@@ -30,7 +31,7 @@ export default function Reservation({ reservation, exhi, onClose }) {
     setRequest({
       ...request, 
       exhibitionId:exhi.id, 
-      reservationLink: "http://localhost:5173/reservation-check/" + exhi.id,
+      reservationLink: `${reservationURL}${exhi.id}`,
       reservationDate: reservation
     })
 

@@ -31,7 +31,7 @@ export default function KakaoShareButton({ data }) {
       content: {
         title: data.exhibitionName,
         description: data.detailDescription,
-        // imageUrl: "http://localhost:8080/poster/"+ data.savedImage,
+        // 공유 이미지 파일로 변경
         imageUrl: "https://blog.kakaocdn.net/dn/bWT0MZ/btrTQBmvgx8/ZLe4zZNsqXMga0B7G3JcR0/img.png",
         link: {
           mobileWebUrl: resultUrl,
