@@ -19,8 +19,15 @@ jobs:
             # SSH 접속 후 작업 디렉토리로 이동
             echo "SSH 접속"
             cd Popple/Front-end/popple
+            
+            # 기존 .env 파일 삭제 (존재하면)
+            echo "기존 .env 파일 삭제"
+            if [ -f .env ]; then
+                rm -f .env
+                echo ".env 파일 삭제 완료"
+            fi
 
-            # 환경 설정 파일 생성
+            # 환경 설정 파일 존재 시 삭제 후 재생성
             echo "환경 설정 파일 생성"
             echo -e "VITE_REST_SERVER=${{ secrets.REST_SERVER }}" >> .env
             echo -e "VITE_SERVER=${{ secrets.SERVER }}" >> .env
