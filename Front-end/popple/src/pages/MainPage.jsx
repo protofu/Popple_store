@@ -136,13 +136,13 @@ export default function MainPage() {
             modules={[Autoplay, EffectCoverflow, Navigation]}
           >
             <SwiperSlide className="cursor-pointer">
-              <img src="/public/images/banner1.png" alt="banner1" className="w-full h-full object-cover" />
+              <img src="/images/banner1.png" alt="banner1" className="w-full h-full object-cover" />
             </SwiperSlide>
             <SwiperSlide className="cursor-pointer">
-              <img src="/public/images/banner2.png" alt="banner2" className="w-full h-full object-cover" />
+              <img src="/images/banner2.png" alt="banner2" className="w-full h-full object-cover" />
             </SwiperSlide>
             <SwiperSlide className="cursor-pointer">
-              <img src="/public/images/banner3.png" alt="banner3" className="w-full h-full object-cover" />
+              <img src="/images/banner3.png" alt="banner3" className="w-full h-full object-cover" />
             </SwiperSlide>
           </Swiper>
         </div>
