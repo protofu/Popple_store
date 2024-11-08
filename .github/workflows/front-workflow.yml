@@ -41,6 +41,7 @@ jobs:
             echo -e "VITE_EXHIBITION_IMAGE=${{ secrets.EXHIBITION_IMAGE }}" >> .env
             echo -e "VITE_EVENT_POSTER=${{ secrets.EVENT_POSTER }}" >> .env
             echo -e "VITE_EVENT_IMAGE=${{ secrets.EVENT_IMAGE }}" >> .env
+            echo -e "VITE_REVIEW_IMAGE=${{ secrets.REVIEW_IMAGE }}" >> .env
             
             # GIT 최신 코드 가져오기
             echo "GIT PULL 작업"

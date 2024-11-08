@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 	// 후에 file을 받아오기 위해 일단 생성해둔 class
 	@Value("${spring.upload.review_location}")
-	private String uploadPath;
+	private String reviewPath;
 	@Value("${spring.upload.event_poster_location}")
 	private String eventPosterPath;
 	@Value("${spring.upload.image_location}")
@@ -37,16 +37,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-		System.out.println(uploadPath);
-		System.out.println(eventPosterPath);
-		System.out.println(imagePath);
-		System.out.println(posterPath);
-		System.out.println(eventImagePath);
-		System.out.println(front_url);
-
 		registry
 		.addResourceHandler("/file/review_image/**")
-		.addResourceLocations("file:"+uploadPath + "/");
+		.addResourceLocations("file:"+reviewPath + "/");
 		registry
 		.addResourceHandler("/file/image/**")
 		.addResourceLocations("file:"+imagePath + "/");
