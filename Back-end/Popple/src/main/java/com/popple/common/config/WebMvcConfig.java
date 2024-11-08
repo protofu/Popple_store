@@ -32,11 +32,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		.allowedOrigins(front_url)
 		.allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
 		.allowedHeaders("*") // 모든 헤더 허용
-        .allowCredentials(true); // 자격 증명 허용 (쿠키, 인증 정보)
+		.allowCredentials(true); // 자격 증명 허용 (쿠키, 인증 정보)
 	}
 
 	@Override
 	public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
+		System.out.println(uploadPath);
+		System.out.println(eventPosterPath);
+		System.out.println(imagePath);
+		System.out.println(posterPath);
+		System.out.println(eventImagePath);
+		System.out.println(front_url);
+
 		registry
 		.addResourceHandler("/file/review_image/**")
 		.addResourceLocations("file:"+uploadPath + "/");
