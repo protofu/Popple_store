@@ -199,7 +199,7 @@ export default function MainPage() {
           {Array.from({ length: totalPages }, (_, index) => (
             <button
               key={index}
-              className={`mx-2 p-2 border rounded ${
+              className={`mx-2 p-2 border rounded-lg m-1 ${
                 currentPage === index + 1 ? "bg-popple-light text-white" : "bg-white text-black"
               }`}
               onClick={() => handlePageChange(index + 1)}
